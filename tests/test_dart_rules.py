@@ -60,18 +60,29 @@ def _client(
     *,
     corp_xml: bytes = _CORP_XML,
     list_rows: list[dict] | None = None,
+    list_rows_by_kind: dict[str, list[dict]] | None = None,
     doc_text: str = "",
 ) -> DartClient:
-    """corpCode.xml → list.json → document.xml 순으로 응답하는 대역 DartClient."""
+    """corpCode.xml → list.json → document.xml 순으로 응답하는 대역 DartClient.
+
+    `list_rows_by_kind`를 주면 요청 쿼리의 `pblntf_ty` 값에 따라 다른 결과를 준다 —
+    정기공시(A)와 외부감사관련(F)이 서로 다른 건수를 가진 실제 상황(범한메카텍 사례)을
+    본뜬다. 안 주면 기존처럼 두 kind 모두 같은 `list_rows`를 돌려준다.
+    """
     monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
 
-    rows = _row() and (list_rows if list_rows is not None else [_row()])
+    default_rows = list_rows if list_rows is not None else [_row()]
 
     def handler(request: httpx.Request) -> httpx.Response:
         url = str(request.url)
         if "corpCode" in url:
             return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", corp_xml))
         if "list.json" in url:
+            if list_rows_by_kind is not None:
+                kind = request.url.params.get("pblntf_ty", "")
+                rows = list_rows_by_kind.get(kind, [])
+            else:
+                rows = default_rows
             return httpx.Response(200, json=_list_json(rows))
         return httpx.Response(200, content=_zip_bytes("doc.xml", doc_text.encode("utf-8")))
 
@@ -259,7 +270,60 @@ def test_no_disclosures_produces_no_evidence_and_a_warning(tmp_path, monkeypatch
     evidence, warnings = dart_rules.extract(client, "테스트기업")
 
     assert evidence == []
-    assert any("공시" in w and "없" in w for w in warnings)
+    assert any("전혀 없다" in w for w in warnings)
+
+
+def test_audit_only_disclosures_do_not_produce_the_false_no_disclosure_warning(
+    tmp_path, monkeypatch
+):
+    """범한메카텍 사례: 정기공시(A) 0건, 외부감사관련(F) 10건. '공시 없음'은 거짓말이다."""
+    f_rows = [_row(rcept_no=f"F{i:03d}", dt="20250514") for i in range(10)]
+    client = _client(
+        tmp_path,
+        monkeypatch,
+        list_rows_by_kind={"A": [], "F": f_rows},
+        doc_text="<P>감사보고서 본문. 특허·연구개발 언급 없음.</P>",
+    )
+
+    evidence, warnings = dart_rules.extract(client, "테스트기업")
+
+    assert evidence == []
+    assert not any("전혀 없다" in w for w in warnings)
+    assert any("외부감사관련" in w and "10건" in w for w in warnings)
+    assert any("사업보고서" in w for w in warnings)
+    assert any("md 지시서" in w for w in warnings)
+
+
+def test_patent_table_found_inside_external_audit_disclosure_still_produces_evidence(
+    tmp_path, monkeypatch
+):
+    """widened query가 kind로 문서를 무시하지 않는다 — 표를 찾으면 F 문서에서도 읽는다."""
+    client = _client(
+        tmp_path,
+        monkeypatch,
+        list_rows_by_kind={"A": [], "F": [_row(rcept_no="F1", dt="20250514")]},
+        doc_text=_PATENT_TABLE_HIGH,
+    )
+
+    evidence, warnings = dart_rules.extract(client, "테스트기업")
+
+    assert len(evidence) == 1
+    assert evidence[0].status == "MET"
+    # B2는 찾았으니 '전부 없다'는 설명 경고가 나오면 안 된다.
+    assert not any("md 지시서" in w for w in warnings)
+
+
+def test_contract_liability_signal_adds_handoff_note_without_creating_evidence(
+    tmp_path, monkeypatch
+):
+    """계약부채/수주잔고는 Economic Value 축(원칙 b) 신호다 — 이 축의 Evidence는 만들지 않는다."""
+    doc = "<P>당기말 계약부채는 1,234백만원이며 수주잔고 현황은 다음과 같다.</P>"
+    client = _client(tmp_path, monkeypatch, doc_text=doc)
+
+    evidence, warnings = dart_rules.extract(client, "테스트기업")
+
+    assert evidence == []
+    assert any("계약부채" in w and "Economic Value" in w for w in warnings)
 
 
 def test_ambiguous_company_name_skips_extraction_rather_than_guessing(tmp_path, monkeypatch):

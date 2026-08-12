@@ -44,12 +44,24 @@ from agents.proven_scalability.tools.dart import DartClient, DartError
 #: DART 뷰어 URL. Evidence.source_url은 사람이 원문을 다시 찾아갈 수 있어야 한다.
 _VIEWER_URL = "https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
 
-#: 정기공시(사업보고서·분기보고서·반기보고서)만 본다 — 다른 유형엔 이 표가 없다.
-_DISCLOSURE_KIND = "A"
+#: 정기공시(사업보고서·분기보고서·반기보고서) — B2·B3 표의 표준 서식이 있는 곳.
+_KIND_PERIODIC = "A"
+#: 외부감사관련(감사보고서·연결감사보고서) — 비상장 기업은 사업보고서 의무가 없어
+#: 이것만 내는 경우가 많다(범한메카텍 실사로 확인, 2026-08-13). B2·B3 표는 없지만
+#: 계약부채·수주잔고 같은 Economic Value 신호가 주석에 있을 수 있어 본다.
+_KIND_AUDIT = "F"
 _BEGIN_DATE = "20220101"
 _END_DATE = "20261231"
 #: 최근 공시부터 몇 건까지 훑을지. 너무 크면 매 실행마다 문서를 여러 건 내려받는다.
+#: DART list.json의 pblntf_ty는 한 번에 값 하나만 받는다(콤마로 묶어 넘겨도 해당 유형
+#: 없음으로 취급됨을 라이브 확인) — 그래서 A·F를 별도 호출 두 번으로 조회해 합친다.
+#: 문서 조회(fetch_document) 횟수는 이 상수로 그대로 묶여 있다 — list.json 호출이
+#: 하나 늘 뿐 실제 문서 다운로드 비용은 늘지 않는다.
 _MAX_DOCUMENTS = 5
+
+#: 감사보고서 주석에서 자주 보이는, Economic Value 축(원칙 b) 신호. 우리 축(기술성)의
+#: Evidence는 아니다 — 팀원에게 넘기는 메모만 남긴다.
+_ECONOMIC_VALUE_KEYWORDS = ("계약부채", "수주잔고", "건설형공사계약")
 
 _TAG_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"\s+")
@@ -211,20 +223,28 @@ def extract(client: DartClient, company: str) -> tuple[list[Evidence], list[str]
         )
         return [], warnings
 
-    try:
-        rows = client.list_disclosures(corp_code, _BEGIN_DATE, _END_DATE, kind=_DISCLOSURE_KIND)
-    except DartError as exc:
-        warnings.append(f"DART 공시 목록 조회 실패: {exc}")
+    rows_periodic, list_warning = _list_disclosures_safe(
+        client, corp_code, _KIND_PERIODIC, "정기공시"
+    )
+    if list_warning:
+        warnings.append(list_warning)
+
+    rows_audit, list_warning = _list_disclosures_safe(client, corp_code, _KIND_AUDIT, "외부감사관련")
+    if list_warning:
+        warnings.append(list_warning)
+
+    if not rows_periodic and not rows_audit:
+        # 상태 1: 이 법인은 DART에 아무 공시도 없다.
+        warnings.append(f"{corp_name}은(는) DART에 공시가 전혀 없다 — 정기공시·외부감사관련 모두 0건.")
         return [], warnings
 
-    if not rows:
-        warnings.append(f"{corp_name}의 정기공시가 없다 — 공시 없음.")
-        return [], warnings
+    combined = _merge_by_date(rows_periodic, rows_audit)
 
     evidence: list[Evidence] = []
     matched: set[str] = set()
+    economic_value_noted = False
 
-    for row in rows[:_MAX_DOCUMENTS]:
+    for row in combined[:_MAX_DOCUMENTS]:
         rcept_no = row.get("rcept_no")
         if not rcept_no:
             continue
@@ -233,6 +253,16 @@ def extract(client: DartClient, company: str) -> tuple[list[Evidence], list[str]
         except DartError as exc:
             warnings.append(f"{corp_name} {rcept_no} 문서 조회 실패: {exc}")
             continue
+
+        if not economic_value_noted:
+            hit = next((kw for kw in _ECONOMIC_VALUE_KEYWORDS if kw in text), None)
+            if hit is not None:
+                warnings.append(
+                    f"{corp_name} {rcept_no}: '{hit}' 등 Economic Value 축(원칙 b) 신호가 "
+                    "감사보고서 주석에 있다 — 이 축(기술성)의 Evidence로는 만들지 않는다. "
+                    "해당 축을 담당하는 에이전트에게 전달할 것."
+                )
+                economic_value_noted = True
 
         for rule in RULES:
             if rule.criterion_id in matched:
@@ -263,7 +293,42 @@ def extract(client: DartClient, company: str) -> tuple[list[Evidence], list[str]
         if len(matched) == len(RULES):
             break
 
+    if not matched and not rows_periodic:
+        # 상태 2: 공시는 있지만 우리 규칙이 읽을 수 있는 유형이 하나도 없다 —
+        # 비상장 기업이 감사보고서만 내고 사업보고서가 아예 없는 경우가 정상 형태다.
+        # 특허·연구개발 인력 표는 사업보고서에만 있으므로 DART로는 확인할 수 없다.
+        missing = ", ".join(rule.criterion_id for rule in RULES)
+        warnings.append(
+            f"{corp_name}의 DART 공시는 외부감사관련(감사보고서) {len(rows_audit)}건뿐이고 "
+            "정기공시(사업보고서·분기보고서)가 없다. 특허 보유현황·연구개발 인력 구성 표는 "
+            "사업보고서에만 있어, 비상장 기업이 감사보고서만 제출한 경우 DART로는 확인할 수 "
+            f"없다 — {missing}는 md 지시서(사용자 LLM 조사) 경로로 조사할 것."
+        )
+
     return evidence, warnings
+
+
+def _list_disclosures_safe(
+    client: DartClient, corp_code: str, kind: str, label: str
+) -> tuple[list[dict], str | None]:
+    """list_disclosures를 감싸 실패를 예외 대신 경고 문자열로 돌려준다."""
+    try:
+        return client.list_disclosures(corp_code, _BEGIN_DATE, _END_DATE, kind=kind), None
+    except DartError as exc:
+        return [], f"DART {label} 목록 조회 실패: {exc}"
+
+
+def _merge_by_date(rows_a: list[dict], rows_b: list[dict]) -> list[dict]:
+    """두 kind의 결과를 rcept_no로 중복 제거하고 접수일 최신순으로 합친다."""
+    seen: set[str] = set()
+    merged: list[dict] = []
+    for row in sorted(rows_a + rows_b, key=lambda r: r.get("rcept_dt", ""), reverse=True):
+        rcept_no = row.get("rcept_no")
+        if not rcept_no or rcept_no in seen:
+            continue
+        seen.add(rcept_no)
+        merged.append(row)
+    return merged
 
 
 def _find_first(text: str, keywords: tuple[str, ...]) -> int | None:
