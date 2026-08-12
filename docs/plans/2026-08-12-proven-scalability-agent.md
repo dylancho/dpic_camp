@@ -540,7 +540,7 @@ git commit -m "feat(criteria): A/B/C 판정 항목 10개와 아키타입별 임�
   - `gate_failures(statuses: dict[str, Status]) -> list[Block]`
   - `decide_verdict(statuses: dict[str, Status]) -> Verdict`
   - `evidence_coverage(statuses: dict[str, Status]) -> float`
-  - `build_diligence_questions(statuses: dict[str, Status]) -> list[str]`
+  - `build_diligence_questions(statuses: dict[str, Status], calibration: Calibration) -> list[str]`
   - `score(evidence, calibration) -> ProvenScalabilityResult`
 
 **핵심 규칙 세 가지**
@@ -895,11 +895,18 @@ def evidence_coverage(statuses: dict[str, Status]) -> float:
     return resolved / len(statuses)
 
 
-def build_diligence_questions(statuses: dict[str, Status]) -> list[str]:
-    """UNVERIFIABLE 항목을 실사 질문으로 바꾼다. CRITERIA 정의 순서를 따른다."""
+def build_diligence_questions(
+    statuses: dict[str, Status], calibration: Calibration
+) -> list[str]:
+    """UNVERIFIABLE 항목을 실사 질문으로 바꾼다. CRITERIA 정의 순서를 따른다.
+
+    판정 기준은 반드시 calibration의 임계치를 쓴다. 원칙 원문(default_threshold)을
+    그대로 쓰면 SW 기업 실사 질문에 "가동 1,000시간" 같은, 아키타입이 적용하지
+    말라고 명시한 기준이 찍힌다.
+    """
     return [
         f"[{c.id}] {c.label} — 공개 자료에서 확인할 수 없었다. "
-        f"판정 기준: {c.default_threshold}"
+        f"판정 기준: {calibration.thresholds.get(c.id, c.default_threshold)}"
         for c in CRITERIA
         if statuses[c.id] == "UNVERIFIABLE"
     ]
@@ -922,7 +929,7 @@ def score(
         evidence_coverage=evidence_coverage(statuses),
         calibration=calibration,
         evidence=evidence,
-        diligence_questions=build_diligence_questions(statuses),
+        diligence_questions=build_diligence_questions(statuses, calibration),
     )
 ```
 
