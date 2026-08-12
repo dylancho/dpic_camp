@@ -1,12 +1,23 @@
+import io
+import zipfile
+
 import httpx
 import pytest
 
-from agents.proven_scalability.tools.dart import DartClient, DartError
+import agents.proven_scalability.tools.dart as dart
+from agents.proven_scalability.tools.dart import DartClient, DartError, dart_search
 
 
 def _client(handler) -> DartClient:
     transport = httpx.MockTransport(handler)
     return DartClient(api_key="test-key", http=httpx.Client(transport=transport))
+
+
+def _zip_bytes(filename: str, content: bytes) -> bytes:
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as archive:
+        archive.writestr(filename, content)
+    return buf.getvalue()
 
 
 def test_list_disclosures_returns_rows():
@@ -56,6 +67,168 @@ def test_api_key_never_appears_in_error_message():
     with pytest.raises(DartError) as exc:
         _client(handler).list_disclosures("00126380", "20240101", "20251231")
     assert "test-key" not in str(exc.value)
+
+
+def test_http_error_status_never_leaks_key_via_raise_for_status():
+    # raise_for_status()의 예외 문자열에는 request.url이 담기고, url에는
+    # crtfc_key가 들어 있다. DartClient는 그 예외를 절대 그대로 전파하면 안 된다.
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(401, text="Unauthorized")
+
+    with pytest.raises(DartError) as exc:
+        _client(handler).list_disclosures("00126380", "20240101", "20251231")
+    message = str(exc.value)
+    assert "test-key" not in message
+    assert "crtfc_key" not in message
+
+
+def test_corp_code_table_parses_xml_and_caches(tmp_path, monkeypatch):
+    cache_path = tmp_path / "corp_codes.json"
+    monkeypatch.setattr(dart, "_CACHE", cache_path)
+
+    xml = (
+        b"<result>"
+        b"<list><corp_code>00126380</corp_code><corp_name>\xec\x82\xbc\xec\x84\xb1\xec\xa0\x84\xec\x9e\x90</corp_name></list>"
+        b"</result>"
+    )
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+
+    client = _client(handler)
+    table = client._corp_code_table()
+    assert table["삼성전자"] == "00126380"
+    assert cache_path.exists()
+
+    # 두 번째 호출은 캐시를 쓰고 네트워크를 다시 타지 않는다
+    table2 = client._corp_code_table()
+    assert table2 == table
+    assert len(calls) == 1
+
+
+def test_corp_code_table_falls_back_to_refetch_when_cache_corrupt(tmp_path, monkeypatch):
+    cache_path = tmp_path / "corp_codes.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text("{not valid json", encoding="utf-8")
+    monkeypatch.setattr(dart, "_CACHE", cache_path)
+
+    xml = b"<result><list><corp_code>00999999</corp_code><corp_name>test</corp_name></list></result>"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+
+    table = _client(handler)._corp_code_table()
+    assert table["test"] == "00999999"
+
+
+def test_fetch_document_extracts_zip_text():
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=_zip_bytes("doc.xml", "산업재산권 보유 현황".encode("utf-8")))
+
+    text = _client(handler).fetch_document("20250315000001")
+    assert "산업재산권" in text
+
+
+def test_fetch_document_non_zip_response_raises_dart_error():
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=b"not a zip")
+
+    with pytest.raises(DartError):
+        _client(handler).fetch_document("20250315000001")
+
+
+def test_dart_search_company_not_found(monkeypatch, tmp_path):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        # corpCode.xml만 호출된다 — 빈 테이블
+        return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", b"<result></result>"))
+
+    monkeypatch.setattr(dart, "_shared", _client(handler))
+    result = dart_search(company_name="존재하지않는회사", keyword="기술성")
+    assert "찾지 못했다" in result
+
+
+def test_dart_search_no_disclosures(monkeypatch, tmp_path):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = b"<result><list><corp_code>00126380</corp_code><corp_name>test</corp_name></list></result>"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if "corpCode" in str(request.url):
+            return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+        return httpx.Response(200, json={"status": "013", "message": "조회된 데이터가 없습니다."})
+
+    monkeypatch.setattr(dart, "_shared", _client(handler))
+    result = dart_search(company_name="test", keyword="기술성")
+    assert "공시가 없다" in result
+
+
+def test_dart_search_keyword_not_found(monkeypatch, tmp_path):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = b"<result><list><corp_code>00126380</corp_code><corp_name>test</corp_name></list></result>"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url)
+        if "corpCode" in url:
+            return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+        if "list.json" in url:
+            return httpx.Response(
+                200,
+                json={
+                    "status": "000",
+                    "message": "정상",
+                    "list": [
+                        {
+                            "corp_name": "test",
+                            "report_nm": "사업보고서",
+                            "rcept_no": "20250315000001",
+                            "rcept_dt": "20250315",
+                        }
+                    ],
+                },
+            )
+        return httpx.Response(200, content=_zip_bytes("doc.xml", "무관한 내용".encode("utf-8")))
+
+    monkeypatch.setattr(dart, "_shared", _client(handler))
+    result = dart_search(company_name="test", keyword="산업재산권")
+    assert "찾지 못했다" in result
+
+
+def test_dart_search_successful_hit_builds_excerpt(monkeypatch, tmp_path):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = b"<result><list><corp_code>00126380</corp_code><corp_name>test</corp_name></list></result>"
+    doc_text = ("배경 설명 " * 50) + "산업재산권 보유 현황" + (" 부연 설명" * 50)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url)
+        if "corpCode" in url:
+            return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+        if "list.json" in url:
+            return httpx.Response(
+                200,
+                json={
+                    "status": "000",
+                    "message": "정상",
+                    "list": [
+                        {
+                            "corp_name": "test",
+                            "report_nm": "사업보고서",
+                            "rcept_no": "20250315000001",
+                            "rcept_dt": "20250315",
+                        }
+                    ],
+                },
+            )
+        return httpx.Response(200, content=_zip_bytes("doc.xml", doc_text.encode("utf-8")))
+
+    monkeypatch.setattr(dart, "_shared", _client(handler))
+    result = dart_search(company_name="test", keyword="산업재산권")
+    assert "산업재산권" in result
+    assert "20250315" in result
+    assert "사업보고서" in result
+    assert "20250315000001" in result
 
 
 @pytest.mark.live

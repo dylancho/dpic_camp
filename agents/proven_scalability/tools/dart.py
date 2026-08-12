@@ -32,11 +32,27 @@ class DartClient:
         self._key = api_key
         self._http = http or httpx.Client(timeout=30.0)
 
-    def _get_json(self, path: str, **params: str) -> dict:
+    def close(self) -> None:
+        """이 클라이언트가 소유한 연결 풀을 닫는다."""
+        self._http.close()
+
+    def _request(self, path: str, **params: str) -> httpx.Response:
+        """DART에 GET을 보내고 응답을 반환한다. non-2xx는 DartError로 변환한다.
+
+        HTTPStatusError.__str__은 request.url을 담고, url에는 crtfc_key가
+        들어 있으므로 절대 str(exc)나 response.url을 노출하지 않는다.
+        """
         response = self._http.get(
             f"{_BASE}/{path}", params={"crtfc_key": self._key, **params}
         )
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise DartError(f"DART HTTP {exc.response.status_code}") from None
+        return response
+
+    def _get_json(self, path: str, **params: str) -> dict:
+        response = self._request(path, **params)
         payload = response.json()
         status = payload.get("status")
         if status == _STATUS_NO_DATA:
@@ -45,6 +61,17 @@ class DartClient:
             # payload["message"]만 담는다. params에는 키가 들어 있으므로 쓰지 않는다
             raise DartError(f"DART status {status}: {payload.get('message', '')}")
         return payload
+
+    def _read_zip_first_entry(self, content: bytes, what: str) -> bytes:
+        """zip 응답에서 첫 엔트리를 꺼낸다. 빈 zip이나 zip이 아닌 응답을 DartError로 변환한다."""
+        try:
+            with zipfile.ZipFile(io.BytesIO(content)) as archive:
+                names = archive.namelist()
+                if not names:
+                    raise DartError(f"DART {what} 응답이 빈 zip이다")
+                return archive.read(names[0])
+        except zipfile.BadZipFile:
+            raise DartError(f"DART {what} 응답이 zip 형식이 아니다") from None
 
     def find_corp_code(self, company_name: str) -> str | None:
         """회사명으로 8자리 고유번호를 찾는다. 전체 목록은 로컬에 캐시한다."""
@@ -59,14 +86,14 @@ class DartClient:
 
     def _corp_code_table(self) -> dict[str, str]:
         if _CACHE.exists():
-            return json.loads(_CACHE.read_text(encoding="utf-8"))
+            try:
+                return json.loads(_CACHE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                # 캐시가 잘렸거나 읽을 수 없다 — 다시 받는다
+                pass
 
-        response = self._http.get(
-            f"{_BASE}/corpCode.xml", params={"crtfc_key": self._key}
-        )
-        response.raise_for_status()
-        with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
-            xml_bytes = archive.read(archive.namelist()[0])
+        response = self._request("corpCode.xml")
+        xml_bytes = self._read_zip_first_entry(response.content, "corpCode.xml")
 
         table: dict[str, str] = {}
         for item in ET.fromstring(xml_bytes).iter("list"):
@@ -75,9 +102,15 @@ class DartClient:
             if name and code:
                 table[name] = code
 
-        _CACHE.parent.mkdir(parents=True, exist_ok=True)
-        _CACHE.write_text(json.dumps(table, ensure_ascii=False), encoding="utf-8")
+        self._write_cache(table)
         return table
+
+    def _write_cache(self, table: dict[str, str]) -> None:
+        """임시 파일에 쓰고 os.replace로 교체한다 — 중간에 죽어도 캐시가 손상되지 않는다."""
+        _CACHE.parent.mkdir(parents=True, exist_ok=True)
+        tmp = _CACHE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(table, ensure_ascii=False), encoding="utf-8")
+        os.replace(tmp, _CACHE)
 
     def list_disclosures(
         self, corp_code: str, begin: str, end: str, kind: str | None = None
@@ -94,21 +127,23 @@ class DartClient:
 
     def fetch_document(self, rcept_no: str) -> str:
         """공시 원문(zip 안의 XML)을 텍스트로 반환한다."""
-        response = self._http.get(
-            f"{_BASE}/document.xml",
-            params={"crtfc_key": self._key, "rcept_no": rcept_no},
-        )
-        response.raise_for_status()
-        with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
-            raw = archive.read(archive.namelist()[0])
+        response = self._request("document.xml", rcept_no=rcept_no)
+        raw = self._read_zip_first_entry(response.content, "document.xml")
         return raw.decode("utf-8", errors="replace")
 
 
+_shared: DartClient | None = None
+
+
 def _shared_client() -> DartClient:
-    key = os.environ.get("DART_API_KEY")
-    if not key:
-        raise DartError("DART_API_KEY 환경변수가 설정되지 않았다")
-    return DartClient(api_key=key)
+    """모듈 전역 싱글턴. dart_search가 호출될 때마다 새 커넥션 풀을 만들지 않는다."""
+    global _shared
+    if _shared is None:
+        key = os.environ.get("DART_API_KEY")
+        if not key:
+            raise DartError("DART_API_KEY 환경변수가 설정되지 않았다")
+        _shared = DartClient(api_key=key)
+    return _shared
 
 
 @beta_tool
