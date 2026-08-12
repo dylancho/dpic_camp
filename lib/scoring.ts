@@ -72,8 +72,10 @@ export function scorePrinciple(
     const b = findings.gateSignals.moatCount ?? levelOf(criteria, 'ps.moat');
     if (a < 1 || b < 2) {
       score = 0;
-      zeroedReason =
-        `필수 조건 미충족 → 0점 처리 (작동 증명 ${a}/1 이상 필요, 해자 ${b}/2 이상 필요)`;
+      const unmet: string[] = [];
+      if (a < 1) unmet.push(`(A) 작동 증명 ${a}건 — 1건 이상 필요`);
+      if (b < 2) unmet.push(`(B) 해자 ${b}건 — 2건 이상 필요`);
+      zeroedReason = `필수 조건 미충족 → 0점 처리: ${unmet.join(', ')}`;
     }
   }
 
