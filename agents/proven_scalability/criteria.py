@@ -7,12 +7,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from agents.proven_scalability.schema import UNCALIBRATED, Block, Calibration
+from agents.proven_scalability.schema import (
+    CRITERION_IDS,
+    UNCALIBRATED,
+    Block,
+    Calibration,
+    CriterionId,
+)
 
 
 @dataclass(frozen=True)
 class Criterion:
-    id: str
+    id: CriterionId
     block: Block
     label: str
     default_threshold: str
@@ -82,6 +88,13 @@ CRITERIA: tuple[Criterion, ...] = (
         "공급망 확보",
         "핵심 원료·부품의 공급 계약 또는 이중 소싱이 확보되어 있다",
     ),
+)
+
+#: ID 집합의 원본은 schema.CriterionId다 (Evidence의 JSON 스키마 enum이 되어야 하므로).
+#: 임포트 시점에 두 정의가 정확히 일치하는지 확인한다 — 어긋난 채로 굴러가면
+#: Evidence는 통과하는데 scoring이 버리는 ID가 생긴다.
+assert tuple(c.id for c in CRITERIA) == CRITERION_IDS, (
+    "criteria.CRITERIA와 schema.CriterionId가 어긋났다. schema.CriterionId를 고칠 것"
 )
 
 #: 아키타입별로 원칙의 문구를 치환한다. 여기 없는 항목은 default_threshold를 쓴다.

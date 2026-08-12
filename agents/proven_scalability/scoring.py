@@ -115,9 +115,31 @@ def build_diligence_questions(
     ]
 
 
+def unknown_criterion_ids(evidence: list[Evidence]) -> list[str]:
+    """resolve_statuses가 버릴 항목 ID를 미리 뽑는다. 정의 순서가 아니라 사전순."""
+    known = {c.id for c in CRITERIA}
+    return sorted({e.criterion_id for e in evidence if e.criterion_id not in known})
+
+
 def score(
-    evidence: list[Evidence], calibration: Calibration
+    evidence: list[Evidence],
+    calibration: Calibration,
+    research_notes: list[str] | None = None,
 ) -> ProvenScalabilityResult:
+    """점수는 evidence와 calibration만으로 결정된다.
+
+    research_notes는 배점에 전혀 관여하지 않는다 — 조사가 온전했는지에 대한 기록을
+    결과에 실어 보내기만 한다. 커버리지가 낮을 때 그것이 '찾아봤지만 없었다'인지
+    '끝까지 못 봤다'인지를 상위 에이전트가 구분할 수 있어야 하기 때문이다.
+    """
+    notes = list(research_notes or [])
+    dropped = unknown_criterion_ids(evidence)
+    if dropped:
+        notes.append(
+            f"알 수 없는 항목 ID {len(dropped)}건을 버렸다: {', '.join(dropped)}. "
+            "커버리지 하락이 추출 오류 때문일 수 있으니 그대로 신뢰하지 말 것."
+        )
+
     statuses = resolve_statuses(evidence)
     blocks = BlockScores(
         a=score_block("A", statuses),
@@ -133,5 +155,6 @@ def score(
         calibration=calibration,
         evidence=evidence,
         resolved_statuses=statuses,
+        research_notes=notes,
         diligence_questions=build_diligence_questions(statuses, calibration),
     )

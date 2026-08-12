@@ -1,5 +1,5 @@
 from agents.proven_scalability.criteria import CRITERIA, resolve_thresholds
-from agents.proven_scalability.schema import BlockScores
+from agents.proven_scalability.schema import BlockScores, Evidence
 from agents.proven_scalability.scoring import (
     build_diligence_questions,
     decide_verdict,
@@ -69,11 +69,49 @@ def test_unscanned_criterion_defaults_to_unverifiable():
     assert set(statuses.values()) == {"UNVERIFIABLE"}
 
 
-def test_unknown_criterion_id_is_dropped_silently():
+def _rogue_evidence(criterion_id: str) -> Evidence:
+    """스키마 검증을 우회해 만든 잘못된 ID의 Evidence.
+
+    criterion_id가 Literal이 된 뒤로 정상 경로(추출 모델의 출력 포함)에서는 이런
+    값이 만들어질 수 없다. 그래도 스코어러의 방어는 2선으로 남겨 두고, 그 방어가
+    '조용히'가 아니라 '기록을 남기고' 동작하는지 확인한다.
+    """
+    return Evidence.model_construct(
+        criterion_id=criterion_id, status="MET", source_tier=1, quote="인용"
+    )
+
+
+def test_unknown_criterion_id_is_dropped_not_crashed():
     # 리서처가 존재하지 않는 항목 ID를 헛짚어도 스코어러는 죽지 않는다
-    statuses = resolve_statuses([ev("Z9_not_a_real_criterion")])
+    statuses = resolve_statuses([_rogue_evidence("Z9_not_a_real_criterion")])
     assert len(statuses) == 10
     assert set(statuses.values()) == {"UNVERIFIABLE"}
+
+
+def test_dropped_criterion_ids_are_recorded_in_research_notes():
+    """버려진 ID를 기록하지 않으면 커버리지 0.0이 '근거 없는 기업'과 구분되지 않는다."""
+    result = score(
+        [_rogue_evidence("A1"), _rogue_evidence("A1_poc")],
+        resolve_thresholds("materials", None),
+    )
+    assert result.evidence_coverage == 0.0
+    joined = " ".join(result.research_notes)
+    assert "A1_poc" in joined and "A1" in joined
+    assert "2" in joined  # 버려진 건수
+
+
+def test_research_notes_are_empty_when_nothing_went_wrong():
+    result = score([ev("A1_poc_reproducibility")], resolve_thresholds("materials", None))
+    assert result.research_notes == []
+
+
+def test_upstream_research_notes_are_carried_through():
+    result = score(
+        [ev("A1_poc_reproducibility")],
+        resolve_thresholds("materials", None),
+        research_notes=["(A) 블록: max_iterations 소진으로 조사가 중단됐다"],
+    )
+    assert result.research_notes == ["(A) 블록: max_iterations 소진으로 조사가 중단됐다"]
 
 
 # --- 배점 ---
