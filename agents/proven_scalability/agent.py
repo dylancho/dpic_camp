@@ -1,8 +1,9 @@
 """Proven Scalability 에이전트의 진입점.
 
-LLM API를 호출하지 않는다. 증거는 두 경로로만 들어온다 — DART 규칙 추출(Task 2)과
-사용자가 자신의 LLM 세션에서 만든 증거 파일(evidence_io, Task 3이 지시서를 만든다).
-판정 자체는 여기서 하지 않는다 — scoring.score()가 순수 파이썬으로 한다.
+LLM API를 호출하지 않는다. 증거는 두 경로로만 들어온다 — DART 공시 규칙 추출
+(extractors.dart_rules, B2·B3 두 항목만 다룬다)과 사용자가 자신의 LLM 세션에서 만든
+증거 파일(evidence_io, docs/agent-instructions/의 md 지시서를 따른 결과). 판정 자체는
+여기서 하지 않는다 — scoring.score()가 순수 파이썬으로 한다.
 """
 
 from __future__ import annotations
@@ -14,8 +15,10 @@ from dotenv import load_dotenv
 
 from agents.proven_scalability.criteria import resolve_thresholds
 from agents.proven_scalability.evidence_io import load_evidence
+from agents.proven_scalability.extractors import dart_rules
 from agents.proven_scalability.schema import Evidence, ProvenScalabilityResult
 from agents.proven_scalability.scoring import score
+from agents.proven_scalability.tools.dart import DartClient, DartError
 
 #: 저장소 루트의 .env를 명시적으로 가리킨다. load_dotenv()를 인자 없이 부르면
 #: 현재 작업 디렉터리에서 위로 탐색하므로, 리포 루트가 아닌 곳에서 실행하면
@@ -43,14 +46,41 @@ def _ensure_env_loaded() -> None:
         )
 
 
-def _extract_dart_evidence(company: str, dart_client) -> list[Evidence]:
-    """DART 공시에서 결정적 규칙으로 Evidence를 뽑는다.
+def _extract_dart_evidence(company: str, dart_client: DartClient) -> tuple[list[Evidence], list[str]]:
+    """DART 공시에서 결정적 규칙(extractors.dart_rules)으로 Evidence를 뽑는다.
 
-    TODO(Task 2): 감사보고서 주석의 수주잔고·무형자산·산업재산권 등을 규칙
-    기반으로 파싱해 Evidence를 만든다. 이 자리는 아직 비어 있다 — 항상 빈
-    리스트를 돌려준다.
+    dart_client가 실제 DartClient가 아니거나(테스트 대역) 예기치 못한 예외가 나면
+    전체 판정을 죽이지 않고 경고로 남긴 채 빈 결과로 넘어간다 — DART는 증거의 두
+    경로 중 하나일 뿐이고, 증거 파일 경로는 이것 없이도 온전히 동작해야 한다.
+    dart_rules.extract 안에서 DartError는 이미 경고로 변환되므로, 여기서 잡는 것은
+    그보다 더 예외적인 경우(잘못된 클라이언트 타입 등)다.
     """
-    return []
+    try:
+        return dart_rules.extract(dart_client, company)
+    except Exception as exc:  # noqa: BLE001 - 외부 클라이언트 실패가 전체를 죽이면 안 된다
+        return [], [f"DART 규칙 추출 중 예외가 발생해 건너뛴다: {exc}"]
+
+
+def _build_dart_client_from_env() -> tuple[DartClient | None, str | None]:
+    """환경변수에서 DART 클라이언트를 만든다. 실패해도 예외를 던지지 않는다.
+
+    Returns:
+        (클라이언트 또는 None, 경고 메시지 또는 None). 키가 없으면 클라이언트 없이
+        진행하되 그 사실을 research_notes에 남긴다 — 증거 파일만으로도 돌아가야 한다.
+    """
+    try:
+        _ensure_env_loaded()
+    except RuntimeError as exc:
+        return None, f"DART 클라이언트를 만들 수 없다 — {exc} DART 없이 증거 파일만으로 진행한다."
+
+    api_key = os.environ.get("DART_API_KEY")
+    if not api_key:
+        return None, "DART_API_KEY가 없다 — DART 없이 증거 파일만으로 진행한다."
+
+    try:
+        return DartClient(api_key=api_key), None
+    except DartError as exc:
+        return None, f"DART 클라이언트 생성 실패 — {exc} DART 없이 증거 파일만으로 진행한다."
 
 
 def evaluate(
@@ -69,18 +99,30 @@ def evaluate(
         thresholds: PM이 항목별로 내려준 임계치 오버라이드.
         evidence_path: 사용자의 LLM 세션이 만든 증거 JSON 경로. None이면 이 경로의
             증거는 없다.
-        dart_client: DART 클라이언트. None이면 실제 조회 시점(Task 2)에 환경변수로
-            생성한다. 테스트는 대역 객체를 넘겨 환경변수 점검을 건너뛴다.
+        dart_client: DART 클라이언트. None이면 환경변수(DART_API_KEY)에서 생성을
+            시도하고, 키가 없거나 생성에 실패해도 예외를 던지지 않고 경고만 남긴 채
+            DART 없이 진행한다 — 증거 파일 경로가 이것 없이도 온전히 동작해야 한다.
+            테스트는 대역 객체를 넘겨 환경변수 점검을 건너뛴다.
     """
-    if dart_client is None:
-        _ensure_env_loaded()
-
     calibration = resolve_thresholds(archetype, thresholds)
 
     evidence: list[Evidence] = []
     notes: list[str] = []
 
-    evidence.extend(_extract_dart_evidence(company, dart_client))
+    client = dart_client
+    owns_client = False
+    if client is None:
+        client, warning = _build_dart_client_from_env()
+        owns_client = client is not None
+        if warning is not None:
+            notes.append(warning)
+
+    if client is not None:
+        dart_evidence, dart_warnings = _extract_dart_evidence(company, client)
+        evidence.extend(dart_evidence)
+        notes.extend(dart_warnings)
+        if owns_client:
+            client.close()
 
     if evidence_path is not None:
         file_evidence, warnings = load_evidence(evidence_path)
