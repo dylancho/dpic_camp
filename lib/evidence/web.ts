@@ -42,6 +42,16 @@ export async function collectWebEvidence(
   const items: EvidenceItem[] = [];
   const seen = new Set<string>();
 
+  /**
+   * 관련성 필터. 검색어에 회사명을 넣어도 검색엔진이 일반론 글을 물어온다
+   * (예: "유상 PoC의 중요성" 같은 칼럼). 근거 풀에 섞이면 에이전트가 그 기업의
+   * 사실인 것처럼 인용할 수 있으므로, 회사명이 실제로 언급된 문서만 남긴다.
+   */
+  const needle = company.name.replace(/\s|\(주\)|주식회사|㈜/g, '').toLowerCase();
+  const mentionsCompany = (r: TavilyResult) =>
+    `${r.title} ${r.content}`.replace(/\s/g, '').toLowerCase().includes(needle);
+  let dropped = 0;
+
   const settled = await Promise.allSettled(
     queriesFor(company).map(async (q) => {
       const res = await fetch('https://api.tavily.com/search', {
@@ -65,6 +75,10 @@ export async function collectWebEvidence(
     for (const r of s.value) {
       if (seen.has(r.url)) continue;
       seen.add(r.url);
+      if (!mentionsCompany(r)) {
+        dropped++;
+        continue;
+      }
       items.push({
         id: `web-${items.length + 1}`,
         source: 'web',
@@ -77,5 +91,8 @@ export async function collectWebEvidence(
   }
 
   if (items.length === 0) gaps.push('웹 검색 결과가 비어 있습니다.');
+  if (dropped > 0) {
+    gaps.push(`웹 검색 결과 ${dropped}건은 기업명이 언급되지 않아 관련성 필터에서 제외했습니다.`);
+  }
   return items;
 }
