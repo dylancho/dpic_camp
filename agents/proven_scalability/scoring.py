@@ -65,6 +65,7 @@ def resolve_statuses(evidence: list[Evidence]) -> dict[str, Status]:
 
 
 def _met_count(block: Block, statuses: dict[str, Status]) -> int:
+    """statuses는 CRITERIA 10개 전부를 키로 갖는 완전한 dict여야 한다."""
     return sum(1 for c in criteria_for(block) if statuses[c.id] == "MET")
 
 
@@ -93,15 +94,22 @@ def decide_verdict(statuses: dict[str, Status]) -> Verdict:
 
 
 def evidence_coverage(statuses: dict[str, Status]) -> float:
+    """statuses는 CRITERIA 10개 전부를 키로 갖는 완전한 dict여야 한다."""
     resolved = sum(1 for s in statuses.values() if s != "UNVERIFIABLE")
     return resolved / len(statuses)
 
 
-def build_diligence_questions(statuses: dict[str, Status]) -> list[str]:
-    """UNVERIFIABLE 항목을 실사 질문으로 바꾼다. CRITERIA 정의 순서를 따른다."""
+def build_diligence_questions(
+    statuses: dict[str, Status], calibration: Calibration
+) -> list[str]:
+    """UNVERIFIABLE 항목을 실사 질문으로 바꾼다. CRITERIA 정의 순서를 따른다.
+
+    판정 기준 문구는 calibration.thresholds를 우선한다 — 아키타입별로
+    치환된 기준이 있으면 그것을, 없으면 원칙 원문(default_threshold)을 쓴다.
+    """
     return [
         f"[{c.id}] {c.label} — 공개 자료에서 확인할 수 없었다. "
-        f"판정 기준: {c.default_threshold}"
+        f"판정 기준: {calibration.thresholds.get(c.id, c.default_threshold)}"
         for c in CRITERIA
         if statuses[c.id] == "UNVERIFIABLE"
     ]
@@ -124,5 +132,5 @@ def score(
         evidence_coverage=evidence_coverage(statuses),
         calibration=calibration,
         evidence=evidence,
-        diligence_questions=build_diligence_questions(statuses),
+        diligence_questions=build_diligence_questions(statuses, calibration),
     )
