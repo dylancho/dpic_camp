@@ -51,6 +51,10 @@ _UNCALIBRATED_LINE = (
     "강화하지 말고, 이 기준 그대로 조사하라."
 )
 
+_HOLD_THE_LINE = (
+    " 산업 특성에 맞게 임의로 완화하거나 강화하지 말고, 이 기준 그대로 조사하라."
+)
+
 EXTRACTION_SYSTEM = """\
 너는 조사 기록을 구조화된 근거 목록으로 변환한다. 새로 조사하지 않고, 주어진 기록에 \
 있는 내용만 사용한다.
@@ -71,8 +75,10 @@ EXTRACTION_SYSTEM = """\
 - 3급 — 언론 보도, 산업 리포트
 - 4급 — 회사 자체 발표, IR 자료, 홈페이지
 
-등급은 있는 그대로 매긴다. 하위 계층 코드가 3~4급 단독 근거를 자동으로 강등하므로, \
-등급을 올려 적어 도와주려 하지 마라.
+등급은 근거가 실제로 어디서 왔는지만 보고 매긴다. 그 출처가 얼마나 설득력 있는지, \
+항목을 충족시키기에 충분한지는 등급과 무관하다 — 언론 보도로 확인된 사실도 3급이고, \
+회사 홈페이지에 실린 정확한 수치도 4급이다. 조사 기록에 출처가 무엇인지 분명하지 않으면 \
+짐작해서 올려 적지 말고, 기록에 적힌 그대로의 출처를 기준으로 매긴다.
 
 ## 규칙
 
@@ -96,6 +102,24 @@ _EXTRACTION_TEMPLATE = """\
 """
 
 
+def _calibration_note(calibration: Calibration) -> str:
+    """프롬프트에 붙일 보정 경고. CLI가 사람에게 보여주는 것과 갈라지지 않게 한다.
+
+    세 갈래다.
+
+    1. 아키타입이 아예 없다 → 중립 기준으로 실행 중임을 알린다
+    2. 아키타입은 왔는데 우리가 모르는 값이다(오타·미지원) → criteria가 만든 note를
+       그대로 싣는다. 이름만 반영되고 임계치는 중립인데 경고가 없으면, 리서처는
+       산업별 기준이 적용된 줄 안다 — 1번의 거울상 거짓말이다
+    3. 알려진 아키타입 → 붙일 말이 없다
+    """
+    if not calibration.archetype_injected:
+        return _UNCALIBRATED_LINE
+    if calibration.note:
+        return f"\n\n**주의**: {calibration.note}{_HOLD_THE_LINE}"
+    return ""
+
+
 def research_prompt(block: Block, company: str, calibration: Calibration) -> str:
     lines = []
     for criterion in criteria_for(block):
@@ -105,14 +129,14 @@ def research_prompt(block: Block, company: str, calibration: Calibration) -> str
         threshold = calibration.thresholds.get(criterion.id, criterion.default_threshold)
         lines.append(f"### {criterion.id} — {criterion.label}\n판정 기준: {threshold}")
 
-    # 경고는 '아키타입이 없다'에만 붙인다. 항목별 오버라이드 유무로 판단하면
-    # 아키타입 임계치를 보여주면서 "중립 기준이다"라고 거짓말하게 된다.
+    # 경고는 항목별 오버라이드 유무로 갈리지 않는다. 그렇게 하면 아키타입 임계치를
+    # 보여주면서 "중립 기준이다"라고 거짓말하게 된다. _calibration_note 참조.
     return _RESEARCH_TEMPLATE.format(
         block=block,
         block_label=_BLOCK_LABEL[block],
         company=company,
         archetype=calibration.archetype,
-        calibration_note="" if calibration.archetype_injected else _UNCALIBRATED_LINE,
+        calibration_note=_calibration_note(calibration),
         criteria_block="\n\n".join(lines),
     )
 

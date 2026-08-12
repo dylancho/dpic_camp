@@ -104,9 +104,15 @@ CRITERIA: tuple[Criterion, ...] = (
 #: ID 집합의 원본은 schema.CriterionId다 (Evidence의 JSON 스키마 enum이 되어야 하므로).
 #: 임포트 시점에 두 정의가 정확히 일치하는지 확인한다 — 어긋난 채로 굴러가면
 #: Evidence는 통과하는데 scoring이 버리는 ID가 생긴다.
-assert tuple(c.id for c in CRITERIA) == CRITERION_IDS, (
-    "criteria.CRITERIA와 schema.CriterionId가 어긋났다. schema.CriterionId를 고칠 것"
-)
+#:
+#: assert를 쓰지 않는다. python -O에서 assert는 통째로 제거되고, 그러면 이 가드가
+#: 막으려던 바로 그 무성(無聲) 드리프트가 최적화 실행에서만 되살아난다.
+if tuple(c.id for c in CRITERIA) != CRITERION_IDS:
+    raise RuntimeError(
+        "criteria.CRITERIA와 schema.CriterionId가 어긋났다. "
+        "ID 집합의 원본은 schema.CriterionId이므로 그쪽을 먼저 맞출 것. "
+        f"CRITERIA={tuple(c.id for c in CRITERIA)} vs CriterionId={CRITERION_IDS}"
+    )
 
 #: 아키타입별로 원칙의 문구를 치환한다. 여기 없는 항목은 default_threshold를 쓴다.
 ARCHETYPE_OVERRIDES: dict[str, dict[str, str]] = {

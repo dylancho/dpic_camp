@@ -268,6 +268,38 @@ def test_transcript_excludes_the_research_prompt_itself():
     assert CAL.thresholds["A1_poc_reproducibility"] not in transcript
 
 
+def test_unquotable_blocks_never_become_python_reprs_in_the_transcript():
+    """전문은 추출 모델에게 '원문 기록'으로 제시된다. repr을 흘리면 인용할 수 없는 것을
+    인용 가능한 것처럼 보이게 만든다."""
+    assistant = SimpleNamespace(
+        content=[
+            SimpleNamespace(
+                type="tool_use", id="tu_1", name="dart_search", input={"k": "v"}
+            )
+        ],
+        stop_reason="tool_use",
+    )
+    tool_result = {
+        "role": "user",
+        "content": [
+            {
+                "type": "tool_result",
+                "tool_use_id": "tu_1",
+                "content": [
+                    {"type": "text", "text": "진짜 원문"},
+                    {"type": "image", "source": {"data": "AAAA"}},
+                ],
+            }
+        ],
+    }
+    client = FakeClient(runner=FakeRunner([assistant], [tool_result]))
+    transcript = research_block(client, "A", "테스트기업", CAL)
+
+    assert "진짜 원문" in transcript
+    assert "AAAA" not in transcript
+    assert "{" not in transcript.split("진짜 원문")[1], "파이썬 repr이 전문에 샜다"
+
+
 # --- 잘린 조사가 보이는가 (Important 6) ---
 
 

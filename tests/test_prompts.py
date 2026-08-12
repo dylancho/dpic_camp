@@ -85,6 +85,31 @@ def test_research_prompt_shows_archetype_thresholds_without_uncalibrated_warning
     assert "materials" in prompt
 
 
+def test_research_prompt_warns_when_archetype_is_unknown():
+    """오타나 미지원 아키타입은 이름만 반영되고 임계치는 중립이다 — 그 사실을 말해야 한다.
+
+    C1 수정이 materials 경로의 거짓말을 없애면서 이 경로에 거울상 거짓말을 만들 수 있다:
+    "적용 아키타입: wetware_biotech"라고 적고 경고를 떼면, 리서처는 산업별 기준이
+    적용된 줄 안다. 실제로는 원칙 원문 그대로다. criteria가 만든 note가 정확히 그
+    사실을 말하고 있으므로, 프롬프트와 CLI가 갈라지지 않게 그 note를 그대로 싣는다.
+    """
+    cal = resolve_thresholds("wetware_biotech", None)
+    prompt = research_prompt("A", "테스트기업", cal)
+
+    assert cal.note is not None
+    assert cal.note in prompt, "criteria가 만든 note가 프롬프트에 도달해야 한다"
+    assert "wetware_biotech" in prompt
+    # 임계치는 실제로 중립이다
+    for criterion in criteria_for("A"):
+        assert criterion.default_threshold in prompt
+
+
+def test_research_prompt_stays_quiet_for_a_known_archetype():
+    """알려진 아키타입은 note가 없으므로 경고 문구가 하나도 붙지 않는다."""
+    prompt = research_prompt("A", "테스트기업", resolve_thresholds("materials", None))
+    assert "주의" not in prompt
+
+
 def test_research_prompt_survives_calibration_with_empty_thresholds():
     """PM 주입 포맷이 미확정이라 thresholds가 비어 올 수 있다 (schema 기본값이 {}).
 
@@ -106,6 +131,18 @@ def test_research_prompt_forbids_judging():
 def test_extraction_system_defines_tier_scale():
     for tier in ("1급", "2급", "3급", "4급"):
         assert tier in EXTRACTION_SYSTEM
+
+
+def test_extraction_system_does_not_disclose_the_demotion_mechanism():
+    """I4에서 JSON 스키마에서 뺀 지렛대가 프롬프트 산문에 남아 있으면 똑같은 문제다.
+
+    "3~4급 단독 근거는 자동 강등된다"를 알려주는 순간, 모델은 등급을 올려 적으면
+    강등을 피할 수 있다는 것도 함께 알게 된다. 부탁으로 막을 일이 아니라 말하지 않을 일이다.
+    """
+    for lever in ("강등", "하위 계층", "자동으로", "scoring"):
+        assert lever not in EXTRACTION_SYSTEM, f"{lever!r}가 강등 메커니즘을 노출한다"
+    # 등급 자체를 정확히 매기라는 지시는 남아 있어야 한다
+    assert "출처" in EXTRACTION_SYSTEM
 
 
 def test_extraction_prompt_embeds_transcript():

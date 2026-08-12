@@ -55,17 +55,24 @@ def _has_pending_tool_use(content) -> bool:
 
 
 def _flatten_text(content) -> str:
-    """tool_result의 content는 문자열이거나 블록 리스트다."""
+    """tool_result의 content는 문자열이거나 블록 리스트다.
+
+    알아보지 못한 블록은 **내용을 싣지 않는다**. str(block)으로 파이썬 repr을 흘려
+    넣으면, "기록에 실제로 있는 원문만 인용하라"는 지시를 받은 추출 모델에게 원문처럼
+    생긴 가짜 텍스트를 주는 꼴이다. 인용할 수 없는 것은 아예 없는 편이 낫다.
+    """
     if isinstance(content, str):
         return content
     if not isinstance(content, list):
-        return str(content)
+        return ""
     parts = []
     for block in content:
         if _field(block, "type") == "text":
             parts.append(_field(block, "text", ""))
         else:
-            parts.append(str(_field(block, "text", "") or block))
+            # 종류만 밝히고 내용은 버린다 — 뭔가 있었다는 사실만 남긴다.
+            kind = _field(block, "type") or "unknown"
+            parts.append(f"(인용 불가 블록 생략: {kind})")
     return "\n".join(p for p in parts if p)
 
 
