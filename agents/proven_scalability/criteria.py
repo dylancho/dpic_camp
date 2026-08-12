@@ -1,6 +1,17 @@
 """하우스 투자 원칙 (d)의 판정 항목과 아키타입별 임계치.
 
-하우스 기준이 바뀌면 이 파일만 고친다. scoring.py는 건드릴 필요가 없다.
+**항목**(무엇을 보는가)과 **임계치 문구**(얼마면 충족인가)는 이 파일이 원본이다.
+아키타입 치환도 여기서 끝난다.
+
+하지만 '하우스 기준'의 나머지 절반은 여기 없다. 바꿀 때 함께 봐야 하는 자리:
+
+- 충족 개수 → 점수 표, 게이트 최소 개수 → `scoring.py` (_SCORE_TABLE, _GATE_MINIMUM)
+- 블록별 상한(12·8·5) → `schema.py` BlockScores의 Field 범위
+- CLI 출력의 `/12 · /8 · /5` 리터럴 → `__main__.py`
+
+한 군데로 합치지 않은 이유는 각자 다른 계약을 지키기 때문이다 — schema는 직렬화
+경계의 검증, scoring은 판정 로직, CLI는 표시. 대신 이 목록을 여기 남겨 둔다.
+항목 ID 집합의 원본은 `schema.CriterionId`다 (Evidence의 JSON 스키마 enum이 되어야 하므로).
 """
 
 from __future__ import annotations

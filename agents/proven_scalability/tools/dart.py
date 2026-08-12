@@ -73,16 +73,38 @@ class DartClient:
         except zipfile.BadZipFile:
             raise DartError(f"DART {what} 응답이 zip 형식이 아니다") from None
 
-    def find_corp_code(self, company_name: str) -> str | None:
-        """회사명으로 8자리 고유번호를 찾는다. 전체 목록은 로컬에 캐시한다."""
+    def find_corp_candidates(self, company_name: str) -> list[tuple[str, str]]:
+        """회사명에 해당할 수 있는 (법인명, 고유번호) 후보를 우선순위대로 돌려준다.
+
+        정확 일치 > 접두 일치 > 부분 일치, 각 구간에서는 짧은 이름이 앞이다.
+        XML 문서 순서 첫 히트를 쓰면 '심텍' 조회가 '심텍홀딩스'로 풀릴 수 있고,
+        그렇게 나온 근거는 tier 1(공시)로 기록되므로 되돌릴 수 없다.
+        정확 일치가 있으면 그것만 돌려준다 — 다른 후보를 볼 이유가 없다.
+        """
         table = self._corp_code_table()
         exact = table.get(company_name)
         if exact:
-            return exact
-        for name, code in table.items():
-            if company_name in name:
-                return code
-        return None
+            return [(company_name, exact)]
+
+        def by_length(pairs: list[tuple[str, str]]) -> list[tuple[str, str]]:
+            return sorted(pairs, key=lambda pair: (len(pair[0]), pair[0]))
+
+        prefix = [(n, c) for n, c in table.items() if n.startswith(company_name)]
+        inner = [
+            (n, c)
+            for n, c in table.items()
+            if company_name in n and not n.startswith(company_name)
+        ]
+        return by_length(prefix) + by_length(inner)
+
+    def find_corp_code(self, company_name: str) -> str | None:
+        """회사명으로 8자리 고유번호를 찾는다. 전체 목록은 로컬에 캐시한다.
+
+        후보가 여럿일 때 어느 것이 쓰였는지 알 수 없으므로, 리서처 경로(dart_search)는
+        이 함수가 아니라 find_corp_candidates를 쓴다.
+        """
+        candidates = self.find_corp_candidates(company_name)
+        return candidates[0][1] if candidates else None
 
     def _corp_code_table(self) -> dict[str, str]:
         if _CACHE.exists():
@@ -158,13 +180,32 @@ def dart_search(company_name: str, keyword: str) -> str:
         keyword: 찾고자 하는 주제 (예: "산업재산권", "수주잔고", "기술성 평가").
     """
     client = _shared_client()
-    corp_code = client.find_corp_code(company_name)
-    if corp_code is None:
+    candidates = client.find_corp_candidates(company_name)
+    if not candidates:
         return f"DART에서 '{company_name}'을(를) 찾지 못했다. 비상장이라 공시 의무가 없을 수 있다."
+
+    corp_name, corp_code = candidates[0]
+    if corp_name != company_name and len(candidates) > 1:
+        # 어느 법인인지 우리가 몰래 고르지 않는다. 잘못된 법인의 공시는 tier 1로
+        # 기록되고, 조회어만 되돌려주면 바꿔치기를 아무도 볼 수 없다.
+        listing = "\n".join(
+            f"- {name} (고유번호 {code})" for name, code in candidates[:10]
+        )
+        return (
+            f"'{company_name}'과 정확히 일치하는 법인이 DART에 없고 후보가 "
+            f"{len(candidates)}건이다. 어느 법인인지 확정한 뒤 정확한 법인명으로 다시 "
+            f"조회하라. 지주회사·계열사를 대상 기업으로 오인하면 판정이 무의미해진다.\n"
+            f"{listing}"
+        )
+
+    #: 조회어가 아니라 '실제로 매칭된 법인명'을 모든 반환 문자열에 담는다.
+    matched = f"'{corp_name}'(고유번호 {corp_code})"
+    if corp_name != company_name:
+        matched += f" — 조회어 '{company_name}'의 부분 일치"
 
     rows = client.list_disclosures(corp_code, "20220101", "20261231")
     if not rows:
-        return f"'{company_name}'(고유번호 {corp_code})의 공시가 없다."
+        return f"{matched}의 공시가 없다."
 
     hits: list[str] = []
     for row in rows[:20]:
@@ -180,5 +221,5 @@ def dart_search(company_name: str, keyword: str) -> str:
             break
 
     if not hits:
-        return f"'{company_name}'의 최근 공시 {len(rows)}건에서 '{keyword}'를 찾지 못했다."
-    return "\n\n---\n\n".join(hits)
+        return f"{matched}의 최근 공시 {len(rows)}건에서 '{keyword}'를 찾지 못했다."
+    return f"{matched} 공시에서 '{keyword}' 검색 결과:\n\n" + "\n\n---\n\n".join(hits)

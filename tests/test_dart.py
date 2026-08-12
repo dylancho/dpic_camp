@@ -231,6 +231,109 @@ def test_dart_search_successful_hit_builds_excerpt(monkeypatch, tmp_path):
     assert "20250315000001" in result
 
 
+# --- 법인 식별 (Important 5) ---
+#
+# 부분 문자열 첫 히트가 XML 문서 순서대로 이기면 '심텍' 조회가 '심텍홀딩스'로
+# 풀릴 수 있다. 그 결과 나온 근거는 tier 1(공시)로 기록되는데, 조회어를 그대로
+# 되돌려주기 때문에 모델도 심사역도 바꿔치기를 볼 수 없다.
+
+_MULTI_XML = (
+    "<result>"
+    "<list><corp_code>00000001</corp_code><corp_name>심텍홀딩스</corp_name></list>"
+    "<list><corp_code>00000002</corp_code><corp_name>심텍</corp_name></list>"
+    "<list><corp_code>00000003</corp_code><corp_name>심텍글로벌</corp_name></list>"
+    "</result>"
+).encode("utf-8")
+
+
+def _corp_table_handler(xml: bytes, list_json: dict | None = None):
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url)
+        if "corpCode" in url:
+            return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+        if "list.json" in url:
+            return httpx.Response(
+                200,
+                json=list_json
+                or {"status": "013", "message": "조회된 데이터가 없습니다."},
+            )
+        return httpx.Response(
+            200, content=_zip_bytes("doc.xml", "내용".encode("utf-8"))
+        )
+
+    return handler
+
+
+def test_exact_match_wins_over_longer_substring_match(tmp_path, monkeypatch):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    client = _client(_corp_table_handler(_MULTI_XML))
+    assert client.find_corp_code("심텍") == "00000002"
+
+
+def test_ambiguous_name_returns_candidates_instead_of_guessing(tmp_path, monkeypatch):
+    """정확 일치가 없고 후보가 여럿이면 하나를 몰래 고르지 않는다."""
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = (
+        "<result>"
+        "<list><corp_code>00000001</corp_code><corp_name>심텍홀딩스</corp_name></list>"
+        "<list><corp_code>00000003</corp_code><corp_name>심텍글로벌</corp_name></list>"
+        "</result>"
+    ).encode("utf-8")
+    monkeypatch.setattr(dart, "_shared", _client(_corp_table_handler(xml)))
+
+    result = dart_search(company_name="심텍", keyword="산업재산권")
+    assert "심텍홀딩스" in result
+    assert "심텍글로벌" in result
+    # 조회를 진행하지 않고 확정을 요구해야 한다
+    assert "공시가 없다" not in result
+
+
+def test_single_substring_match_echoes_the_matched_legal_entity(tmp_path, monkeypatch):
+    """후보가 하나뿐이어도 바꿔치기 사실 자체는 보여야 한다."""
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = (
+        "<result>"
+        "<list><corp_code>00000001</corp_code><corp_name>심텍홀딩스</corp_name></list>"
+        "</result>"
+    ).encode("utf-8")
+    monkeypatch.setattr(dart, "_shared", _client(_corp_table_handler(xml)))
+
+    result = dart_search(company_name="심텍", keyword="산업재산권")
+    assert "심텍홀딩스" in result, "조회어가 아니라 실제로 매칭된 법인명을 돌려줘야 한다"
+
+
+def test_successful_hit_echoes_matched_corp_name(tmp_path, monkeypatch):
+    monkeypatch.setattr(dart, "_CACHE", tmp_path / "corp_codes.json")
+    xml = b"<result><list><corp_code>00126380</corp_code><corp_name>test</corp_name></list></result>"
+    rows = {
+        "status": "000",
+        "message": "정상",
+        "list": [
+            {
+                "corp_name": "test",
+                "report_nm": "사업보고서",
+                "rcept_no": "20250315000001",
+                "rcept_dt": "20250315",
+            }
+        ],
+    }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url)
+        if "corpCode" in url:
+            return httpx.Response(200, content=_zip_bytes("CORPCODE.xml", xml))
+        if "list.json" in url:
+            return httpx.Response(200, json=rows)
+        return httpx.Response(
+            200, content=_zip_bytes("doc.xml", "산업재산권 12건".encode("utf-8"))
+        )
+
+    monkeypatch.setattr(dart, "_shared", _client(handler))
+    result = dart_search(company_name="test", keyword="산업재산권")
+    assert "고유번호 00126380" in result
+    assert "산업재산권 12건" in result
+
+
 @pytest.mark.live
 def test_live_dart_connection():
     """실제 DART 호출. `pytest -m live`로만 실행된다."""
