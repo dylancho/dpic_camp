@@ -1,5 +1,4 @@
 from agents.proven_scalability.tools import kipris
-from agents.proven_scalability.tools.web import WEB_SEARCH_TOOL
 
 
 def test_patent_search_reports_unavailability_explicitly():
@@ -47,8 +46,3 @@ def test_patent_search_steers_to_unverifiable():
 
     result = kipris.patent_search(applicant="테스트기업")
     assert "확인 불가" in result or "UNVERIFIABLE" in result
-
-
-def test_web_search_tool_uses_current_type():
-    assert WEB_SEARCH_TOOL["type"] == "web_search_20260209"
-    assert WEB_SEARCH_TOOL["name"] == "web_search"

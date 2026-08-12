@@ -13,7 +13,6 @@ import zipfile
 from pathlib import Path
 
 import httpx
-from anthropic import beta_tool
 
 _BASE = "https://opendart.fss.or.kr/api"
 _CACHE = Path.home() / ".cache" / "dpic" / "corp_codes.json"
@@ -168,7 +167,6 @@ def _shared_client() -> DartClient:
     return _shared
 
 
-@beta_tool
 def dart_search(company_name: str, keyword: str) -> str:
     """DART 공시에서 기업의 특정 주제 관련 내용을 찾는다.
 

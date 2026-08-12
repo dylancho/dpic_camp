@@ -7,8 +7,6 @@ API 키를 확보하지 못했다. 키가 생기면 `patent_search` 본문을 �
 
 from __future__ import annotations
 
-from anthropic import beta_tool
-
 _UNAVAILABLE = (
     "KIPRIS API 키가 확보되지 않아 특허 등록 건수와 청구항 구조를 조회할 수 없다. "
     "이 항목은 '확인 불가(UNVERIFIABLE)'로 기록하고 실사 질문으로 넘길 것. "
@@ -21,7 +19,6 @@ class KiprisUnavailable(Exception):
     """KIPRIS 키가 없거나 조회에 실패했을 때."""
 
 
-@beta_tool
 def patent_search(applicant: str) -> str:
     """출원인 이름으로 등록 특허를 조회한다.
 

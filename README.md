@@ -13,7 +13,7 @@
 
 ```bash
 pip install -e ".[dev]"
-cp .env.example .env   # DART_API_KEY, ANTHROPIC_API_KEY 를 채운다
+cp .env.example .env   # DART_API_KEY 를 채운다
 ```
 
 ## 실행
