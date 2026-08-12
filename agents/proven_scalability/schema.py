@@ -24,7 +24,15 @@ class Evidence(BaseModel):
     """한 항목에 대한 하나의 근거. 리서처가 반환하는 유일한 타입."""
 
     criterion_id: str
-    status: Status
+    status: Status = Field(
+        description=(
+            "리서처가 수집 시점에 매긴 상태 (필터 이전, 감사 추적용). "
+            "등급 필터·다중 근거 병합을 거치지 않았으므로 최종 판정과 다를 수 있다 — "
+            "예: tier 3 근거 하나만으로 MET을 매겼어도 scoring.score()가 신뢰 등급 미달로 "
+            "UNVERIFIABLE로 강등할 수 있다. 항목별 최종 상태는 "
+            "ProvenScalabilityResult.resolved_statuses를 봐야 한다."
+        )
+    )
     source_tier: SourceTier
     source_url: str | None = None
     quote: str = Field(description="판단 근거가 된 원문 인용")
@@ -64,5 +72,19 @@ class ProvenScalabilityResult(BaseModel):
         ge=0.0, le=1.0, description="조사 항목 중 UNVERIFIABLE이 아닌 비율"
     )
     calibration: Calibration
-    evidence: list[Evidence]
+    evidence: list[Evidence] = Field(
+        description=(
+            "리서처가 수집한 근거 원문 그대로 (필터 이전, 감사 추적용). 개별 Evidence.status는 "
+            "등급 필터·다중 근거 병합 이전 값이라 최종 판정과 어긋날 수 있다 — 점수 산출에 쓰인 "
+            "항목별 최종 상태는 resolved_statuses를 볼 것."
+        )
+    )
+    resolved_statuses: dict[str, Status] = Field(
+        default_factory=dict,
+        description=(
+            "항목(criterion_id)별 최종 상태 — 등급 필터와 다중 근거 병합을 거친, 점수 산출에 "
+            "실제로 쓰인 값. 이 필드가 권위 있는 소스다. evidence[i].status와 다를 수 있다. "
+            "scoring.score()가 채운다 (CRITERIA 10개 전부를 키로 갖는다)."
+        ),
+    )
     diligence_questions: list[str]

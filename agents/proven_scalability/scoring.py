@@ -132,5 +132,6 @@ def score(
         evidence_coverage=evidence_coverage(statuses),
         calibration=calibration,
         evidence=evidence,
+        resolved_statuses=statuses,
         diligence_questions=build_diligence_questions(statuses, calibration),
     )

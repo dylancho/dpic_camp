@@ -276,3 +276,21 @@ def test_score_populates_gate_failed_when_gates_fail():
     assert result.gate_failed == ["A", "B"]
     assert result.block_scores == BlockScores(a=0, b=0, c=0)
     assert result.score == 0
+
+
+def test_score_resolved_statuses_has_all_criteria():
+    result = score([ev("A1_poc_reproducibility")], CAL)
+    assert set(result.resolved_statuses) == {c.id for c in CRITERIA}
+
+
+def test_score_resolved_statuses_diverges_from_raw_evidence_status_on_tier_demotion():
+    """evidence[i].status는 필터 이전 값이라 최종 판정과 어긋날 수 있다 — 이것이 정상이다.
+
+    tier 3 근거 하나만으로는 MET을 신뢰하지 않으므로 scoring.score()가
+    UNVERIFIABLE로 강등한다. evidence 리스트 자체는 원문 그대로(MET) 남아야 한다 —
+    누군가 나중에 evidence를 직접 고쳐서 "일치"시키면 감사 추적이 무너진다.
+    """
+    result = score([ev("A1_poc_reproducibility", "MET", tier=3)], CAL)
+
+    assert result.evidence[0].status == "MET"
+    assert result.resolved_statuses["A1_poc_reproducibility"] == "UNVERIFIABLE"

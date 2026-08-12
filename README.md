@@ -26,6 +26,11 @@ python -m agents.proven_scalability --company "기업명" --json
 `--archetype`은 PM 에이전트가 내려주는 값이다. 생략하면 아키타입 중립 기준으로 실행되고
 결과에 `uncalibrated`로 표시된다 — 이 에이전트는 아키타입을 자체 분류하지 않는다.
 
+`--json`은 `evidence`(리서처가 수집한 원문 그대로, 필터 이전 — 감사 추적용)와
+`resolved_statuses`(등급 필터·병합을 거친 항목별 최종 상태 — 점수 산출에 실제로 쓰인 값)를
+둘 다 담는다. 점수와 일치해야 하는 상태를 읽으려면 `resolved_statuses`를 볼 것 —
+`evidence[i].status`는 최종 판정과 다를 수 있다.
+
 아키타입: `deep_tech` · `materials` · `industrial_hardware` · `energy_infra` · `recycling` · `software_ai_robotics`
 
 ## 테스트

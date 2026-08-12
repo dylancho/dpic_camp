@@ -51,3 +51,18 @@ def test_result_round_trips_through_json():
     )
     restored = ProvenScalabilityResult.model_validate_json(result.model_dump_json())
     assert restored == result
+
+
+def test_resolved_statuses_defaults_to_empty_when_not_supplied():
+    """직접 생성 시(스코어러를 거치지 않을 때) resolved_statuses는 순수 추가 필드다."""
+    result = ProvenScalabilityResult(
+        verdict="PASS",
+        score=25,
+        block_scores=BlockScores(a=12, b=8, c=5),
+        gate_failed=[],
+        evidence_coverage=1.0,
+        calibration=Calibration(archetype="materials", injected=False),
+        evidence=[],
+        diligence_questions=[],
+    )
+    assert result.resolved_statuses == {}
