@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 Status = Literal["MET", "NOT_MET", "UNVERIFIABLE"]
 Verdict = Literal["PASS", "FAIL", "INSUFFICIENT_EVIDENCE"]
@@ -18,6 +18,10 @@ Block = Literal["A", "B", "C"]
 #: 3 = 언론 보도·산업 리포트
 #: 4 = 회사 자체 발표·IR 자료·홈페이지
 SourceTier = Annotated[int, Field(ge=1, le=4)]
+
+#: 아키타입이 주입되지 않았을 때 쓰는 마커. 설계 §2.4 — 자체 추정하지 않고
+#: 중립 기준으로 실행하되 그 사실을 결과에 명시한다.
+UNCALIBRATED = "uncalibrated"
 
 
 class Evidence(BaseModel):
@@ -43,14 +47,37 @@ class Evidence(BaseModel):
 
 
 class Calibration(BaseModel):
-    """PM 에이전트가 내려준 아키타입과 임계치. 본 에이전트는 분류하지 않는다."""
+    """PM 에이전트가 내려준 아키타입과 임계치. 본 에이전트는 분류하지 않는다.
+
+    '아키타입이 주입됐는가'와 '항목별 임계치 오버라이드가 주입됐는가'는 서로 다른
+    질문이다. 둘을 한 불리언에 담으면 `--archetype materials`(오버라이드 없음)
+    실행이 전부 '미보정'으로 잘못 표시되고, 프롬프트가 materials 임계치를 보여주면서
+    "이건 중립 기준이다"라고 리서처에게 거짓을 말하게 된다. 그래서 나눠 둔다.
+
+    설계 §2.4의 `uncalibrated` 마커는 **아키타입이 없다**는 뜻이지
+    항목별 오버라이드가 없다는 뜻이 아니다.
+    """
 
     archetype: str
     thresholds: dict[str, str] = Field(default_factory=dict)
-    injected: bool = Field(
-        description="False면 PM 주입 없이 아키타입 중립 기준으로 실행됐다는 뜻"
+    thresholds_injected: bool = Field(
+        default=False,
+        description=(
+            "PM이 항목별 임계치 오버라이드를 직접 내려줬는가. 아키타입 오버라이드 테이블 "
+            "적용은 여기 포함되지 않는다"
+        ),
     )
     note: str | None = None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def archetype_injected(self) -> bool:
+        """PM이 아키타입을 내려줬는가. False면 아키타입 중립 기준으로 실행됐다는 뜻.
+
+        archetype에서 파생한다 — 별도 필드로 두면 둘이 어긋날 수 있고, 어긋나는 쪽이
+        정확히 이번에 고친 버그였다.
+        """
+        return self.archetype != UNCALIBRATED
 
 
 class BlockScores(BaseModel):

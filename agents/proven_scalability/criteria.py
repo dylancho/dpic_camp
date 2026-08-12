@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from agents.proven_scalability.schema import Block, Calibration
+from agents.proven_scalability.schema import UNCALIBRATED, Block, Calibration
 
 
 @dataclass(frozen=True)
@@ -139,9 +139,9 @@ def resolve_thresholds(
 
     if archetype is None:
         return Calibration(
-            archetype="uncalibrated",
+            archetype=UNCALIBRATED,
             thresholds=thresholds,
-            injected=False,
+            thresholds_injected=False,
             note=_UNCALIBRATED_NOTE,
         )
 
@@ -155,6 +155,6 @@ def resolve_thresholds(
     return Calibration(
         archetype=archetype,
         thresholds=thresholds,
-        injected=bool(injected),
+        thresholds_injected=bool(injected),
         note=note,
     )

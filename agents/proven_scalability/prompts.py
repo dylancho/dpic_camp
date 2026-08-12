@@ -99,15 +99,20 @@ _EXTRACTION_TEMPLATE = """\
 def research_prompt(block: Block, company: str, calibration: Calibration) -> str:
     lines = []
     for criterion in criteria_for(block):
-        threshold = calibration.thresholds[criterion.id]
+        # scoring.build_diligence_questions와 같은 폴백을 쓴다. Calibration은 PM
+        # 에이전트와의 주입 계약이고 그 포맷이 아직 미확정이라(설계 §7.4),
+        # thresholds가 비어 오는 Calibration도 정상 입력으로 받아야 한다.
+        threshold = calibration.thresholds.get(criterion.id, criterion.default_threshold)
         lines.append(f"### {criterion.id} — {criterion.label}\n판정 기준: {threshold}")
 
+    # 경고는 '아키타입이 없다'에만 붙인다. 항목별 오버라이드 유무로 판단하면
+    # 아키타입 임계치를 보여주면서 "중립 기준이다"라고 거짓말하게 된다.
     return _RESEARCH_TEMPLATE.format(
         block=block,
         block_label=_BLOCK_LABEL[block],
         company=company,
         archetype=calibration.archetype,
-        calibration_note="" if calibration.injected else _UNCALIBRATED_LINE,
+        calibration_note="" if calibration.archetype_injected else _UNCALIBRATED_LINE,
         criteria_block="\n\n".join(lines),
     )
 

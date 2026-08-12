@@ -53,7 +53,7 @@ def test_evaluate_without_archetype_marks_uncalibrated():
     ):
         result = evaluate("테스트기업", client=object())
 
-    assert result.calibration.injected is False
+    assert result.calibration.archetype_injected is False
     assert result.calibration.archetype == "uncalibrated"
     assert result.verdict == "INSUFFICIENT_EVIDENCE"
     assert result.gate_failed == ["A", "B"]

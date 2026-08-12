@@ -39,7 +39,8 @@ def main() -> int:
     print(f"  게이트  : {'통과' if not result.gate_failed else f'미충족 {result.gate_failed}'}")
     print(f"  커버리지: {result.evidence_coverage:.0%}")
     print(f"  보정    : {result.calibration.archetype}"
-          f"{'' if result.calibration.injected else ' (미보정)'}")
+          f"{'' if result.calibration.archetype_injected else ' (미보정)'}"
+          f"{' · 임계치 주입됨' if result.calibration.thresholds_injected else ''}")
     if result.calibration.note:
         print(f"  주의    : {result.calibration.note}")
 

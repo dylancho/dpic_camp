@@ -4,6 +4,7 @@ from agents.proven_scalability.prompts import (
     extraction_prompt,
     research_prompt,
 )
+from agents.proven_scalability.schema import Calibration
 
 
 def test_research_prompt_lists_only_its_own_block():
@@ -52,17 +53,48 @@ def test_research_prompt_hides_warning_when_injected():
         "A3_field_operation_hours": "1,500시간 이상",
     }
     cal_injected = resolve_thresholds("materials", injected_thresholds)
-    assert cal_injected.injected is True  # 주입 상태 확인
+    assert cal_injected.thresholds_injected is True  # 주입 상태 확인
 
     prompt_injected = research_prompt("A", "테스트기업", cal_injected)
     assert "주입되지 않았다" not in prompt_injected  # 경고가 없어야 함
 
     # 비교: uncalibrated 상태는 경고가 있어야 함
     cal_uncalibrated = resolve_thresholds(None, None)
-    assert cal_uncalibrated.injected is False  # uncalibrated 상태 확인
+    assert cal_uncalibrated.archetype_injected is False  # uncalibrated 상태 확인
 
     prompt_uncalibrated = research_prompt("A", "테스트기업", cal_uncalibrated)
     assert "주입되지" in prompt_uncalibrated  # 경고가 있어야 함
+
+
+def test_research_prompt_shows_archetype_thresholds_without_uncalibrated_warning():
+    """아키타입만 주입되고 항목별 오버라이드가 없는 경우 — 프롬프트가 거짓말하면 안 된다.
+
+    이 조합(`resolve_thresholds("materials", None)`)은 CLI의 모든 `--archetype`
+    실행이 타는 경로다. 프롬프트에 실린 임계치는 materials 오버라이드인데
+    "주입되지 않았다. 아래는 중립 기준이다"라고 붙으면 리서처에게 거짓을 말하는 것이다.
+    """
+    cal = resolve_thresholds("materials", None)
+    prompt = research_prompt("A", "테스트기업", cal)
+
+    # 프롬프트가 보여주는 것은 실제로 materials 오버라이드다
+    assert cal.thresholds["A1_poc_reproducibility"] in prompt
+    assert cal.thresholds["A3_field_operation_hours"] in prompt
+    # 그러므로 "중립 기준" 경고가 붙으면 안 된다
+    assert "주입되지" not in prompt
+    assert "중립 기준" not in prompt
+    assert "materials" in prompt
+
+
+def test_research_prompt_survives_calibration_with_empty_thresholds():
+    """PM 주입 포맷이 미확정이라 thresholds가 비어 올 수 있다 (schema 기본값이 {}).
+
+    scoring.py는 이미 .get(id, default_threshold)로 방어한다. 프롬프트만 KeyError로
+    죽으면 계약이 반쪽이다.
+    """
+    cal = Calibration(archetype="materials", thresholds={})
+    prompt = research_prompt("A", "테스트기업", cal)
+    for criterion in criteria_for("A"):
+        assert criterion.default_threshold in prompt
 
 
 def test_research_prompt_forbids_judging():
