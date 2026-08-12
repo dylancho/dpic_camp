@@ -125,3 +125,34 @@ def test_resolved_statuses_defaults_to_empty_when_not_supplied():
         diligence_questions=[],
     )
     assert result.resolved_statuses == {}
+
+
+def test_met_tier_profile_defaults_to_empty_when_not_supplied():
+    """resolved_statuses와 같은 추가 필드 패턴 — 직접 생성이 여전히 동작해야 한다."""
+    result = ProvenScalabilityResult(
+        verdict="PASS",
+        score=25,
+        block_scores=BlockScores(a=12, b=8, c=5),
+        gate_failed=[],
+        evidence_coverage=1.0,
+        calibration=Calibration(archetype="materials"),
+        evidence=[],
+        diligence_questions=[],
+    )
+    assert result.met_tier_profile == {}
+
+
+def test_met_tier_profile_round_trips_through_json():
+    result = ProvenScalabilityResult(
+        verdict="PASS",
+        score=8,
+        block_scores=BlockScores(a=8, b=0, c=0),
+        gate_failed=[],
+        evidence_coverage=0.1,
+        calibration=Calibration(archetype="materials"),
+        evidence=[],
+        met_tier_profile={"A1_poc_reproducibility": 3},
+        diligence_questions=[],
+    )
+    restored = ProvenScalabilityResult.model_validate_json(result.model_dump_json())
+    assert restored.met_tier_profile == {"A1_poc_reproducibility": 3}

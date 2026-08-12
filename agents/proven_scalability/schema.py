@@ -147,6 +147,15 @@ class ProvenScalabilityResult(BaseModel):
             "scoring.score()가 채운다 (CRITERIA 10개 전부를 키로 갖는다)."
         ),
     )
+    met_tier_profile: dict[str, int] = Field(
+        default_factory=dict,
+        description=(
+            "MET으로 확정된 항목(criterion_id)마다, 그 MET을 뒷받침한 가장 신뢰도 높은(숫자가 "
+            "작은) 근거 등급. 1~4급 전부 MET을 뒷받침할 수 있는 현재 정책에서, 강등 여부만으로는 "
+            "드러나지 않던 '이 MET이 얼마나 약한 근거에 기대고 있는가'를 명시한다. "
+            "scoring.score()가 채운다."
+        ),
+    )
     research_notes: list[str] = Field(
         default_factory=list,
         description=(

@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "criterion_id": "A1_poc_reproducibility",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.etnews.com/20231121000249",
+      "quote": "'캘리포니아에서 진행되는 미국 최대 규모 VRFB 발전소 프로젝트에 공급하는 제품을 생산' 중이라는 서술이 확인된다. 다만 공급 사이트가 몇 곳인지, 서로 다른 고객·환경에서 2회 이상인지, 핵심 성능 KPI의 재현 폭이 얼마인지가 제시되지 않는다.",
+      "extracted_value": "확인된 프로젝트 1건 (미국 캘리포니아 VRFB 발전소), 사이트 수·KPI 재현 폭 미상"
+    },
+    {
+      "criterion_id": "A2_third_party_validation",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.thebell.co.kr/free/content/ArticleView.asp?key=202010211102472760101036&lcode=00",
+      "quote": "에이치투는 국내에서 유일하게 흐름전지의 단체표준 인증을 획득한 업체이며, 2021년 6월 흐름전지 국내 최초 우수연구개발 혁신제품으로 지정되었다.",
+      "extracted_value": "단체표준 인증 1건 + 우수연구개발 혁신제품 지정 1건. 다만 후자는 조달 목적 지정으로 시험성적서와 성격이 다르며, 두 건 모두 인증서 원문은 미확보"
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "energy_infra 기준은 실증 사이트 가동에 더해 성능보증(PPA 또는 성능계약) 체결을 요구한다. 캘리포니아 프로젝트 공급 사실은 확인되나 성능보증 계약 체결 여부와 누적 가동 실적을 확인할 자료를 찾지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B1_exchange_tech_grade",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "거래소 기술성 평가 등급을 확인할 자료를 찾지 못했다. 2010년 설립된 비상장 법인으로 DART에 정기공시가 없고(감사보고서 4건만 제출), 기술특례상장 트랙 진입 여부가 공개되어 있지 않다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B2_registered_patents",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "등록 특허 건수와 청구항 구조를 확인할 자료를 찾지 못했다. DART 규칙 추출도 이 회사는 정기공시가 없어 지적재산권 표를 확인하지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B3_domain_expertise",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "관련 도메인 석사 이상 인력 비중을 확인할 자료를 찾지 못했다. 학위별 인력 구성표는 사업보고서 항목인데 이 회사는 비상장으로 정기공시를 제출하지 않는다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B4_lab_publication_track",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "핵심 인력의 랩실 근무 이력, peer-reviewed 논문, 핵심 특허 보유를 확인할 자료를 찾지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "C1_capacity_plan",
+      "status": "NOT_MET",
+      "source_tier": 3,
+      "source_url": "https://www.etnews.com/20231121000249",
+      "quote": "1공장은 330MWh 규모로 2023년 5월 준공을 완료했고, 2공장은 '1공장 대비 3배 이상 규모'로 건설을 추진 중이다. 2공장이 완공되면 기가급 흐름전지 생산능력을 확보한다. 다만 2공장의 완공 시점이 기재되지 않았다.",
+      "extracted_value": "1공장 330MWh(2023-05 준공), 2공장 3배 이상(≈1GWh급) 추진 중. 규모는 명시, 완공 시점 미제시"
+    },
+    {
+      "criterion_id": "C2_capex_funding",
+      "status": "NOT_MET",
+      "source_tier": 3,
+      "source_url": "https://thevc.kr/h2/fundings",
+      "quote": "총 6건의 투자 유치를 받았으며 최근 단계는 Series C다. 2019년과 2020년 한화그룹으로부터 각각 30억원의 전략적 투자를 유치했다. 다만 조달 총액이 공개되지 않았고, 조달 자금이 2공장 증설에 쓰인다는 용도 연결이 확인되지 않는다.",
+      "extracted_value": "투자 6건(Series C까지), 한화 30억×2 확인. 총액 비공개, 증설 용도 연결 없음"
+    },
+    {
+      "criterion_id": "C3_supply_chain",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "핵심 원료인 바나듐 전해액의 조달 계약이나 이중 소싱 구조를 확인할 자료를 찾지 못했다. 바나듐은 가격 변동성이 큰 원자재라 이 항목이 특히 중요하나 공개 자료에 없다.",
+      "extracted_value": null
+    }
+  ]
+}

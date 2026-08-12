@@ -1,3 +1,4 @@
+import agents.proven_scalability.scoring as scoring_module
 from agents.proven_scalability.criteria import CRITERIA, resolve_thresholds
 from agents.proven_scalability.schema import BlockScores, Evidence
 from agents.proven_scalability.scoring import (
@@ -5,6 +6,7 @@ from agents.proven_scalability.scoring import (
     decide_verdict,
     evidence_coverage,
     gate_failures,
+    met_tier_profile,
     resolve_statuses,
     score,
     score_block,
@@ -17,14 +19,31 @@ CAL = resolve_thresholds("industrial_hardware", None)
 # --- 등급 필터 ---
 
 
-def test_tier_3_only_met_is_demoted_to_unverifiable():
+def test_tier_3_only_met_is_accepted():
+    # 2026-08-13 정책 변경: 3급(언론 보도) 단독 근거도 이제 MET을 뒷받침한다 —
+    # 비상장 기업의 공개 근거가 거의 전부 3~4급이라 예전 필터를 쓰면 모든 항목이
+    # 강등돼 서로 다른 기업이 구분 불가능한 0점으로 나왔다. 오너의 명시적 결정.
     statuses = resolve_statuses([ev("A1_poc_reproducibility", "MET", tier=3)])
-    assert statuses["A1_poc_reproducibility"] == "UNVERIFIABLE"
+    assert statuses["A1_poc_reproducibility"] == "MET"
 
 
-def test_tier_4_only_met_is_demoted():
+def test_tier_4_only_met_is_accepted():
+    # 4급(회사 자체 발표·IR·홈페이지) 단독 근거도 이제 MET을 뒷받침한다. 같은 정책 변경.
     statuses = resolve_statuses([ev("A2_third_party_validation", "MET", tier=4)])
-    assert statuses["A2_third_party_validation"] == "UNVERIFIABLE"
+    assert statuses["A2_third_party_validation"] == "MET"
+
+
+def test_credible_tiers_mechanism_still_demotes_when_narrowed(monkeypatch):
+    """강등 메커니즘(apply_tier_filter) 자체는 살아 있다 — _CREDIBLE_TIERS를
+
+    좁히면 정책을 즉시 원복할 수 있어야 한다. 이 테스트가 그 배선을 고정한다:
+    정책이 다시 {1, 2}로 좁혀지면 3급 단독 MET은 여전히 강등돼야 한다.
+    """
+    monkeypatch.setattr(scoring_module, "_CREDIBLE_TIERS", frozenset({1, 2}))
+    statuses = scoring_module.resolve_statuses(
+        [ev("A1_poc_reproducibility", "MET", tier=3)]
+    )
+    assert statuses["A1_poc_reproducibility"] == "UNVERIFIABLE"
 
 
 def test_tier_1_met_survives_alongside_tier_3():
@@ -321,14 +340,81 @@ def test_score_resolved_statuses_has_all_criteria():
     assert set(result.resolved_statuses) == {c.id for c in CRITERIA}
 
 
-def test_score_resolved_statuses_diverges_from_raw_evidence_status_on_tier_demotion():
+def test_score_resolved_statuses_can_diverge_from_raw_evidence_status_under_narrowed_policy(
+    monkeypatch,
+):
     """evidence[i].status는 필터 이전 값이라 최종 판정과 어긋날 수 있다 — 이것이 정상이다.
 
-    tier 3 근거 하나만으로는 MET을 신뢰하지 않으므로 scoring.score()가
-    UNVERIFIABLE로 강등한다. evidence 리스트 자체는 원문 그대로(MET) 남아야 한다 —
-    누군가 나중에 evidence를 직접 고쳐서 "일치"시키면 감사 추적이 무너진다.
+    현재 정책(1~4급 전부 신뢰)에서는 tier 3 단독 MET이 그대로 살아남으므로 이 사례로는
+    발산이 재현되지 않는다. 발산 자체는 apply_tier_filter가 여전히 만들어낼 수 있는
+    메커니즘이므로, _CREDIBLE_TIERS를 좁혀 그 경로가 살아 있음을 확인한다. evidence
+    리스트 자체는 원문 그대로(MET) 남아야 한다 — 누군가 나중에 evidence를 직접 고쳐서
+    "일치"시키면 감사 추적이 무너진다.
     """
-    result = score([ev("A1_poc_reproducibility", "MET", tier=3)], CAL)
+    monkeypatch.setattr(scoring_module, "_CREDIBLE_TIERS", frozenset({1, 2}))
+    result = scoring_module.score([ev("A1_poc_reproducibility", "MET", tier=3)], CAL)
 
     assert result.evidence[0].status == "MET"
     assert result.resolved_statuses["A1_poc_reproducibility"] == "UNVERIFIABLE"
+
+
+def test_score_tier_3_only_met_is_met_under_current_policy():
+    """현재 정책에서는 tier 3 단독 MET이 발산 없이 그대로 살아남는다."""
+    result = score([ev("A1_poc_reproducibility", "MET", tier=3)], CAL)
+
+    assert result.evidence[0].status == "MET"
+    assert result.resolved_statuses["A1_poc_reproducibility"] == "MET"
+
+
+# --- 근거 등급 프로필 ---
+
+
+def test_met_tier_profile_records_strongest_tier_per_met_criterion():
+    statuses = resolve_statuses(
+        [
+            ev("A1_poc_reproducibility", "MET", tier=3),
+            ev("A1_poc_reproducibility", "MET", tier=1),
+            ev("B1_exchange_tech_grade", "MET", tier=4),
+        ]
+    )
+    profile = met_tier_profile(
+        [
+            ev("A1_poc_reproducibility", "MET", tier=3),
+            ev("A1_poc_reproducibility", "MET", tier=1),
+            ev("B1_exchange_tech_grade", "MET", tier=4),
+        ],
+        statuses,
+    )
+    assert profile == {"A1_poc_reproducibility": 1, "B1_exchange_tech_grade": 4}
+
+
+def test_met_tier_profile_excludes_non_met_criteria():
+    evidence = [ev("A3_field_operation_hours", "NOT_MET", tier=1)]
+    statuses = resolve_statuses(evidence)
+    assert met_tier_profile(evidence, statuses) == {}
+
+
+def test_score_populates_met_tier_profile():
+    result = score(
+        [
+            ev("A1_poc_reproducibility", "MET", tier=3),
+            ev("B1_exchange_tech_grade", "MET", tier=1),
+        ],
+        CAL,
+    )
+    assert result.met_tier_profile == {
+        "A1_poc_reproducibility": 3,
+        "B1_exchange_tech_grade": 1,
+    }
+
+
+def test_score_adds_research_note_when_met_rests_only_on_weak_tiers():
+    result = score([ev("A1_poc_reproducibility", "MET", tier=4)], CAL)
+    joined = " ".join(result.research_notes)
+    assert "A1_poc_reproducibility" in joined
+    assert "3~4급" in joined
+
+
+def test_score_does_not_add_weak_tier_note_when_met_rests_on_strong_tier():
+    result = score([ev("A1_poc_reproducibility", "MET", tier=1)], CAL)
+    assert not any("3~4급" in note for note in result.research_notes)

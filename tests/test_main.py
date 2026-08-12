@@ -205,6 +205,21 @@ def test_no_evidence_note_is_shown_when_present(capture):
     assert note in out
 
 
+# --- 근거 등급 프로필 ---
+
+
+def test_tier_composition_line_is_shown_when_met_criteria_exist(capture):
+    result = _result(evidence=[ev("A1_poc_reproducibility", "MET", tier=3)])
+    out = capture(["--company", "테스트기업"], result)
+    assert "근거 구성" in out
+    assert "MET 1건 중 0건은 1~2급, 1건은 3~4급" in out
+
+
+def test_tier_composition_line_is_omitted_when_no_met_criteria(capture):
+    out = capture(["--company", "테스트기업"], _result())
+    assert "근거 구성" not in out
+
+
 def test_evidence_file_warnings_appear_in_output(capture):
     """evidence_io가 스키마 위반 항목을 버리며 남긴 경고가 CLI 출력에 드러나야 한다."""
     note = "증거 파일 2번 항목을 스키마 위반으로 버렸다 (1건): criterion_id: 알 수 없는 값"

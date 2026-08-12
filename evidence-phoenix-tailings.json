@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "criterion_id": "A1_poc_reproducibility",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.metaltechnews.com/story/2026/06/17/mining-tech/pentagon-backs-1b-rare-earth-expansion/2801.html",
+      "quote": "Phoenix Tailings opened a metallization facility in Exeter, Massachusetts, designed to produce 200 metric tons per year of neodymium-praseodymium metals and dysprosium-iron alloys. Proceeds will expand capabilities beyond its current production of neodymium-praseodymium (NdPr), dysprosium (Dy), and terbium (Tb).",
+      "extracted_value": "상업 생산 가동 중, 3종(NdPr·Dy·Tb) 생산. 파일럿 단계를 넘어선 반복 생산이나 ±10~20% 재현성 수치 자체는 공개되지 않음"
+    },
+    {
+      "criterion_id": "A2_third_party_validation",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "제3자 공인시험기관의 시험성적서나 독립 인증기관 인증서를 찾지 못했다. 국방부(Department of War)의 조건부 자금 지원은 실사를 수반했을 것으로 보이나, 그 실사 결과는 공개되지 않았고 시험성적서와 성격이 다르다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "materials 기준은 배치 수와 수율 재현성으로 본다. Exeter 시설이 가동 중인 사실은 확인되나 누적 배치 수, 회수율(recovery rate), 수율 재현 폭 수치를 찾지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B1_exchange_tech_grade",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "미국 법인이므로 한국거래소 기술성 평가 대상이 아니다. 이 항목은 구조적으로 해당하지 않으며, 국내 상장을 전제한 평가 등급이 존재하지 않는다. 해외 기업에 대해서는 동등한 제3자 기술평가(예: 국책기관 기술실사 등급)로 대체 기준을 정할지 팀 논의가 필요하다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B2_registered_patents",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "등록 특허 건수와 청구항 구조를 확인할 자료를 찾지 못했다. 미국 법인이라 KIPRIS·DART 경로가 모두 해당하지 않으며, USPTO 조회는 이번 조사 범위에서 수행하지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B3_domain_expertise",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "관련 도메인 석사 이상 인력 비중을 확인할 자료를 찾지 못했다. 미국 비상장 법인으로 인력 구성 공시 의무가 없다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B4_lab_publication_track",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "핵심 인력의 랩실 근무 이력, peer-reviewed 논문, 핵심 특허 보유를 이번 조사에서 확인하지 못했다. 창업자 배경에 대한 1차 자료를 확보하지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "C1_capacity_plan",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.metaltechnews.com/story/2026/06/17/mining-tech/pentagon-backs-1b-rare-earth-expansion/2801.html",
+      "quote": "Phoenix Tailings opened a metallization facility in Exeter, Massachusetts, designed to produce 200 metric tons per year. The company has said it could scale up to more than 1,000 t per year, enough for all US defense applications. The money will also support a new rare-earth separation and metallization plant in the U.S. called the Freedom Facility.",
+      "extracted_value": "현재 200 t/yr → 1,000+ t/yr 확대 계획, 신규 Freedom Facility 건설. 규모 명시, 완공 시점은 미확인"
+    },
+    {
+      "criterion_id": "C2_capex_funding",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.businesswire.com/news/home/20260219710465/en/Phoenix-Tailings-Secures-$40.2-Million-in-Strategic-Capital-to-Accelerate-U.S.-Rare-Earth-Metals-Production",
+      "quote": "Phoenix Tailings closed a $40.2 million oversubscribed B-3 amplification round in February 2026, bringing total Series B funding to $116.6 million — $30.2 million in equity and $10 million in venture debt — to accelerate expansion of fully clean, domestic rare earth metals production. The Department of War has conditionally committed $500 million, anchoring a roughly $1 billion financing push.",
+      "extracted_value": "Series B 누적 $116.6M 조달 완료 + 국방부 $500M 조건부 확약. 용도(생산능력 확대) 명시"
+    },
+    {
+      "criterion_id": "C3_supply_chain",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "원료인 광미(mining tailings)의 확보 계약이나 이중 소싱 구조를 확인할 자료를 찾지 못했다. 사업 모델상 광산 폐기물이 feedstock이나, 어느 광산과 어떤 조건으로 계약했는지가 공개되지 않았다.",
+      "extracted_value": null
+    }
+  ]
+}

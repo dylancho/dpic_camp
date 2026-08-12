@@ -16,9 +16,20 @@ from agents.proven_scalability.schema import (
     Verdict,
 )
 
-#: 3급(언론)·4급(회사 자체 발표) 근거만으로는 MET을 인정하지 않는다.
-#: 원칙의 "Founder 자체 테스트만 있으면 불인정"을 코드로 강제하는 장치다.
-_CREDIBLE_TIERS = frozenset({1, 2})
+#: 현재 정책(2026-08-13, 프로젝트 오너 결정): 1~4급 전부 MET을 뒷받침할 수 있다.
+#:
+#: 원래는 {1, 2}였다 — 3급(언론)·4급(회사 자체 발표)만으로는 MET을 인정하지 않아
+#: 원칙의 "Founder 자체 테스트만 있으면 불인정"을 코드로 강제했다. 그런데 비상장
+#: pre-IPO 기업의 공개 근거는 거의 전부 3~4급이라, 그 필터를 적용하면 모든 항목이
+#: 강등되어 서로 전혀 다른 기업들이 똑같이 0/25로 나왔다 (범한메카텍·제이알에너지솔루션
+#: 실측 사례). 오너에게 원칙 문구와의 충돌을 명시적으로 알렸고, 그럼에도 4개 등급 전부
+#: 허용하기로 결정했다 — 이 파일의 판단이 아니라 그 결정을 반영한 것이다.
+#:
+#: 강등 메커니즘 자체(apply_tier_filter)는 지우지 않았다. 이 상수를 다시 {1, 2}로
+#: (또는 다른 부분집합으로) 좁히기만 하면 정책을 즉시 원복할 수 있다.
+#: 하지만 정책이 넓어진 만큼 스코어의 근거 구성을 투명하게 드러내는 책임이
+#: ProvenScalabilityResult.met_tier_profile과 CLI 출력으로 넘어갔다 — score() 참고.
+_CREDIBLE_TIERS = frozenset({1, 2, 3, 4})
 
 #: 충족 개수 → 점수. 게이트 미달 구간은 아예 키에 없다.
 _SCORE_TABLE: dict[Block, dict[int, int]] = {
@@ -115,6 +126,27 @@ def build_diligence_questions(
     ]
 
 
+def met_tier_profile(
+    evidence: list[Evidence], statuses: dict[str, Status]
+) -> dict[str, int]:
+    """MET으로 확정된 항목마다, 그 MET을 뒷받침한 가장 강한(숫자가 작은) 등급을 기록한다.
+
+    statuses는 이미 resolve_statuses가 확정한 최종 상태다 — 여기서 다시 상태 로직을
+    계산하지 않는다. 이 함수는 그 결과 중 MET인 항목에 대해서만, 원본 evidence를
+    훑어 가장 신뢰도 높은 근거 등급을 찾는다. tier 1~2만 신뢰하던 시절에는 이 정보가
+    apply_tier_filter의 강등 여부로 암묵적으로 드러났지만, 지금은 4개 등급이 전부
+    MET을 뒷받침할 수 있어 그 신호가 사라졌다 — 그래서 명시적으로 기록한다.
+    """
+    profile: dict[str, int] = {}
+    for e in evidence:
+        if e.status != "MET" or statuses.get(e.criterion_id) != "MET":
+            continue
+        current = profile.get(e.criterion_id)
+        if current is None or e.source_tier < current:
+            profile[e.criterion_id] = e.source_tier
+    return profile
+
+
 def unknown_criterion_ids(evidence: list[Evidence]) -> list[str]:
     """resolve_statuses가 버릴 항목 ID를 미리 뽑는다. 정의 순서가 아니라 사전순."""
     known = {c.id for c in CRITERIA}
@@ -146,6 +178,16 @@ def score(
         b=score_block("B", statuses),
         c=score_block("C", statuses),
     )
+    tier_profile = met_tier_profile(evidence, statuses)
+    weak_only = sorted(
+        criterion_id for criterion_id, tier in tier_profile.items() if tier >= 3
+    )
+    if weak_only:
+        notes.append(
+            f"MET {len(weak_only)}건이 3~4급(언론·회사 자체 발표) 근거에만 의존한다: "
+            f"{', '.join(weak_only)}. 1~2급 근거로 보강되기 전까지는 실사에서 재확인할 것."
+        )
+
     return ProvenScalabilityResult(
         verdict=decide_verdict(statuses),
         score=blocks.total,
@@ -155,6 +197,7 @@ def score(
         calibration=calibration,
         evidence=evidence,
         resolved_statuses=statuses,
+        met_tier_profile=tier_profile,
         research_notes=notes,
         diligence_questions=build_diligence_questions(statuses, calibration),
     )

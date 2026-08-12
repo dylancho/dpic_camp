@@ -52,6 +52,14 @@ def main() -> int:
           f"B {result.block_scores.b}/8 · C {result.block_scores.c}/5)")
     print(f"  게이트  : {'통과' if not result.gate_failed else f'미충족 {result.gate_failed}'}")
     print(f"  커버리지: {result.evidence_coverage:.0%}")
+    if result.met_tier_profile:
+        strong = sum(1 for t in result.met_tier_profile.values() if t <= 2)
+        weak = sum(1 for t in result.met_tier_profile.values() if t >= 3)
+        total_met = len(result.met_tier_profile)
+        print(
+            f"  근거 구성: MET {total_met}건 중 {strong}건은 1~2급, "
+            f"{weak}건은 3~4급(언론·회사 자체 발표)"
+        )
     print(f"  보정    : {result.calibration.archetype}"
           f"{'' if result.calibration.archetype_injected else ' (미보정)'}"
           f"{' · 임계치 주입됨' if result.calibration.thresholds_injected else ''}")
