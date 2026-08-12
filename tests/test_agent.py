@@ -16,7 +16,7 @@ _SENTINEL_ANTHROPIC_KEY = "sk-ant-api03-Qh7mZ2xL9vR4tK8wN1pS6yF3dC5bA0eJ"
 def test_evaluate_runs_all_three_blocks():
     calls = []
 
-    def fake_run_block(client, block, company, calibration):
+    def fake_run_block(client, block, company, calibration, notes=None):
         calls.append(block)
         return [ev("A1_poc_reproducibility")] if block == "A" else []
 
@@ -35,7 +35,7 @@ def test_evaluate_merges_evidence_and_scores():
 
     with patch(
         "agents.proven_scalability.agent.run_block",
-        lambda client, block, company, cal: per_block[block],
+        lambda client, block, company, cal, notes=None: per_block[block],
     ):
         result = evaluate("테스트기업", archetype="materials", client=object())
 
@@ -57,6 +57,29 @@ def test_evaluate_without_archetype_marks_uncalibrated():
     assert result.calibration.archetype == "uncalibrated"
     assert result.verdict == "INSUFFICIENT_EVIDENCE"
     assert result.gate_failed == ["A", "B"]
+
+
+def test_evaluate_carries_research_notes_from_blocks_to_result():
+    """잘린 블록이 결과에 드러나야 한다 — 안 그러면 낮은 커버리지가 세탁된다."""
+
+    def fake_run_block(client, block, company, calibration, notes=None):
+        if block == "B":
+            notes.append("(B) 블록: 툴 호출 한도에 걸려 조사가 중단됐다")
+        return []
+
+    with patch("agents.proven_scalability.agent.run_block", fake_run_block):
+        result = evaluate("테스트기업", archetype="materials", client=object())
+
+    assert result.research_notes == ["(B) 블록: 툴 호출 한도에 걸려 조사가 중단됐다"]
+    assert result.evidence_coverage == 0.0  # 커버리지만 보면 구분되지 않는 값
+
+
+def test_evaluate_result_has_no_notes_when_every_block_completes():
+    with patch(
+        "agents.proven_scalability.agent.run_block", lambda *a, **k: []
+    ):
+        result = evaluate("테스트기업", archetype="materials", client=object())
+    assert result.research_notes == []
 
 
 # --- 자격 증명 점검 (_ensure_env_loaded) ---

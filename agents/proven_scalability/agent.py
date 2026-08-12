@@ -56,7 +56,10 @@ def evaluate(
     calibration = resolve_thresholds(archetype, thresholds)
 
     evidence: list[Evidence] = []
+    # 블록이 잘렸거나 추출이 실패한 사실을 결과까지 들고 간다. 이게 없으면 낮은
+    # 커버리지가 '찾아봤지만 없었다'인지 '끝까지 못 봤다'인지 구분되지 않는다.
+    notes: list[str] = []
     for block in _BLOCKS:
-        evidence.extend(run_block(client, block, company, calibration))
+        evidence.extend(run_block(client, block, company, calibration, notes=notes))
 
-    return score(evidence, calibration)
+    return score(evidence, calibration, research_notes=notes)

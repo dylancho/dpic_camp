@@ -44,6 +44,13 @@ def main() -> int:
     if result.calibration.note:
         print(f"  주의    : {result.calibration.note}")
 
+    if result.research_notes:
+        # 커버리지 바로 아래가 아니라 여기 두면 묻힌다 — 커버리지 해석을 바꾸는
+        # 정보이므로 실사 질문보다 먼저 보여준다.
+        print("\n조사 결함 (커버리지를 그대로 읽지 말 것):")
+        for note in result.research_notes:
+            print(f"  ! {note}")
+
     if result.diligence_questions:
         print("\n실사에서 확인할 것:")
         for question in result.diligence_questions:
