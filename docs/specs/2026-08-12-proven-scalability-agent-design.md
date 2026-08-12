@@ -176,59 +176,99 @@ verdict는 오직 게이트 미충족의 **원인**으로 결정된다.
 "기준에 못 미친다"로 세탁된다. 커버리지가 낮은 25점 만점과 높은 25점 만점은 전혀 다른
 정보다.
 
+## 4.5. 구조가 왜 바뀌었는가 (2026-08-13)
+
+캠프 평가 규칙상 제출 산출물이 LLM API를 호출하면 안 된다는 조건이 뒤늦게 확정됐다.
+아래 §5의 원래 설계는 `researcher.py`가 `anthropic` SDK의 Tool Runner로 조사하고
+`client.messages.parse`로 `Evidence[]`를 추출하는 2단계 구조였다 — 이 층 전체가 그
+규칙에 걸린다.
+
+다만 §2.1의 중심 주장("판정은 순수 파이썬이 한다")은 애초에 이 문제를 이미 절반쯤
+피해 있었다. LLM은 증거를 **모으는** 데만 썼고 `scoring.py`에는 처음부터 모델 호출이
+없었다. 그래서 이번 전환은 채점 로직의 교체가 아니라 **증거가 들어오는 경로의 교체**다.
+
+새 경로는 둘이다.
+
+1. **DART 규칙 추출** (`extractors/dart_rules.py`) — 공시 원문을 정규식으로 훑는
+   결정론적 코드. LLM이 아니다. `B2_registered_patents`·`B3_domain_expertise` 두
+   항목만 다룬다 — 나머지는 공시에 존재하지 않는 정보이거나(A1~A3, B4, C1~C3),
+   확신할 수 없어 규칙을 만들지 않기로 한 항목(B1, 아래 §5 참고)이다.
+2. **`.md` 지시서 + 사용자의 LLM** (`docs/agent-instructions/`) — 레포에는 Markdown
+   지시서만 있고, 이걸 사람이 자신의 LLM 세션에 붙여넣어 조사시킨 뒤 `evidence.json`으로
+   저장해 `--evidence`로 넘긴다. 지시서는 데이터이지 실행 코드가 아니다 — 레포의
+   파이썬은 이 지시서를 읽지도, 그걸 실행하는 LLM을 호출하지도 않는다.
+
+§2.1~2.4(수집/판정 분리, 3상태, 등급 필터, PM 임계치 주입)는 이 전환과 무관하게 전부
+유효하다 — 그 결정들은 애초에 "누가 조사하는가"가 아니라 "조사 결과를 어떻게
+신뢰할 것인가"에 관한 것이었다.
+
 ## 5. 구조
 
 ```
 agents/proven_scalability/
-  schema.py       Evidence · GateResult · ProvenScalabilityResult
-  criteria.py     A/B/C 항목 정의 + 아키타입별 임계치 치환 규칙
-  scoring.py      순수 함수. Evidence[] → 점수·게이트·verdict. LLM 없음
-  researcher.py   Tool Runner 기반 리서처: tech_proof / moat / scaleup
+  schema.py         Evidence · Calibration · ProvenScalabilityResult
+  criteria.py        A/B/C 항목 정의 + 아키타입별 임계치 치환 규칙
+  scoring.py          순수 함수. Evidence[] → 점수·게이트·verdict. LLM 없음
+  evidence_io.py     evidence.json을 읽어 Evidence[]로 검증. 스키마 위반은
+                      경고로 남기고 버린다 (§2.3 등급 강제와 무관하게, ID·타입
+                      자체가 틀린 항목을 거른다)
+  extractors/
+    dart_rules.py    DART 공시 원문 → 결정론적 정규식 → Evidence 후보.
+                      B2·B3 두 항목만. §4.5 참고
   tools/
-    dart.py       DART OpenAPI. 공시·감사보고서 주석
-    kipris.py     인터페이스만. 키 미확보 (§6)
-    web.py        웹 검색 — 인증·논문·언론
-  prompts.py      블록별 조사 프롬프트 + Evidence 추출 프롬프트
-  agent.py        오케스트레이션. 3블록 실행 → scoring → 결과
+    dart.py          DART OpenAPI 클라이언트. 순수 HTTP, LLM 툴 데코레이터 없음
+    kipris.py        인터페이스만. 키 미확보 (§6)
+  agent.py           오케스트레이션. DART 추출 + 증거 파일 로드 → scoring → 결과
+docs/agent-instructions/
+  00-evidence-schema.md   출력 계약(evidence.json 형식) — 유일한 criterion_id 정답지
+  01-block-a-*.md          (A) 기술 작동 증명 조사 지시서
+  02-block-b-*.md          (B) 해자 조사 지시서
+  03-block-c-*.md          (C) Scale-up 조사 지시서
 tests/
   test_scoring.py    배점·게이트·등급필터 결정론 검증
   test_criteria.py   아키타입별 임계치 치환
+  test_evidence_io.py         증거 파일 검증·경고
+  test_dart_rules.py          DART 규칙 추출 (실제 공시 문구 픽스처)
+  test_no_llm_dependency.py   레포 전체에 LLM SDK import가 없음을 강제
   fixtures/          고정 Evidence 세트
 ```
 
-스택: Python + `anthropic` SDK의 **Tool Runner** (`client.beta.messages.tool_runner`).
-Claude Agent SDK가 아니다 — 우리에게 필요한 건 DART·KIPRIS·웹 세 개의 커스텀 툴이 전부고,
-파일시스템·bash는 쓰지 않는다. 무엇보다 Agent SDK에는 구조화 출력이 없어서 리서처의 반환값을
-`Evidence` 스키마로 강제할 수 없다 — 자유 텍스트를 파싱하는 순간 판정 재현성이 무너진다.
+`researcher.py`·`prompts.py`·`tools/web.py`(Anthropic 서버 툴 래퍼)는 삭제됐다.
+`tools/dart.py`·`tools/kipris.py`는 남았지만 `@beta_tool` 데코레이터를 걷어내
+평범한 함수가 됐다 — 함수 본문과 docstring은 그대로라 `.md` 지시서가 설명을
+참조할 수 있다.
 
-각 리서처는 2단계로 동작한다.
-
-1. **조사 (Tool Runner)** — 자기 블록 항목만 조사하며 툴을 호출. 자유 형식으로 진행
-2. **추출 (`client.messages.parse`)** — 1단계 대화 전문을 입력으로, Pydantic 스키마에 맞는
-   `Evidence[]`를 반환. 툴 없음, 새 조사 없음, 오직 구조화만
-
-1단계의 '대화 전문'은 리서처의 서술만이 아니라 **툴 결과 원문까지** 포함한다 (DART 발췌,
-웹 검색 결과의 제목·URL). 서술만 넘기면 추출 모델은 1차 출처를 본 적이 없는 상태에서
-"기록에 실제로 있는 원문"을 인용해야 하고, `source_tier`도 리서처의 묘사에만 의존하게
-되어 §2.3의 등급 강제가 근거를 잃는다. 블록마다 출처 라벨을 붙여 DART 발췌·웹 검색
-결과·리서처 서술을 구분할 수 있게 한다.
-
-조사와 추출을 나누는 이유는 조사 중에는 자유롭게 탐색하되 경계에서 타입을 강제하기 위함이다.
-블록을 셋으로 나누는 이유는 프롬프트 비대화를 막고 A/B 판정이 서로 오염되지 않게 하기 위함이다.
+`evaluate()`는 DART 규칙 추출 결과와 `evidence_path`가 가리키는 파일의 결과를
+합쳐 `score()`에 넘긴다. 어느 한쪽이 비어 있어도(또는 둘 다 비어 있어도) 나머지
+경로만으로 동작해야 한다 — DART 키가 없어도 증거 파일만으로, 증거 파일이 없어도
+DART만으로 채점이 계속된다. 두 경로 모두 비어 있으면 `research_notes`에
+"증거가 하나도 입력되지 않았다"를 남긴다 (§4의 커버리지-대-조사결함 구분 참고).
 
 ## 6. 데이터 소스와 한계
 
 | 소스 | 상태 | 용도 |
 |---|---|---|
-| DART OpenAPI | 키 확보됨 | 감사보고서 주석(수주잔고·계약부채·무형자산·산업재산권), 기술성 평가 관련 서류 |
-| 웹 검색 | 가능 | 제3자 인증, peer-reviewed 논문, 언론 보도 |
+| DART OpenAPI | 키 확보됨 | 감사보고서 주석(수주잔고·계약부채·무형자산·산업재산권), 규칙 추출(`extractors/dart_rules.py`)의 입력 |
+| 사용자의 LLM 세션 (`.md` 지시서) | 사람이 직접 수행 | A1~A3, B1, B4, C1~C3 — DART에 없는 정보. 실제로 수행됐을 때만 커버리지가 생긴다 |
 | KIPRIS | **키 미확보** | 등록 특허 건수·청구항 구조 |
 
-**KIPRIS 부재의 결과**: `B2_registered_patents`는 DART 무형자산·산업재산권 주석과 웹
-검색으로 대체한다. 이 경로로는 등록 건수의 근사치까지는 가능하나 "핵심 청구항이 경쟁사
-회피가 어려운 구조인가"는 판정할 수 없다. 따라서 `B2`는 상당수 `UNVERIFIABLE`로 떨어져
-실사 질문으로 넘어간다. `tools/kipris.py`는 인터페이스만 정의해 두고, 키 확보 시
-그 자리에 구현을 넣는다.
+이 프로젝트는 더 이상 `ANTHROPIC_API_KEY`를 쓰지 않는다. 필요한 비밀값은
+`DART_API_KEY` 하나뿐이고, 그마저 없어도 예외로 죽지 않고 경고를 남긴 채
+증거 파일만으로 채점이 계속된다 (§4.5, `agent.py`의 `_build_dart_client_from_env`).
+
+**KIPRIS 부재의 결과**: `B2_registered_patents`는 DART 무형자산·산업재산권 주석
+(규칙 추출)과 사람의 조사(`.md` 지시서)로 대체한다. 이 경로로는 등록 건수의
+근사치까지는 가능하나 "핵심 청구항이 경쟁사 회피가 어려운 구조인가"는 판정할 수
+없다. 따라서 `B2`는 상당수 `UNVERIFIABLE`로 떨어져 실사 질문으로 넘어간다.
+`tools/kipris.py`는 인터페이스만 정의해 두고, 키 확보 시 그 자리에 구현을 넣는다.
+
+**DART 규칙 추출이 다루지 않는 항목의 정직한 이유** (§4.5 요약, 상세는
+`extractors/dart_rules.py` 모듈 docstring): `B1_exchange_tech_grade`는 공시
+본문에서 "기술평가"가 기관명·과제명의 일부로만 나타날 뿐 등급 문자열로는
+나타나지 않는다는 것을 2026-08-13 실제 공시로 확인했다. 여기에 키워드 매칭
+규칙을 만들면 확신을 갖고 틀린 답을 낼 위험이 가장 크다 — 그래서 규칙을
+만들지 않고 `UNVERIFIABLE`로 남긴다. **이건 미구현이 아니라 의도된 결정이다.**
+나중에 단순 키워드 매칭으로 "채워 넣지" 말 것.
 
 DART 키는 `.env`에서 읽는다. 키 값은 커밋하지 않는다.
 

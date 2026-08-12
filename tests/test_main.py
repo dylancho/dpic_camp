@@ -8,12 +8,14 @@ evaluate를 대역으로 바꿔 네트워크를 절대 타지 않는다. CLI는 
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from agents.proven_scalability import __main__ as cli
 from agents.proven_scalability.criteria import resolve_thresholds
+from agents.proven_scalability.evidence_io import EvidenceFileError
 from agents.proven_scalability.scoring import score
 from tests.fixtures.evidence import ev
 
@@ -132,3 +134,80 @@ def test_missing_credentials_exit_code_and_no_traceback(capsys):
     captured = capsys.readouterr()
     assert "ANTHROPIC_API_KEY" in captured.err
     assert captured.out == ""
+
+
+# --- --evidence 플래그 ---
+
+
+def test_evidence_flag_is_forwarded_as_path(tmp_path):
+    """--evidence 값이 evaluate에 Path로 그대로 전달돼야 한다."""
+    evidence_file = tmp_path / "evidence.json"
+    evidence_file.write_text('{"items": []}', encoding="utf-8")
+
+    seen_kwargs = {}
+
+    def fake_evaluate(*args, **kwargs):
+        seen_kwargs.update(kwargs)
+        return _result()
+
+    with patch.object(cli, "evaluate", fake_evaluate):
+        with patch(
+            "sys.argv",
+            ["proven-scalability", "--company", "테스트기업", "--evidence", str(evidence_file)],
+        ):
+            assert cli.main() == 0
+
+    assert seen_kwargs["evidence_path"] == evidence_file
+    assert isinstance(seen_kwargs["evidence_path"], Path)
+
+
+def test_evidence_flag_omitted_forwards_none(capture):
+    """--evidence 없이 실행해도 정상 동작해야 한다 — DART 규칙 추출만으로 채점."""
+    seen_kwargs = {}
+
+    def fake_evaluate(*args, **kwargs):
+        seen_kwargs.update(kwargs)
+        return _result()
+
+    with patch.object(cli, "evaluate", fake_evaluate):
+        with patch("sys.argv", ["proven-scalability", "--company", "테스트기업"]):
+            assert cli.main() == 0
+
+    assert seen_kwargs["evidence_path"] is None
+
+
+def test_evidence_file_error_exits_cleanly_without_traceback(capsys):
+    """파일이 없거나 스키마 위반이면 EvidenceFileError가 traceback 없이 명확한 메시지로 나와야 한다."""
+
+    def boom(*a, **k):
+        raise EvidenceFileError("증거 파일이 없다: nope.json")
+
+    with patch.object(cli, "evaluate", boom):
+        with patch(
+            "sys.argv",
+            ["proven-scalability", "--company", "테스트기업", "--evidence", "nope.json"],
+        ):
+            assert cli.main() == 1
+
+    captured = capsys.readouterr()
+    assert "증거 파일이 없다" in captured.err
+    assert captured.out == ""
+    assert "Traceback" not in captured.err
+
+
+def test_no_evidence_note_is_shown_when_present(capture):
+    """증거 파일 없이 돌렸을 때의 안내 문구가 research_notes를 통해 그대로 드러나야 한다."""
+    note = (
+        "증거가 하나도 입력되지 않았다 — DART 추출 결과와 증거 파일이 모두 없다. "
+        "전 항목 UNVERIFIABLE은 '조사했지만 없었다'가 아니라 '아무것도 조사되지 않았다'는 뜻이다."
+    )
+    out = capture(["--company", "테스트기업"], _result(notes=[note]))
+    assert note in out
+
+
+def test_evidence_file_warnings_appear_in_output(capture):
+    """evidence_io가 스키마 위반 항목을 버리며 남긴 경고가 CLI 출력에 드러나야 한다."""
+    note = "증거 파일 2번 항목을 스키마 위반으로 버렸다 (1건): criterion_id: 알 수 없는 값"
+    out = capture(["--company", "테스트기업"], _result(notes=[note]))
+    assert note in out
+    assert "조사 결함" in out

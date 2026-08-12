@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from agents.proven_scalability.agent import evaluate
+from agents.proven_scalability.evidence_io import EvidenceFileError
 
 
 def main() -> int:
@@ -19,12 +21,24 @@ def main() -> int:
         default=None,
         help="PM 에이전트가 내려준 아키타입. 생략하면 uncalibrated로 실행된다",
     )
+    parser.add_argument(
+        "--evidence",
+        type=Path,
+        default=None,
+        help=(
+            "docs/agent-instructions/를 따라 사용자의 LLM 세션이 만든 증거 JSON 경로. "
+            "생략하면 DART 공시 규칙 추출만으로 채점하고, 대부분의 항목은 "
+            "UNVERIFIABLE로 남는다"
+        ),
+    )
     parser.add_argument("--json", action="store_true", help="JSON으로 출력")
     args = parser.parse_args()
 
     try:
-        result = evaluate(args.company, archetype=args.archetype)
-    except RuntimeError as exc:
+        result = evaluate(
+            args.company, archetype=args.archetype, evidence_path=args.evidence
+        )
+    except (RuntimeError, EvidenceFileError) as exc:
         print(f"오류: {exc}", file=sys.stderr)
         return 1
 
