@@ -170,21 +170,32 @@ agents/proven_scalability/
   schema.py       Evidence · GateResult · ProvenScalabilityResult
   criteria.py     A/B/C 항목 정의 + 아키타입별 임계치 치환 규칙
   scoring.py      순수 함수. Evidence[] → 점수·게이트·verdict. LLM 없음
-  researcher.py   Claude Agent SDK 서브에이전트: tech_proof / moat / scaleup
+  researcher.py   Tool Runner 기반 리서처: tech_proof / moat / scaleup
   tools/
     dart.py       DART OpenAPI. 공시·감사보고서 주석
     kipris.py     인터페이스만. 키 미확보 (§6)
     web.py        웹 검색 — 인증·논문·언론
-  prompts/
-    tech_proof.md · moat.md · scaleup.md
+  prompts.py      블록별 조사 프롬프트 + Evidence 추출 프롬프트
+  agent.py        오케스트레이션. 3블록 실행 → scoring → 결과
 tests/
   test_scoring.py    배점·게이트·등급필터 결정론 검증
   test_criteria.py   아키타입별 임계치 치환
   fixtures/          고정 Evidence 세트
 ```
 
-스택: Python + Claude Agent SDK. 리서처 3개는 각자 자기 블록 항목만 조사한다.
-블록을 나누는 이유는 프롬프트 비대화를 막고 A/B 판정이 서로 오염되지 않게 하기 위함이다.
+스택: Python + `anthropic` SDK의 **Tool Runner** (`client.beta.messages.tool_runner`).
+Claude Agent SDK가 아니다 — 우리에게 필요한 건 DART·KIPRIS·웹 세 개의 커스텀 툴이 전부고,
+파일시스템·bash는 쓰지 않는다. 무엇보다 Agent SDK에는 구조화 출력이 없어서 리서처의 반환값을
+`Evidence` 스키마로 강제할 수 없다 — 자유 텍스트를 파싱하는 순간 판정 재현성이 무너진다.
+
+각 리서처는 2단계로 동작한다.
+
+1. **조사 (Tool Runner)** — 자기 블록 항목만 조사하며 툴을 호출. 자유 형식으로 진행
+2. **추출 (`client.messages.parse`)** — 1단계 대화 전문을 입력으로, Pydantic 스키마에 맞는
+   `Evidence[]`를 반환. 툴 없음, 새 조사 없음, 오직 구조화만
+
+조사와 추출을 나누는 이유는 조사 중에는 자유롭게 탐색하되 경계에서 타입을 강제하기 위함이다.
+블록을 셋으로 나누는 이유는 프롬프트 비대화를 막고 A/B 판정이 서로 오염되지 않게 하기 위함이다.
 
 ## 6. 데이터 소스와 한계
 
