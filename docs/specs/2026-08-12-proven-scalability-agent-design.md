@@ -132,12 +132,25 @@ ProvenScalabilityResult
   evidence_coverage  0.0~1.0   조사 항목 중 UNVERIFIABLE이 아닌 비율
   calibration        아키타입 · 적용 임계치 · 주입 여부
   evidence           Evidence[]
+  resolved_statuses  {criterion_id: 최종 상태}   등급 필터·병합을 거친 권위 있는 값
+  research_notes     string[]   조사가 온전했는지의 기록 (아래)
   diligence_questions  string[]   UNVERIFIABLE 항목에서 생성
 ```
 
+`calibration`의 '주입 여부'는 두 개다. **아키타입이 주입됐는가**(`archetype_injected`,
+`archetype != "uncalibrated"`에서 파생)와 **항목별 임계치 오버라이드가 주입됐는가**
+(`thresholds_injected`)는 다른 질문이다. 하나로 묶으면 아키타입만 온 실행이 전부
+`uncalibrated`로 잘못 표시되고, 프롬프트가 아키타입 임계치를 보여주면서 "이건 중립
+기준이다"라고 리서처에게 거짓을 말한다. §2.4의 `uncalibrated`는 전자만을 뜻한다.
+
+`research_notes`는 **조사 자체가 온전했는지**를 담는다 — 툴 호출 한도·재시작 한도
+소진으로 잘린 블록, 추출 스키마 검증 실패, 버려진 항목 ID. 비어 있지 않은데 커버리지가
+낮다면 그 낮음은 "찾아봤지만 없었다"가 아니라 "끝까지 못 봤다"일 수 있다. 이 구분이
+없으면 중단이 조용히 '낮은 커버리지'로 세탁된다.
+
 ```
 Evidence
-  criterion_id     A1_poc_reproducibility 등
+  criterion_id     A1_poc_reproducibility 등. 10개 ID의 Literal (schema.CriterionId)
   status           MET | NOT_MET | UNVERIFIABLE
   source_tier      1~4
   source_url
@@ -193,6 +206,12 @@ Claude Agent SDK가 아니다 — 우리에게 필요한 건 DART·KIPRIS·웹 �
 1. **조사 (Tool Runner)** — 자기 블록 항목만 조사하며 툴을 호출. 자유 형식으로 진행
 2. **추출 (`client.messages.parse`)** — 1단계 대화 전문을 입력으로, Pydantic 스키마에 맞는
    `Evidence[]`를 반환. 툴 없음, 새 조사 없음, 오직 구조화만
+
+1단계의 '대화 전문'은 리서처의 서술만이 아니라 **툴 결과 원문까지** 포함한다 (DART 발췌,
+웹 검색 결과의 제목·URL). 서술만 넘기면 추출 모델은 1차 출처를 본 적이 없는 상태에서
+"기록에 실제로 있는 원문"을 인용해야 하고, `source_tier`도 리서처의 묘사에만 의존하게
+되어 §2.3의 등급 강제가 근거를 잃는다. 블록마다 출처 라벨을 붙여 DART 발췌·웹 검색
+결과·리서처 서술을 구분할 수 있게 한다.
 
 조사와 추출을 나누는 이유는 조사 중에는 자유롭게 탐색하되 경계에서 타입을 강제하기 위함이다.
 블록을 셋으로 나누는 이유는 프롬프트 비대화를 막고 A/B 판정이 서로 오염되지 않게 하기 위함이다.
