@@ -1,5 +1,6 @@
-# 양양 5조 · Pre-IPO 투자심사 에이전트
+# dpic_camp · 양양 5조 Pre-IPO 투자심사 에이전트
 
+드림인베스터클럽 캠프 5조.
 기업명 하나를 넣으면 우리 하우스 투자철학(a/b/c/d)에 따라 근거를 모으고, 채점하고, IC용 투자보고서를 쓴다.
 
 > 우리는 임팩트에 투자하지만, 임팩트라는 이유로 투자하지 않습니다.
@@ -12,8 +13,8 @@
 ## 시작하기 (조원용, 3분)
 
 ```bash
-git clone https://github.com/dylancho/yangyang.git
-cd yangyang
+git clone https://github.com/dylancho/dpic_camp.git
+cd dpic_camp
 npm install
 
 # DART 키 넣기 (무료, 5분)
@@ -170,3 +171,4 @@ app/                            (선택) 웹 UI 버전 — API 키가 있을 때
   있으면 수집이 더 촘촘해진다 ([tavily.com](https://tavily.com), 무료 1,000건/월).
 - **`app/` 웹 UI 버전도 남아 있다.** 배포용이 필요하면 `AI_GATEWAY_API_KEY`(유료 크레딧 필요)를
   넣고 `npm run dev`. 해커톤 시연은 Claude Code 쪽이 비용 0원이라 더 편하다.
+- **이 저장소는 public이다.** `.env.local`은 gitignore되어 있지만, DART 키를 코드에 하드코딩하지 말 것.
