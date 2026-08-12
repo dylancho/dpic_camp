@@ -7,8 +7,10 @@ from agents.proven_scalability import agent
 from agents.proven_scalability.agent import evaluate
 from tests.fixtures.evidence import ev
 
-_SENTINEL_DART_KEY = "sentinel-dart-key-should-never-appear-in-error"
-_SENTINEL_ANTHROPIC_KEY = "sentinel-anthropic-key-should-never-appear-in-error"
+#: 우연한 부분 문자열 일치가 불가능할 만큼 길고, 진짜 키처럼 보이는(그럴듯한 접두어 +
+#: 무작위스러운 몸통) 값이어야 한다 — 값을 자르거나 패턴 매칭으로 일부만 가리는 회귀도 잡기 위해.
+_SENTINEL_DART_KEY = "dart-live-9f3ac71b2e6d4480a5f9c1d7e8b0429f"
+_SENTINEL_ANTHROPIC_KEY = "sk-ant-api03-Qh7mZ2xL9vR4tK8wN1pS6yF3dC5bA0eJ"
 
 
 def test_evaluate_runs_all_three_blocks():
@@ -70,28 +72,45 @@ def _no_real_dotenv(monkeypatch, tmp_path):
     monkeypatch.setattr(agent, "_ENV_PATH", tmp_path / "이런파일없음.env")
 
 
-def test_ensure_env_loaded_raises_when_anthropic_key_missing(monkeypatch, _no_real_dotenv):
+def test_ensure_env_loaded_names_missing_anthropic_key_without_leaking_present_dart_value(
+    monkeypatch, _no_real_dotenv
+):
+    """DART_API_KEY는 실재하는 값을 들고 있고, ANTHROPIC_API_KEY만 없다.
+
+    메시지는 없는 쪽의 '이름'은 말해야 하고, 있는 쪽의 '값'은 절대 담으면 안 된다.
+    두 절반을 한 케이스에서 같이 확인해야 한다 — 따로 보면 각각 공허하게 통과한다.
+    """
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setenv("DART_API_KEY", _SENTINEL_DART_KEY)
 
     with pytest.raises(RuntimeError) as exc_info:
         agent._ensure_env_loaded()
 
-    assert "ANTHROPIC_API_KEY" in str(exc_info.value)
+    message = str(exc_info.value)
+    assert "ANTHROPIC_API_KEY" in message
+    assert _SENTINEL_DART_KEY not in message
 
 
-def test_ensure_env_loaded_raises_when_dart_key_missing(monkeypatch, _no_real_dotenv):
+def test_ensure_env_loaded_names_missing_dart_key_without_leaking_present_anthropic_value(
+    monkeypatch, _no_real_dotenv
+):
+    """거울상 케이스 — ANTHROPIC_API_KEY는 실재하는 값을 들고 있고, DART_API_KEY만 없다."""
     monkeypatch.setenv("ANTHROPIC_API_KEY", _SENTINEL_ANTHROPIC_KEY)
     monkeypatch.delenv("DART_API_KEY", raising=False)
 
     with pytest.raises(RuntimeError) as exc_info:
         agent._ensure_env_loaded()
 
-    assert "DART_API_KEY" in str(exc_info.value)
+    message = str(exc_info.value)
+    assert "DART_API_KEY" in message
+    assert _SENTINEL_ANTHROPIC_KEY not in message
 
 
-def test_ensure_env_loaded_error_never_leaks_secret_values(monkeypatch, _no_real_dotenv):
-    """이름은 말해도 되지만 값은 절대 안 된다 — 두 키 다 없을 때도 확인한다."""
+def test_ensure_env_loaded_error_never_leaks_secret_values_when_both_missing(
+    monkeypatch, _no_real_dotenv
+):
+    """둘 다 없을 때도 (당연히 아무 값도 새지 않지만) crtfc_key 같은 내부 파라미터명이
+    실수로 섞여 들어가지 않는지 확인한다."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("DART_API_KEY", raising=False)
 
@@ -99,8 +118,8 @@ def test_ensure_env_loaded_error_never_leaks_secret_values(monkeypatch, _no_real
         agent._ensure_env_loaded()
 
     message = str(exc_info.value)
-    assert _SENTINEL_ANTHROPIC_KEY not in message
-    assert _SENTINEL_DART_KEY not in message
+    assert "ANTHROPIC_API_KEY" in message
+    assert "DART_API_KEY" in message
     assert "crtfc_key" not in message
 
 
