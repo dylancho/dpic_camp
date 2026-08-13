@@ -154,6 +154,17 @@ export const PrincipleFindingsSchema = z.object({
   confidence: z.number().min(0).max(1),
   /** 이 원칙에 대한 2~3문장 요약 */
   summary: z.string(),
+  /**
+   * 담당 조원의 스킬이 정의한 출력 형식(표·서사)을 그대로 채운 마크다운.
+   * 최종 투자보고서의 해당 원칙 섹션에 그대로 실린다.
+   * level만으로는 IC에서 설명이 안 되므로, 판정의 서술 근거를 여기에 남긴다.
+   */
+  skillReport: z.string().optional(),
+  /**
+   * 에이전트가 조사 중 새로 찾은 근거. 채점 전에 EvidencePack에 편입되어야
+   * 인용이 유효해진다 (없는 sourceId 인용은 sanitizeEvidence가 버린다).
+   */
+  extraEvidence: z.array(EvidenceItemSchema).optional(),
 });
 export type PrincipleFindings = z.infer<typeof PrincipleFindingsSchema>;
 

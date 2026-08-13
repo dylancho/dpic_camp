@@ -15,7 +15,9 @@
 ```bash
 git clone https://github.com/dylancho/dpic_camp.git
 cd dpic_camp
-npm install
+
+npm install              # 오케스트레이터 · 근거수집 · 채점 (TypeScript)
+pip install -e ".[dev]"  # 원칙 d 채점기 (조원 D, Python)
 
 # DART 키 넣기 (무료, 5분)
 cp .env.example .env.local
@@ -37,8 +39,10 @@ DART 키는 [opendart.fss.or.kr](https://opendart.fss.or.kr) 에서 **개인회�
 |---|---|
 | `/투자심사 <기업명>` | 전체 파이프라인 (수집 → 캘리브레이션 → 4개 에이전트 → 채점 → 보고서) |
 | `npm run collect -- "<기업명>"` | 근거 수집만 (LLM 안 씀) |
+| `npm run adapt:d -- "<기업명>"` | 조원 D 파이썬 채점기 실행 + 공용 형식 변환 (LLM 안 씀) |
 | `npm run score -- "<기업명>"` | 채점만 (LLM 안 씀) |
 | `npm test` | 채점·게이트 엔진 테스트 10개 |
+| `python -m pytest` | 조원 D 에이전트 테스트 145개 |
 
 ---
 
@@ -70,7 +74,17 @@ DART 키는 [opendart.fss.or.kr](https://opendart.fss.or.kr) 에서 **개인회�
 └──────────────┴──────────────┴──────────────┴───────────────┘
       │  Claude Code 서브에이전트 4개 병렬
       │  각자 level(이산 판정) + 원문 인용만 반환. 점수는 안 매긴다.
-      │  → runs/<기업>/findings-<원칙>.json
+      │  a·b·c → runs/<기업>/findings-<원칙>.json
+      │  d     → runs/<기업>/evidence-proven-scalability.json  (조사만)
+      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 1-B · 조원 D 파이썬 채점기      npm run adapt:d        │
+│   agents/proven_scalability/ (결정론, LLM 호출 없음)        │
+│   A1~A3 · B1~B4 · C1~C3 항목별 MET/NOT_MET/UNVERIFIABLE    │
+│   → 공용 level로 변환 → findings-proven_scalability.json    │
+│   D가 모은 근거도 psa-* id로 근거 풀에 편입 (인용 유효화)   │
+└─────────────────────────────────────────────────────────────┘
+      │
       ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ STEP 2 · 결정론적 채점 & Cut-off      npm run score         │
@@ -107,16 +121,28 @@ DART 키는 [opendart.fss.or.kr](https://opendart.fss.or.kr) 에서 **개인회�
 
 ## 조원별 작업 분담
 
-| 담당 | 원칙 | 배점 | 건드릴 파일 |
-|---|---|---|---|
-| 조원 A | a. Structural Demand | 30 | `.claude/agents/principle-a-structural-demand.md` |
-| 조원 B | b. Economic Value | 25 | `.claude/agents/principle-b-economic-value.md` |
-| **나** | c. Physical Impact | 20 | `.claude/agents/principle-c-physical-impact.md` |
-| 조원 D | d. Proven Scalability | 25 | `.claude/agents/principle-d-proven-scalability.md` |
-| **나** | 오케스트레이션 | — | `.claude/skills/투자심사/SKILL.md`, `lib/`, `scripts/` |
+4명이 서로 다른 형태로 만들었고, **각자 만든 것을 그대로 살려서** 하나의 파이프라인에 물렸다.
 
-**각자 자기 `.md` 파일 하나만 고치면 된다.** 서로 충돌하지 않는다.
-프롬프트를 고치고 `/투자심사`를 다시 돌리면 바로 반영된다.
+| 담당 | 원칙 | 배점 | 만든 것 | 파이프라인에 붙는 방식 |
+|---|---|---|---|---|
+| 조원 A | a. Structural Demand | 30 | `.claude/skills/structural-demand-check/` (스킬) | `principle-a` 서브에이전트가 이 스킬을 루브릭으로 읽고 level로 변환 |
+| 조원 B | b. Economic Value | 25 | `.claude/skills/economic-value-check/` (스킬) | `principle-b` 서브에이전트가 동일 방식 |
+| **나** | c. Physical Impact | 20 | `.claude/agents/principle-c-physical-impact.md` | 2단계 서브에이전트 (하드 게이트 분리) |
+| 조원 D | d. Proven Scalability | 25 | `agents/proven_scalability/` (Python 결정론 채점기) | `principle-d`가 **조사만** 하고, 채점은 파이썬이. `npm run adapt:d`가 변환 |
+| **나** | 오케스트레이션 | — | `.claude/skills/투자심사/`, `lib/`, `scripts/` | 전체 조립 |
+
+**각자 자기 파일만 고치면 된다.** 서로 충돌하지 않는다.
+A·B는 `SKILL.md`의 판정 기준을, D는 파이썬 `criteria.py`/`scoring.py`를 고치면
+`/투자심사`를 다시 돌릴 때 바로 반영된다.
+
+### 형식이 다른 셋을 어떻게 합쳤나
+
+| 문제 | 해결 |
+|---|---|
+| A·B의 스킬은 `PASS/CONDITIONAL PASS/FAIL` 서사를 내고, 채점 엔진은 `level`을 원한다 | 각 서브에이전트 파일에 **매핑표**를 박았다. (예: Policy Dependency `Mostly Yes` → `sd.subsidy` level 2). 스킬 원문은 손대지 않았다 |
+| D는 Python이고 자체 채점기(A 12·B 8·C 5 = 25점)를 갖는다 | 배점이 우리 Score Pad와 정확히 같아서, **D의 채점기를 버리지 않고** `resolved_statuses`의 MET 개수를 level로 옮겼다 (`scripts/adapt-proven.mts`) |
+| 조원들이 새로 찾은 근거를 인용하면 "없는 sourceId"로 버려진다 | `extraEvidence` 필드를 계약서에 추가. 채점 직전에 근거 풀로 편입한다. D의 근거는 `psa-*` id로 편입 |
+| level만 남으면 IC에서 설명이 안 된다 | `skillReport` 필드로 조원들이 정의한 표·서사 전문을 실어 보고서 본문에 그대로 쓴다 |
 
 ### 4명이 반드시 지켜야 하는 규칙 3가지
 
@@ -141,22 +167,31 @@ STEP c-1(단위 확정)과 c-2(스코어링)를 분리했다. 다른 원칙도 �
 
 ```
 .claude/
-  skills/투자심사/SKILL.md      ★ 오케스트레이터 (STEP 0~3)
-  agents/principle-a~d-*.md     ★ 조원별 원칙 에이전트 4개
+  skills/
+    투자심사/SKILL.md            ★ 오케스트레이터 (STEP 0~3)
+    structural-demand-check/     조원 A의 원칙 a 루브릭
+    economic-value-check/        조원 B의 원칙 b 루브릭
+  agents/principle-a~d-*.md      원칙별 서브에이전트 4개
 lib/
-  philosophy.ts                 철학 원문 + Score Pad 루브릭 (단일 진실 원천)
-  archetypes.ts                 STEP 0 아키타입 6종
-  contract.ts                   조원 간 계약서 (Zod 스키마)
-  scoring.ts                    결정론적 채점 + Cut-off (LLM 없음)
-  run-store.ts                  runs/<기업>/ 디렉터리 규약
-  evidence/
-    pack.ts  dart.ts  web.ts  zip.ts
+  philosophy.ts                  철학 원문 + Score Pad 루브릭 (단일 진실 원천)
+  archetypes.ts                  STEP 0 아키타입 6종
+  contract.ts                    조원 간 계약서 (Zod 스키마)
+  scoring.ts                     결정론적 채점 + Cut-off (LLM 없음)
+  run-store.ts                   runs/<기업>/ 디렉터리 규약
+  evidence/  pack.ts dart.ts web.ts zip.ts
+agents/proven_scalability/       조원 D의 원칙 d 채점기 (Python, 결정론)
+  criteria.py scoring.py schema.py
+  extractors/dart_rules.py       DART 공시 규칙 추출
+  tools/dart.py tools/kipris.py
+docs/agent-instructions/         조원 D의 조사 지시서 (principle-d가 따른다)
 scripts/
-  collect.mts                   근거 수집
-  score.mts                     채점
-  scoring.test.ts               Cut-off 규칙 10개 테스트
-runs/<기업>/                    심사 1건의 모든 산출물 (gitignore)
-app/                            (선택) 웹 UI 버전 — API 키가 있을 때만 동작
+  collect.mts                    근거 수집
+  adapt-proven.mts               조원 D 채점기 → 공용 형식 어댑터
+  score.mts                      채점
+  scoring.test.ts                Cut-off 규칙 10개 테스트
+tests/                           조원 D 테스트 145개 (pytest)
+runs/<기업>/                     심사 1건의 모든 산출물 (gitignore)
+app/                             (선택) 웹 UI 버전 — API 키가 있을 때만 동작
 ```
 
 ---

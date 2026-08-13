@@ -119,8 +119,45 @@ calibration의 `thresholds.impactUnit`은 **후보일 뿐**이다. 그대로 받
   "redFlags": [], "missingData": [], "killQuestions": [],
   "confidence": 0.7,
   "summary": "2~3문장",
+  "skillReport": "아래 형식의 마크다운 전문. 최종 보고서의 원칙 c 섹션에 그대로 실린다.",
   "extraEvidence": [{ "id": "web-c-1", "source": "web", "title": "…", "url": "https://…", "content": "…" }]
 }
+```
+
+`skillReport` 는 이 구조를 그대로 채운다 (다른 원칙 에이전트들과 형식을 맞춘다):
+
+```
+## Physical Impact Verdict
+Verdict: PASS / CONDITIONAL PASS / FAIL / INSUFFICIENT EVIDENCE
+One-line Thesis: (이 기업의 임팩트가 왜 측정 가능한 물리량인지/서사인지 한 문장)
+
+## Primary Impact Unit (하드 게이트)
+| 항목 | 값 | 근거 |
+| 단위 | … | [sourceId] |
+| 산정 경계 | … | |
+| 산정식 | … | |
+| baseline | … | |
+| 확인된 정량값 | … | |
+게이트 판정: 통과 / 탈락 — (사유)
+
+## 4개 기준 평가
+| 기준 | 충족 | 근거 |
+| 1. 저감 메커니즘 진술 | Yes/No | … |
+| 2. 대체 대상 특정 | Yes/No | … |
+| 3. 저감 규모 파악 | Yes/No | … |
+| 4. baseline 대비 정량 비교 | Yes/No | … |
+
+## 임팩트–매출 연동
+(제품 1단위 판매가 임팩트 몇 단위로 이어지는지, 구조적으로 직결되는지)
+
+## Key Evidence
+(가장 중요한 증거 3~5개, 인용 포함)
+
+## Missing Evidence / DD Questions
+(최대 5개, 경영진에게 실제로 물을 수 있을 만큼 구체적으로)
+
+## IC Conclusion
+Why is this impact real and measurable? (2~3문장. 크기가 아니라 측정 가능성과 baseline 우위로 답할 것)
 ```
 
 `verdict`는 `met` | `partial` | `unmet` | `unknown`. 작업 후 파일 경로와 **하드 게이트 통과 여부**를 명시해 보고한다.

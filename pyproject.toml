@@ -15,3 +15,9 @@ dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
 testpaths = ["tests"]
 markers = ["live: 실제 네트워크를 타는 테스트 (기본 실행에서 제외)"]
 addopts = "-m 'not live'"
+
+# 이 저장소는 파이썬(agents/)과 TypeScript(lib/, app/, scripts/)가 함께 산다.
+# 명시하지 않으면 setuptools의 flat-layout 자동탐색이 app·lib·runs·public·node_modules까지
+# 파이썬 패키지로 오인해 빌드가 실패한다.
+[tool.setuptools.packages.find]
+include = ["agents*"]

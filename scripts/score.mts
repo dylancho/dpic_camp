@@ -65,8 +65,18 @@ for (const id of PRINCIPLE_ORDER as PrincipleId[]) {
     );
   }
   const findings = (parsed.success ? parsed.data : raw) as PrincipleFindings;
+
+  // 에이전트가 새로 찾은 근거를 채점 전에 근거 풀에 편입한다.
+  // 이걸 빼먹으면 그 인용들이 전부 "없는 sourceId"로 간주돼 버려진다.
+  for (const item of findings.extraEvidence ?? []) {
+    if (!evidence.items.some((x) => x.id === item.id)) evidence.items.push(item);
+  }
+
   scored.push(scorePrinciple(id, findings, evidence));
 }
+
+// 편입된 근거를 파일에도 반영해 다음 실행·보고서에서 인용이 유지되게 한다
+writeFileSync(`${dir}/evidence.json`, JSON.stringify(evidence, null, 2), 'utf8');
 
 const verdict = applyCutoff(scored);
 
@@ -140,6 +150,8 @@ const md = [
     p.findings.killQuestions.length
       ? `**Kill questions**\n${p.findings.killQuestions.map((r) => `- ${r}`).join('\n')}\n`
       : '',
+    // 담당 조원 스킬의 서술 전문 — 보고서 작성 에이전트가 이 부분을 그대로 인용한다
+    p.findings.skillReport ? `<details><summary>담당 스킬 상세 리포트</summary>\n\n${p.findings.skillReport}\n\n</details>\n` : '',
   ]),
   evidence.gaps.length ? `## 근거 수집 공백\n\n${evidence.gaps.map((g) => `- ${g}`).join('\n')}\n` : '',
   problems.length ? `## 제출 문제\n\n${problems.map((p) => `- ${p}`).join('\n')}\n` : '',
