@@ -15,15 +15,17 @@ config({ path: '.env.local', quiet: true });
 
 const name = process.argv[2];
 if (!name) {
-  console.error('사용법: npm run collect -- "기업명" [주관사]');
+  console.error('사용법: npm run collect -- "기업명" [주관사] [영문상호 ...]');
   process.exit(1);
 }
 const underwriter = process.argv[3];
+// 3번째 이후 인자는 별칭(영문 상호 등)으로 취급한다
+const aliases = process.argv.slice(4).filter(Boolean);
 
 const dir = runDir(name);
 mkdirSync(dir, { recursive: true });
 
-const pack = await buildEvidencePack({ name, underwriter });
+const pack = await buildEvidencePack({ name, underwriter, aliases });
 
 writeFileSync(`${dir}/evidence.md`, renderEvidence(pack), 'utf8');
 writeFileSync(

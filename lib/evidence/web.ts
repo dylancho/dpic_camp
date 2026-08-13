@@ -40,6 +40,7 @@ export async function collectWebEvidence(
   }
 
   const items: EvidenceItem[] = [];
+  const rejected: EvidenceItem[] = [];
   const seen = new Set<string>();
 
   /**
@@ -47,9 +48,14 @@ export async function collectWebEvidence(
    * (예: "유상 PoC의 중요성" 같은 칼럼). 근거 풀에 섞이면 에이전트가 그 기업의
    * 사실인 것처럼 인용할 수 있으므로, 회사명이 실제로 언급된 문서만 남긴다.
    */
-  const needle = company.name.replace(/\s|\(주\)|주식회사|㈜/g, '').toLowerCase();
-  const mentionsCompany = (r: TavilyResult) =>
-    `${r.title} ${r.content}`.replace(/\s/g, '').toLowerCase().includes(needle);
+  const norm = (s: string) => s.replace(/\s|\(주\)|주식회사|㈜|-/g, '').toLowerCase();
+  // 한글 상호와 영문 표기가 다른 기업이 많다 (에스그래핀 ↔ S-Graphene).
+  // 별칭을 안 받으면 영문 기사가 전부 걸러져 근거가 텅 빈다.
+  const needles = [company.name, ...(company.aliases ?? [])].map(norm).filter(Boolean);
+  const mentionsCompany = (r: TavilyResult) => {
+    const hay = norm(`${r.title} ${r.content} ${r.url}`);
+    return needles.some((n) => hay.includes(n));
+  };
   let dropped = 0;
 
   const settled = await Promise.allSettled(
@@ -75,24 +81,44 @@ export async function collectWebEvidence(
     for (const r of s.value) {
       if (seen.has(r.url)) continue;
       seen.add(r.url);
-      if (!mentionsCompany(r)) {
-        dropped++;
-        continue;
-      }
-      items.push({
-        id: `web-${items.length + 1}`,
-        source: 'web',
+      const item = {
+        id: '',
+        source: 'web' as const,
         title: r.title,
         url: r.url,
         date: r.published_date?.slice(0, 10),
         content: r.content.slice(0, 2500),
-      });
+      };
+      if (!mentionsCompany(r)) {
+        dropped++;
+        rejected.push(item);
+        continue;
+      }
+      items.push({ ...item, id: `web-${items.length + 1}` });
     }
   }
 
-  if (items.length === 0) gaps.push('웹 검색 결과가 비어 있습니다.');
   if (dropped > 0) {
     gaps.push(`웹 검색 결과 ${dropped}건은 기업명이 언급되지 않아 관련성 필터에서 제외했습니다.`);
   }
+
+  // 안전장치: 상호 표기가 달라 필터가 거의 전부를 지우면, 근거 없이 심사하는 것보다
+  // 미검증 표시를 달고 살려두는 편이 낫다. 에이전트가 스스로 관련성을 다시 판단한다.
+  if (items.length < 3 && rejected.length > 0) {
+    const salvaged = rejected.slice(0, 8).map((r, i) => ({
+      ...r,
+      id: `web-unverified-${i + 1}`,
+      title: `[관련성 미확인] ${r.title}`,
+    }));
+    items.push(...salvaged);
+    gaps.push(
+      `기업명 직접 언급 근거가 ${items.length - salvaged.length}건뿐이라 제외분 중 ${salvaged.length}건을 ` +
+        `\`web-unverified-*\` 로 되살렸습니다. **이 항목들은 대상 기업 자료가 아닐 수 있으니 ` +
+        `인용 전 반드시 본문에서 기업 관련성을 직접 확인하세요.** ` +
+        `영문 상호가 있다면 --alias 로 다시 수집하는 편이 정확합니다.`,
+    );
+  }
+
+  if (items.length === 0) gaps.push('웹 검색 결과가 비어 있습니다.');
   return items;
 }

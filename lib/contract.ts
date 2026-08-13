@@ -29,6 +29,8 @@ export const CompanyInputSchema = z.object({
   notes: z.string().optional(),
   /** 참고 URL */
   urls: z.array(z.string()).optional(),
+  /** 영문 상호 등 별칭. 웹 검색 관련성 필터가 이것도 함께 본다 (에스그래핀 ↔ S-Graphene) */
+  aliases: z.array(z.string()).optional(),
 });
 export type CompanyInput = z.infer<typeof CompanyInputSchema>;
 
