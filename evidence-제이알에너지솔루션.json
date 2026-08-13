@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "criterion_id": "A1_poc_reproducibility",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.etnews.com/20250514000255",
+      "quote": "SCAQMD는 에너베이트 배터리를 활용해 상용차를 전기차로 전환하는 실증 사업을 전개하며, 에너베이트는 팹리스, JR에너지솔루션은 파운드리, SCAQMD는 최종 수요 기업인 구조다. 실증 1건은 확인되나 서로 다른 고객·환경 2회 이상이 아니고, 핵심 성능 KPI의 재현 폭 수치가 제시되지 않았다.",
+      "extracted_value": "실증 1건 (SCAQMD·에너베이트), KPI 재현 폭 미상"
+    },
+    {
+      "criterion_id": "A2_third_party_validation",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "공인시험기관 시험성적서나 독립 인증기관 인증서를 찾지 못했다. '리튬이온전지, 실리콘, 전극 관련 국가 R&D를 수행'했다는 서술은 있으나 과제 수행은 제3자 검증과 다르고, 발급기관·시험항목·발급일이 명시된 자료가 없다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.thelec.kr/news/articleView.html?idxno=37110",
+      "quote": "충북 음성 1공장은 지난해 2월 양산을 시작했다. 다만 이는 자사 생산시설 가동이며, energy_infra 기준이 요구하는 실증 사이트 가동에 더해 성능보증(PPA 또는 성능계약) 체결 여부는 확인되지 않는다.",
+      "extracted_value": "1공장 양산 개시 2025-02"
+    },
+    {
+      "criterion_id": "B1_exchange_tech_grade",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "거래소 기술성 평가 등급을 확인할 수 없었다. 2029년 상장 목표가 보도되었으나 기술특례상장 트랙 여부와 기술평가 등급이 공개된 자료가 없다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B2_registered_patents",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "등록 특허 건수를 확인할 자료를 찾지 못했다. '리튬이온전지, 실리콘, 전극 관련 국가 R&D를 수행'했다는 서술만 있고 특허 등록 여부·건수·청구항 구조는 언급되지 않는다. DART 규칙 추출도 이 회사는 정기공시가 없어 특허 표를 확인하지 못했다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B3_domain_expertise",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "관련 도메인 석사 이상 인력 비중을 확인할 자료를 찾지 못했다. 학위별 인력 구성표는 사업보고서 항목인데 이 회사는 비상장으로 정기공시를 제출하지 않는다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "B4_lab_publication_track",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "핵심 인력의 랩실 근무 이력, peer-reviewed 논문, 핵심 특허 보유를 확인할 자료를 찾지 못했다. 국가 R&D 과제 수행 이력은 회사 단위 서술이고 개별 인력의 이력으로 연결되지 않는다.",
+      "extracted_value": null
+    },
+    {
+      "criterion_id": "C1_capacity_plan",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.thelec.kr/news/articleView.html?idxno=37110",
+      "quote": "1·2·3공장을 합쳐 최대 5.5GWh 규모로 늘릴 방침이며, 충북 음성 1공장은 양극과 음극 각각 500MWh 규모로 지난해 2월 양산을 시작했고, 2026년 3월까지 2호기 라인을 증설해 1공장 생산능력을 1.5GWh로 늘릴 예정이다. 2027년에는 2공장(2GWh) 가동을 계획 중이며, 3공장도 같은 규모로 검토하고 있다.",
+      "extracted_value": "1공장 1.5GWh(2026-03) → 2공장 2GWh(2027) → 총 5.5GWh. 시점·규모 모두 명시"
+    },
+    {
+      "criterion_id": "C2_capex_funding",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.thelec.kr/news/articleView.html?idxno=37110",
+      "quote": "시리즈A 617억원에 이어 시리즈B 300억원을 조달했으며, 시리즈B는 1공장 증설 자금 확보에 사용된다. 한국앤컴퍼니가 90억원을 투자했다.",
+      "extracted_value": "시리즈A 617억 + 시리즈B 300억 조달 완료, 용도(1공장 증설) 명시"
+    },
+    {
+      "criterion_id": "C3_supply_chain",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": null,
+      "quote": "핵심 원료·부품·장비의 공급 계약이나 이중 소싱 확보를 확인할 자료를 찾지 못했다. 파운드리 모델상 고객사(에너베이트·한국앤컴퍼니)와의 관계는 확인되나 이는 수요 측이며 공급 측 확보 구조가 아니다.",
+      "extracted_value": null
+    }
+  ]
+}

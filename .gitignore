@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 .env*.local
 runs/
+
+# Python (조원 D 에이전트)
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
