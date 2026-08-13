@@ -29,7 +29,7 @@ export async function buildEvidencePack(company: CompanyInput): Promise<Evidence
   const gaps: string[] = [];
 
   const [dart, web] = await Promise.all([
-    collectDartEvidence(company.name, gaps),
+    collectDartEvidence(company.name, gaps, company.corpCode),
     collectWebEvidence(company, gaps),
   ]);
 

@@ -20,12 +20,14 @@ if (!name) {
 }
 const underwriter = process.argv[3];
 // 3번째 이후 인자는 별칭(영문 상호 등)으로 취급한다
-const aliases = process.argv.slice(4).filter(Boolean);
+const rest = process.argv.slice(4).filter(Boolean);
+const corpCode = rest.find((a) => a.startsWith('--corp-code='))?.split('=')[1];
+const aliases = rest.filter((a) => !a.startsWith('--'));
 
 const dir = runDir(name);
 mkdirSync(dir, { recursive: true });
 
-const pack = await buildEvidencePack({ name, underwriter, aliases });
+const pack = await buildEvidencePack({ name, underwriter, aliases, corpCode });
 
 writeFileSync(`${dir}/evidence.md`, renderEvidence(pack), 'utf8');
 writeFileSync(

@@ -28,7 +28,10 @@ const NOTE_KEYWORDS = [
   '무형자산',
 ];
 
-let corpCodeCache: Map<string, { code: string; name: string }> | null = null;
+type Corp = { code: string; name: string };
+
+/** 정규화 상호 → 같은 이름을 가진 법인 **전부**. 동명이인을 조용히 삼키지 않는다. */
+let corpCodeCache: Map<string, Corp[]> | null = null;
 
 async function loadCorpCodes(apiKey: string) {
   if (corpCodeCache) return corpCodeCache;
@@ -36,14 +39,15 @@ async function loadCorpCodes(apiKey: string) {
   if (!res.ok) throw new Error(`DART corpCode 조회 실패: ${res.status}`);
   const xml = unzipFirstEntry(Buffer.from(await res.arrayBuffer())).toString('utf8');
 
-  const map = new Map<string, { code: string; name: string }>();
+  const map = new Map<string, Corp[]>();
   const re = /<list>\s*<corp_code>(.*?)<\/corp_code>\s*<corp_name>(.*?)<\/corp_name>/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(xml))) {
     const name = m[2].trim();
-    // 동명이인 방지: 먼저 등록된 것을 유지 (DART는 최근 등록 순이 아님)
     const key = normalize(name);
-    if (!map.has(key)) map.set(key, { code: m[1].trim(), name });
+    const arr = map.get(key);
+    if (arr) arr.push({ code: m[1].trim(), name });
+    else map.set(key, [{ code: m[1].trim(), name }]);
   }
   corpCodeCache = map;
   return map;
@@ -53,15 +57,43 @@ function normalize(s: string) {
   return s.replace(/\s|\(주\)|주식회사|㈜/g, '').toLowerCase();
 }
 
-export async function findCorpCode(companyName: string, apiKey: string) {
+/** DART 기업개황 — 신원 대조용(설립일·업종·주소·대표). 동명이인 판별의 근거가 된다. */
+export async function fetchCompanyProfile(corpCode: string, apiKey: string) {
+  const res = await fetch(`${BASE}/company.json?crtfc_key=${apiKey}&corp_code=${corpCode}`);
+  if (!res.ok) return null;
+  const j = (await res.json()) as Record<string, string>;
+  if (j.status !== '000') return null;
+  return {
+    corpName: j.corp_name,
+    estDt: j.est_dt,
+    indutyCode: j.induty_code,
+    address: j.adres,
+    ceo: j.ceo_nm,
+    stockCode: j.stock_code,
+  };
+}
+
+/**
+ * 상호로 법인을 찾는다. **동명이인이면 고르지 않고 전부 돌려준다.**
+ *
+ * 실제로 터진 사고: "에이치투"로 조회하면 DART에 완전히 같은 이름의 법인이 2개 있는데
+ * (석유화학 도매업체 / 금속재생 업체), 예전 구현은 먼저 만난 것을 조용히 골랐다.
+ * 그 결과 VRFB ESS 기업을 심사하면서 무관한 수입·유통 회사의 감사보고서를 근거로 썼다.
+ * 잘못된 근거는 근거 없음보다 나쁘다 — 점수가 그럴듯하게 나와서 아무도 의심하지 않기 때문이다.
+ */
+export async function findCorpCandidates(companyName: string, apiKey: string): Promise<Corp[]> {
   const map = await loadCorpCodes(apiKey);
   const key = normalize(companyName);
-  if (map.has(key)) return map.get(key)!;
-  // 부분 일치 폴백
+  const exact = map.get(key);
+  if (exact?.length) return exact;
+  if (key.length < 2) return [];
+  // 부분 일치 폴백 — 여기서도 여러 건이면 전부 돌려준다
+  const partial: Corp[] = [];
   for (const [k, v] of map) {
-    if (k.includes(key) && key.length >= 2) return v;
+    if (k.includes(key)) partial.push(...v);
+    if (partial.length > 8) break;
   }
-  return null;
+  return partial;
 }
 
 /** 공시 원문(document.xml)을 받아 태그를 제거하고 키워드 주변만 잘라낸다 */
@@ -99,6 +131,7 @@ async function fetchDocumentExcerpt(rceptNo: string, apiKey: string, maxChars = 
 export async function collectDartEvidence(
   companyName: string,
   gaps: string[],
+  corpCodeOverride?: string,
 ): Promise<EvidenceItem[]> {
   const apiKey = process.env.DART_API_KEY;
   if (!apiKey) {
@@ -107,11 +140,53 @@ export async function collectDartEvidence(
   }
 
   try {
-    const corp = await findCorpCode(companyName, apiKey);
-    if (!corp) {
-      gaps.push(`DART에서 "${companyName}" 고유번호를 찾지 못했습니다 (미등록 법인이거나 상호 불일치).`);
-      return [];
+    let corp: Corp;
+    if (corpCodeOverride) {
+      corp = { code: corpCodeOverride, name: companyName };
+    } else {
+      const candidates = await findCorpCandidates(companyName, apiKey);
+      if (candidates.length === 0) {
+        gaps.push(`DART에서 "${companyName}" 고유번호를 찾지 못했습니다 (미등록 법인이거나 상호 불일치).`);
+        return [];
+      }
+      if (candidates.length > 1) {
+        // 동명이인을 임의로 고르면 무관한 회사의 재무제표로 심사하게 된다.
+        // 잘못된 근거는 근거 없음보다 나쁘므로, 고르지 않고 수집을 중단한다.
+        const profiles = await Promise.all(
+          candidates.slice(0, 6).map(async (c) => {
+            const p = await fetchCompanyProfile(c.code, apiKey);
+            return `    ${c.code}  ${c.name}` +
+              (p ? ` — 설립 ${p.estDt}, 업종 ${p.indutyCode}, 대표 ${p.ceo}, ${p.address?.slice(0, 30)}` : '');
+          }),
+        );
+        gaps.push(
+          `⛔ DART에 "${companyName}" 과 일치하는 법인이 ${candidates.length}건입니다. ` +
+            `임의로 고르면 무관한 회사의 재무제표로 심사하게 되므로 DART 수집을 중단했습니다.\n` +
+            profiles.join('\n') +
+            `\n    → 맞는 법인을 골라 다시 수집하세요: npm run collect -- "${companyName}" "" --corp-code=<8자리>`,
+        );
+        return [];
+      }
+      corp = candidates[0];
     }
+
+    // 신원 대조용 개황을 항상 첫 근거로 넣는다. 에이전트가 "이게 정말 그 회사인가"를
+    // 설립일·업종·주소로 직접 확인할 수 있어야 한다.
+    const profile = await fetchCompanyProfile(corp.code, apiKey);
+    const profileItem: EvidenceItem | null = profile
+      ? {
+          id: 'dart-profile',
+          source: 'dart',
+          title: `[DART] ${profile.corpName} 기업개황 (신원 대조용)`,
+          url: `https://dart.fss.or.kr/dsae001/selectPopup.ax?selectKey=${corp.code}`,
+          content:
+            `상호: ${profile.corpName}\n고유번호: ${corp.code}\n설립일: ${profile.estDt}\n` +
+            `업종코드: ${profile.indutyCode}\n대표자: ${profile.ceo}\n주소: ${profile.address}\n` +
+            `종목코드: ${profile.stockCode || '(비상장)'}\n\n` +
+            `※ 이 개황이 심사 대상 기업과 일치하는지 먼저 확인하라. ` +
+            `설립연도·업종·주소가 어긋나면 동명이인일 수 있으며, 그 경우 아래 dart-* 근거를 사용하면 안 된다.`,
+        }
+      : null;
 
     const end = new Date();
     const bgn = new Date(end.getFullYear() - 3, end.getMonth(), end.getDate());
@@ -129,7 +204,7 @@ export async function collectDartEvidence(
 
     if (list.status !== '000' || !list.list?.length) {
       gaps.push(`DART 공시 목록이 비어 있습니다 (status=${list.status}: ${list.message}).`);
-      return [];
+      return profileItem ? [profileItem] : [];
     }
 
     // 감사보고서 · 사업보고서 · 분기/반기보고서 우선
@@ -137,7 +212,7 @@ export async function collectDartEvidence(
     const targets = list.list.filter((d) => priority.test(d.report_nm)).slice(0, 3);
     if (targets.length === 0) targets.push(list.list[0]);
 
-    const items: EvidenceItem[] = [];
+    const items: EvidenceItem[] = profileItem ? [profileItem] : [];
     for (const [i, doc] of targets.entries()) {
       const excerpt = await fetchDocumentExcerpt(doc.rcept_no, apiKey);
       if (!excerpt) continue;
@@ -163,8 +238,14 @@ export async function collectDartEvidence(
         .join('\n'),
     });
 
-    if (items.length === 1) {
+    if (items.filter((i) => /^dart-\d+$/.test(i.id)).length === 0) {
       gaps.push('DART 공시 원문 본문을 추출하지 못했습니다 (목록만 확보).');
+    }
+    if (profile) {
+      gaps.push(
+        `DART 신원 대조 필요: 고유번호 ${corp.code} / 설립 ${profile.estDt} / 업종 ${profile.indutyCode} / ` +
+          `대표 ${profile.ceo}. 심사 대상 기업과 어긋나면 dart-* 근거를 사용하지 말 것 (dart-profile 참조).`,
+      );
     }
     return items;
   } catch (e) {

@@ -31,6 +31,28 @@ if (!evidence) {
 }
 const calibration = readJson<Calibration>(`${dir}/calibration.json`);
 
+/** 담당자마다 다른 판정 어휘를 공용 4값으로 정규화한다 */
+const VERDICT_SYNONYMS: Record<string, string> = {
+  not_met: 'unmet', notmet: 'unmet', 'not demonstrated': 'unmet', fail: 'unmet', no: 'unmet',
+  met: 'met', confirmed: 'met', pass: 'met', yes: 'met',
+  plausible: 'partial', conditional: 'partial', 'conditional pass': 'partial',
+  unverifiable: 'unknown', 'insufficient evidence': 'unknown', 'not disclosed': 'unknown', unclear: 'unknown',
+};
+
+function normalizeVerdicts(raw: unknown): unknown {
+  const r = raw as { criteria?: { verdict?: unknown }[] };
+  for (const c of r?.criteria ?? []) {
+    if (typeof c.verdict !== 'string') continue;
+    const key = c.verdict.trim().toLowerCase();
+    if (['met', 'partial', 'unmet', 'unknown'].includes(key)) {
+      c.verdict = key;
+    } else if (VERDICT_SYNONYMS[key]) {
+      c.verdict = VERDICT_SYNONYMS[key];
+    }
+  }
+  return raw;
+}
+
 const scored: ScoredPrinciple[] = [];
 const problems: string[] = [];
 
@@ -57,8 +79,11 @@ for (const id of PRINCIPLE_ORDER as PrincipleId[]) {
     continue;
   }
 
-  // 계약서(Zod) 위반은 여기서 잡는다 — 조원이 형식을 어기면 조용히 넘어가지 않는다
-  const parsed = PrincipleFindingsSchema.safeParse(raw);
+  // 계약서(Zod) 위반은 여기서 잡는다 — 조원이 형식을 어기면 조용히 넘어가지 않는다.
+  // 다만 4명이 서로 다른 판정 어휘를 쓰는 프로젝트라(조원 D는 MET/NOT_MET/UNVERIFIABLE,
+  // 조원 A·B 스킬은 Confirmed/Not Demonstrated) 동의어가 새어 들어오는 것은 형식 오류로
+  // 취급하지 않고 정규화한다. 진짜 못 알아볼 값만 오류로 보고한다.
+  const parsed = PrincipleFindingsSchema.safeParse(normalizeVerdicts(raw));
   if (!parsed.success) {
     problems.push(
       `${file} 형식 오류 → ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.')}: ${i.message}`).join(' / ')}`,

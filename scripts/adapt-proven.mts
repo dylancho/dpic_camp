@@ -125,6 +125,27 @@ const detail = (prefix: string) =>
     .map(([id, st]) => `${id}=${st}`)
     .join(', ');
 
+/* ── 두 채점기가 갈리는 지점을 명시적으로 드러낸다 ──────────
+ *
+ * 조원 D의 scoring.py 는 필수 조건 미충족 시 **그 블록만** 0으로 두고 나머지 블록 점수를
+ * 살린다 (예: A 0건·B 3건·C 2건 → 0+7+4 = 11/25).
+ * 우리 하우스 헌법은 다르다:
+ *   "필수 조건 — Proven Scalability의 (A) 1개 이상·(B) 2개 이상 미충족 시 해당 원칙 0점 처리"
+ * '해당 원칙'은 a/b/c/d 중 하나를 가리킨다. (A)·(B)는 원칙이 아니라 조건이다.
+ * 따라서 최종 점수는 lib/scoring.ts 가 25점 전체를 0으로 만드는 쪽이 문서대로다.
+ *
+ * D의 블록 점수는 버리지 않는다 — "어느 블록이 얼마나 강했는가"는 실사에서 쓸모 있는 진단이다.
+ * 다만 두 숫자가 갈릴 때 조용히 넘어가면 "내 CLI는 11점인데 보고서는 0점"이라는 혼선이 난다.
+ * 그래서 갈리는 순간 summary와 redFlags에 그 사실을 박아 넣는다.
+ */
+const houseGateFails = aCount < 1 || bCount < 2;
+const divergence = houseGateFails && result.score > 0;
+const divergenceNote =
+  `조원 D 채점기는 실패 블록만 0으로 두어 ${result.score}/25 를 산출했으나, ` +
+  `하우스 Cut-off 규칙("(A)≥1·(B)≥2 미충족 시 해당 원칙 0점 처리")에 따라 최종 점수는 0/25로 처리된다. ` +
+  `블록 점수(A ${result.block_scores.a} · B ${result.block_scores.b} · C ${result.block_scores.c})는 ` +
+  `어느 축이 강했는지를 보여주는 진단 정보로만 읽을 것.`;
+
 const findings: PrincipleFindings = {
   criteria: [
     {
@@ -156,6 +177,7 @@ const findings: PrincipleFindings = {
   redFlags: [
     ...result.research_notes.map((n) => `[조사 결함] ${n}`),
     ...(result.gate_failed.length ? [`D 자체 게이트 미충족 블록: ${result.gate_failed.join(', ')}`] : []),
+    ...(divergence ? [`[채점 기준 차이] ${divergenceNote}`] : []),
   ],
   missingData: Object.entries(result.resolved_statuses)
     .filter(([, st]) => st === 'UNVERIFIABLE')
@@ -165,7 +187,8 @@ const findings: PrincipleFindings = {
   summary:
     `조원 D 파이썬 에이전트 판정: ${result.verdict}, 자체 점수 ${result.score}/25 ` +
     `(A ${result.block_scores.a}/12 · B ${result.block_scores.b}/8 · C ${result.block_scores.c}/5). ` +
-    `근거 커버리지 ${Math.round(result.evidence_coverage * 100)}%.`,
+    `근거 커버리지 ${Math.round(result.evidence_coverage * 100)}%.` +
+    (divergence ? ` ⚠ ${divergenceNote}` : ''),
 };
 
 writeFileSync(`${dir}/findings-proven_scalability.json`, JSON.stringify(findings, null, 2), 'utf8');
