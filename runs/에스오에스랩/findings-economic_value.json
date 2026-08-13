@@ -1,0 +1,6 @@
+{"criteria":[
+{"criterionId":"ev.tier","level":4,"verdict":"met","rationale":"단일판매·공급계약 공시.","evidence":[{"sourceId":"dart-index","quote":"20260616 단일판매ㆍ공급계약체결"}]},
+{"criterionId":"ev.roi","level":0,"verdict":"unknown","rationale":"payback 미공개.","evidence":[]},
+{"criterionId":"ev.wtp","level":1,"verdict":"partial","rationale":"일부 확인.","evidence":[]}],
+"gateSignals":{"paidEvidenceCount":2},"redFlags":["고객 집중도"],"missingData":["고객 ROI"],
+"killQuestions":[],"confidence":0.6,"summary":"공급계약 확인.","skillReport":"## Economic Value Verdict\nVerdict: PASS\n(표 생략)"}

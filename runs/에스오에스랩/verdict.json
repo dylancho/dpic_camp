@@ -1,0 +1,468 @@
+{
+  "verdict": {
+    "total": 51,
+    "max": 100,
+    "band": "reject",
+    "bandLabel": "Reject",
+    "pass": false,
+    "hardGateFailed": false,
+    "gateNotes": [
+      "【필수 조건】 Proven Scalability: 필수 조건 미충족 → 0점 처리: (A) 작동 증명 0건 — 1건 이상 필요, (B) 해자 1건 — 2건 이상 필요",
+      "【편중 방지 Floor】 Proven Scalability 0/25점으로 floor(15점) 미달 → 총점이 70을 넘어도 IC 특별승인 대상입니다."
+    ],
+    "needsICApproval": [
+      "proven_scalability"
+    ]
+  },
+  "scored": [
+    {
+      "principle": "structural_demand",
+      "name": "Structural Demand",
+      "category": "시장성",
+      "max": 30,
+      "rawScore": 20,
+      "score": 20,
+      "floor": 18,
+      "belowFloor": false,
+      "criteria": [
+        {
+          "criterionId": "sd.drivers",
+          "label": "구조적 driver 개수",
+          "max": 16,
+          "level": 2,
+          "score": 13,
+          "verdict": "met",
+          "rationale": "Confirmed 2건.",
+          "evidence": [
+            {
+              "sourceId": "web-a-1",
+              "quote": "현대차 로보틱스랩 200억 공급"
+            }
+          ]
+        },
+        {
+          "criterionId": "sd.subsidy",
+          "label": "Subsidy 의존도 ≤30% (Stress Test 통과)",
+          "max": 8,
+          "level": 1,
+          "score": 4,
+          "verdict": "partial",
+          "rationale": "Unclear.",
+          "evidence": []
+        },
+        {
+          "criterionId": "sd.tam",
+          "label": "10년+ 산업변화 설득력 + bottom-up TAM",
+          "max": 6,
+          "level": 1,
+          "score": 3,
+          "verdict": "partial",
+          "rationale": "bottom-up 미분해.",
+          "evidence": []
+        }
+      ],
+      "findings": {
+        "criteria": [
+          {
+            "criterionId": "sd.drivers",
+            "level": 2,
+            "verdict": "met",
+            "rationale": "Confirmed 2건.",
+            "evidence": [
+              {
+                "sourceId": "web-a-1",
+                "quote": "현대차 로보틱스랩 200억 공급"
+              }
+            ]
+          },
+          {
+            "criterionId": "sd.subsidy",
+            "level": 1,
+            "verdict": "partial",
+            "rationale": "Unclear.",
+            "evidence": []
+          },
+          {
+            "criterionId": "sd.tam",
+            "level": 1,
+            "verdict": "partial",
+            "rationale": "bottom-up 미분해.",
+            "evidence": []
+          }
+        ],
+        "gateSignals": {
+          "structuralDrivers": [
+            "productivity_imperative",
+            "supply_chain_reconfiguration"
+          ]
+        },
+        "redFlags": [],
+        "missingData": [
+          "정부과제 비중"
+        ],
+        "killQuestions": [
+          "현대차 외 고객은?"
+        ],
+        "confidence": 0.5,
+        "summary": "Confirmed driver 2개.",
+        "skillReport": "## Structural Demand Verdict\nVerdict: CONDITIONAL PASS\n(표 생략)",
+        "extraEvidence": [
+          {
+            "id": "web-a-1",
+            "source": "web",
+            "title": "현대차 라이다 공급",
+            "url": "https://example.com/a",
+            "content": "현대차 로보틱스랩 200억 공급"
+          }
+        ]
+      }
+    },
+    {
+      "principle": "economic_value",
+      "name": "Economic Value",
+      "category": "시장성",
+      "max": 25,
+      "rawScore": 15,
+      "score": 15,
+      "floor": 15,
+      "belowFloor": false,
+      "criteria": [
+        {
+          "criterionId": "ev.tier",
+          "label": "상업 증거 티어",
+          "max": 13,
+          "level": 4,
+          "score": 13,
+          "verdict": "met",
+          "rationale": "단일판매·공급계약 공시.",
+          "evidence": [
+            {
+              "sourceId": "dart-index",
+              "quote": "20260616 단일판매ㆍ공급계약체결"
+            }
+          ]
+        },
+        {
+          "criterionId": "ev.roi",
+          "label": "고객 ROI · Payback 임계 충족",
+          "max": 8,
+          "level": 0,
+          "score": 0,
+          "verdict": "unknown",
+          "rationale": "payback 미공개.",
+          "evidence": []
+        },
+        {
+          "criterionId": "ev.wtp",
+          "label": "Willingness to pay (유상PoC비·repeat·계약부채↑)",
+          "max": 4,
+          "level": 1,
+          "score": 2,
+          "verdict": "partial",
+          "rationale": "일부 확인.",
+          "evidence": []
+        }
+      ],
+      "findings": {
+        "criteria": [
+          {
+            "criterionId": "ev.tier",
+            "level": 4,
+            "verdict": "met",
+            "rationale": "단일판매·공급계약 공시.",
+            "evidence": [
+              {
+                "sourceId": "dart-index",
+                "quote": "20260616 단일판매ㆍ공급계약체결"
+              }
+            ]
+          },
+          {
+            "criterionId": "ev.roi",
+            "level": 0,
+            "verdict": "unknown",
+            "rationale": "payback 미공개.",
+            "evidence": []
+          },
+          {
+            "criterionId": "ev.wtp",
+            "level": 1,
+            "verdict": "partial",
+            "rationale": "일부 확인.",
+            "evidence": []
+          }
+        ],
+        "gateSignals": {
+          "paidEvidenceCount": 2
+        },
+        "redFlags": [
+          "고객 집중도"
+        ],
+        "missingData": [
+          "고객 ROI"
+        ],
+        "killQuestions": [],
+        "confidence": 0.6,
+        "summary": "공급계약 확인.",
+        "skillReport": "## Economic Value Verdict\nVerdict: PASS\n(표 생략)"
+      }
+    },
+    {
+      "principle": "physical_impact",
+      "name": "Physical Impact",
+      "category": "임팩트성",
+      "max": 20,
+      "rawScore": 16,
+      "score": 16,
+      "floor": 12,
+      "belowFloor": false,
+      "criteria": [
+        {
+          "criterionId": "pi.unit",
+          "label": "Primary Impact Unit 정의 (하드 게이트)",
+          "max": 8,
+          "level": 1,
+          "score": 4,
+          "verdict": "partial",
+          "rationale": "단위는 지목되나 경계 모호.",
+          "evidence": []
+        },
+        {
+          "criterionId": "pi.criteria4",
+          "label": "4개 기준 중 충족 개수 (2개↑ 만점)",
+          "max": 7,
+          "level": 2,
+          "score": 7,
+          "verdict": "met",
+          "rationale": "2개 충족.",
+          "evidence": []
+        },
+        {
+          "criterionId": "pi.linkage",
+          "label": "임팩트–매출 연동 (Revenue↑ = Impact↑)",
+          "max": 5,
+          "level": 2,
+          "score": 5,
+          "verdict": "met",
+          "rationale": "직결.",
+          "evidence": []
+        }
+      ],
+      "findings": {
+        "criteria": [
+          {
+            "criterionId": "pi.unit",
+            "level": 1,
+            "verdict": "partial",
+            "rationale": "단위는 지목되나 경계 모호.",
+            "evidence": []
+          },
+          {
+            "criterionId": "pi.criteria4",
+            "level": 2,
+            "verdict": "met",
+            "rationale": "2개 충족.",
+            "evidence": []
+          },
+          {
+            "criterionId": "pi.linkage",
+            "level": 2,
+            "verdict": "met",
+            "rationale": "직결.",
+            "evidence": []
+          }
+        ],
+        "gateSignals": {
+          "primaryImpactUnit": "사고-저감 건수/설비-yr"
+        },
+        "redFlags": [
+          "baseline 비교 부재"
+        ],
+        "missingData": [
+          "산정식"
+        ],
+        "killQuestions": [],
+        "confidence": 0.6,
+        "summary": "단위는 있으나 경계 모호.",
+        "skillReport": "## Physical Impact Verdict\nVerdict: CONDITIONAL PASS\n(표 생략)"
+      }
+    },
+    {
+      "principle": "proven_scalability",
+      "name": "Proven Scalability",
+      "category": "기술성",
+      "max": 25,
+      "rawScore": 2,
+      "score": 0,
+      "floor": 15,
+      "belowFloor": true,
+      "zeroedReason": "필수 조건 미충족 → 0점 처리: (A) 작동 증명 0건 — 1건 이상 필요, (B) 해자 1건 — 2건 이상 필요",
+      "criteria": [
+        {
+          "criterionId": "ps.working",
+          "label": "(A) 기술 작동 증명 (1개↑ 필수)",
+          "max": 12,
+          "level": 0,
+          "score": 0,
+          "verdict": "unmet",
+          "rationale": "조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
+          "evidence": [
+            {
+              "sourceId": "psa-1",
+              "quote": "연혁에 '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'이 있으나, materials 기준이 요구하는 Pilot run 2회 이상·고객 qualification 1건 이상·재현성 ±10~20% 수치가 어디에도 제시되지 않는다. 시설의 존재와 파일럿 실행 실적은 다르다."
+            },
+            {
+              "sourceId": "psa-2",
+              "quote": "연혁의 인증은 '2020.06 벤처인증(기술보증기금)', '2020.10 중소기업 확인(중소벤처기업부)'뿐이다. 둘 다 기업 지위에 대한 행정 인증이고, 원칙이 요구하는 제3자 공인시험기관의 시험성적서나 제품·기술 인증이 아니다."
+            },
+            {
+              "sourceId": "psa-3",
+              "quote": "materials 기준은 배치 수와 수율 재현성으로 본다. 파일럿 시설 구축·확장 사실은 확인되나 누적 배치 수, 수율, 재현 폭 수치를 찾지 못했다."
+            }
+          ]
+        },
+        {
+          "criterionId": "ps.moat",
+          "label": "(B) 해자 Defensibility (2개↑ 필수)",
+          "max": 8,
+          "level": 1,
+          "score": 2,
+          "verdict": "met",
+          "rationale": "조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
+          "evidence": [
+            {
+              "sourceId": "psa-4",
+              "quote": "거래소 기술성 평가 등급을 확인할 자료를 찾지 못했다. 상장 준비 단계나 기술특례 트랙 여부가 공개되어 있지 않다."
+            },
+            {
+              "sourceId": "psa-5",
+              "quote": "'세계 최초로 그래핀에 나노홀을 일괄 형성하는 양산 기술, 금속에서 그래핀을 기르는 기술 등 독창적인 연구개발 노하우를 갖추고 있다'는 기술 보유 서술은 있으나, 등록 특허 건수와 청구항 구조는 제시되지 않는다. DART에도 이 회사의 공시가 없어 확인 경로가 없다."
+            },
+            {
+              "sourceId": "psa-6",
+              "quote": "'2021.03 기업부설연구소 설립(과학기술정보통신부)'이 확인되나, 연구 인력의 규모와 학위별 구성(석사 이상 비중)은 공개되어 있지 않다."
+            }
+          ]
+        },
+        {
+          "criterionId": "ps.scaleup",
+          "label": "(C) Scale-up 준비",
+          "max": 5,
+          "level": 0,
+          "score": 0,
+          "verdict": "unmet",
+          "rationale": "조원 D의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
+          "evidence": [
+            {
+              "sourceId": "psa-8",
+              "quote": "'2022.06 Fabrication Zero 완공(서울대연구공원)', '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'. 시점은 명시되나 증설 규모(생산능력·면적)가 제시되지 않고, 시험검증용 파일럿이지 양산 라인 증설 로드맵이 아니다."
+            },
+            {
+              "sourceId": "psa-9",
+              "quote": "2020년 개인엔젤부터 2025년 인비저닝파트너스·에이티넘인베스트먼트·IBK기업은행까지 5회 이상 투자유치가 확인되고, 2022.06에는 유안타인베스트먼트·KB증권·에이티넘인베스트먼트·KDB산업은행·JB인베스트먼트가 참여했다. 다만 조달 금액이 공개되지 않았고, 조달 자금이 증설에 쓰인다는 용도 연결이 어디에도 없다."
+            },
+            {
+              "sourceId": "psa-10",
+              "quote": "핵심 원료·부품의 공급 계약이나 이중 소싱 확보를 확인할 자료를 찾지 못했다. 그래핀 전구체·기재 금속의 조달 구조에 대한 언급이 공개 자료에 없다."
+            }
+          ]
+        }
+      ],
+      "findings": {
+        "criteria": [
+          {
+            "criterionId": "ps.working",
+            "level": 0,
+            "verdict": "unmet",
+            "rationale": "조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
+            "evidence": [
+              {
+                "sourceId": "psa-1",
+                "quote": "연혁에 '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'이 있으나, materials 기준이 요구하는 Pilot run 2회 이상·고객 qualification 1건 이상·재현성 ±10~20% 수치가 어디에도 제시되지 않는다. 시설의 존재와 파일럿 실행 실적은 다르다."
+              },
+              {
+                "sourceId": "psa-2",
+                "quote": "연혁의 인증은 '2020.06 벤처인증(기술보증기금)', '2020.10 중소기업 확인(중소벤처기업부)'뿐이다. 둘 다 기업 지위에 대한 행정 인증이고, 원칙이 요구하는 제3자 공인시험기관의 시험성적서나 제품·기술 인증이 아니다."
+              },
+              {
+                "sourceId": "psa-3",
+                "quote": "materials 기준은 배치 수와 수율 재현성으로 본다. 파일럿 시설 구축·확장 사실은 확인되나 누적 배치 수, 수율, 재현 폭 수치를 찾지 못했다."
+              }
+            ]
+          },
+          {
+            "criterionId": "ps.moat",
+            "level": 1,
+            "verdict": "met",
+            "rationale": "조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
+            "evidence": [
+              {
+                "sourceId": "psa-4",
+                "quote": "거래소 기술성 평가 등급을 확인할 자료를 찾지 못했다. 상장 준비 단계나 기술특례 트랙 여부가 공개되어 있지 않다."
+              },
+              {
+                "sourceId": "psa-5",
+                "quote": "'세계 최초로 그래핀에 나노홀을 일괄 형성하는 양산 기술, 금속에서 그래핀을 기르는 기술 등 독창적인 연구개발 노하우를 갖추고 있다'는 기술 보유 서술은 있으나, 등록 특허 건수와 청구항 구조는 제시되지 않는다. DART에도 이 회사의 공시가 없어 확인 경로가 없다."
+              },
+              {
+                "sourceId": "psa-6",
+                "quote": "'2021.03 기업부설연구소 설립(과학기술정보통신부)'이 확인되나, 연구 인력의 규모와 학위별 구성(석사 이상 비중)은 공개되어 있지 않다."
+              }
+            ]
+          },
+          {
+            "criterionId": "ps.scaleup",
+            "level": 0,
+            "verdict": "unmet",
+            "rationale": "조원 D의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
+            "evidence": [
+              {
+                "sourceId": "psa-8",
+                "quote": "'2022.06 Fabrication Zero 완공(서울대연구공원)', '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'. 시점은 명시되나 증설 규모(생산능력·면적)가 제시되지 않고, 시험검증용 파일럿이지 양산 라인 증설 로드맵이 아니다."
+              },
+              {
+                "sourceId": "psa-9",
+                "quote": "2020년 개인엔젤부터 2025년 인비저닝파트너스·에이티넘인베스트먼트·IBK기업은행까지 5회 이상 투자유치가 확인되고, 2022.06에는 유안타인베스트먼트·KB증권·에이티넘인베스트먼트·KDB산업은행·JB인베스트먼트가 참여했다. 다만 조달 금액이 공개되지 않았고, 조달 자금이 증설에 쓰인다는 용도 연결이 어디에도 없다."
+              },
+              {
+                "sourceId": "psa-10",
+                "quote": "핵심 원료·부품의 공급 계약이나 이중 소싱 확보를 확인할 자료를 찾지 못했다. 그래핀 전구체·기재 금속의 조달 구조에 대한 언급이 공개 자료에 없다."
+              }
+            ]
+          }
+        ],
+        "gateSignals": {
+          "provenWorkingCount": 0,
+          "moatCount": 1
+        },
+        "redFlags": [
+          "[조사 결함] 에스오에스랩 20260515002099: '계약부채' 등 Economic Value 축(원칙 b) 신호가 감사보고서 주석에 있다 — 이 축(기술성)의 Evidence로는 만들지 않는다. 해당 축을 담당하는 에이전트에게 전달할 것.",
+          "[조사 결함] 에스오에스랩 20260515002099: 'B3_domain_expertise' 관련 섹션은 찾았지만 표를 명확히 읽지 못했다 — 추측하지 않고 건너뛴다 (UNVERIFIABLE로 남는다).",
+          "[조사 결함] 에스오에스랩 20251118000163: 'B3_domain_expertise' 관련 섹션은 찾았지만 표를 명확히 읽지 못했다 — 추측하지 않고 건너뛴다 (UNVERIFIABLE로 남는다).",
+          "[조사 결함] 에스오에스랩 20251114002154: 'B3_domain_expertise' 관련 섹션은 찾았지만 표를 명확히 읽지 못했다 — 추측하지 않고 건너뛴다 (UNVERIFIABLE로 남는다).",
+          "[조사 결함] 에스오에스랩 20250814002878: 'B3_domain_expertise' 관련 섹션은 찾았지만 표를 명확히 읽지 못했다 — 추측하지 않고 건너뛴다 (UNVERIFIABLE로 남는다).",
+          "[조사 결함] MET 1건이 3~4급(언론·회사 자체 발표) 근거에만 의존한다: B4_lab_publication_track. 1~2급 근거로 보강되기 전까지는 실사에서 재확인할 것.",
+          "D 자체 게이트 미충족 블록: A, B"
+        ],
+        "missingData": [
+          "A1_poc_reproducibility — 근거를 확인하지 못했다",
+          "A3_field_operation_hours — 근거를 확인하지 못했다",
+          "B1_exchange_tech_grade — 근거를 확인하지 못했다",
+          "B2_registered_patents — 근거를 확인하지 못했다",
+          "B3_domain_expertise — 근거를 확인하지 못했다",
+          "C3_supply_chain — 근거를 확인하지 못했다"
+        ],
+        "killQuestions": [
+          "[A1_poc_reproducibility] PoC 재현성 — 공개 자료에서 확인할 수 없었다. 판정 기준: 서로 다른 고객·환경에서 PoC 2회 이상, 핵심 성능 KPI가 ±10~20% 내 재현",
+          "[A3_field_operation_hours] 실환경 가동 — 공개 자료에서 확인할 수 없었다. 판정 기준: 실환경 누적 가동 1,000시간 이상",
+          "[B1_exchange_tech_grade] 거래소 기술성 평가 — 공개 자료에서 확인할 수 없었다. 판정 기준: 거래소 기술성 평가 A 이상 (기술특례상장 기준 등급)",
+          "[B2_registered_patents] 등록 특허 — 공개 자료에서 확인할 수 없었다. 판정 기준: 등록 특허 3건 이상 (출원 아님). 핵심 청구항의 경쟁사 회피 난이도를 함께 본다",
+          "[B3_domain_expertise] 도메인 전문성 — 공개 자료에서 확인할 수 없었다. 판정 기준: 관련 도메인 석사 이상 인력 비중 60% 이상",
+          "[C3_supply_chain] 공급망 확보 — 공개 자료에서 확인할 수 없었다. 판정 기준: 핵심 원료·부품의 공급 계약 또는 이중 소싱이 확보되어 있다"
+        ],
+        "confidence": 0.4,
+        "summary": "조원 D 파이썬 에이전트 판정: INSUFFICIENT_EVIDENCE, 자체 점수 0/25 (A 0/12 · B 0/8 · C 0/5). 근거 커버리지 40%."
+      }
+    }
+  ]
+}

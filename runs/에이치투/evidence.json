@@ -1,0 +1,257 @@
+{
+  "company": {
+    "name": "에이치투",
+    "aliases": []
+  },
+  "gaps": [
+    "웹 검색 결과 19건은 기업명이 언급되지 않아 관련성 필터에서 제외했습니다.",
+    "⛔ DART에 \"에이치투\" 과 일치하는 법인이 2건입니다. 임의로 고르면 무관한 회사의 재무제표로 심사하게 되므로 DART 수집을 중단했습니다.\n    01152665  에이치투 — 설립 20021001, 업종 46722, 대표 조경현, 서울특별시 서초구 서초대로48길 89-4 (서초동, U\n    01622544  에이치투 — 설립 20200203, 업종 38322, 대표 송재권, 경기도 화성시 만세구 양감면 사격장길 131-22 (사\n    → 맞는 법인을 골라 다시 수집하세요: npm run collect -- \"에이치투\" \"\" --corp-code=<8자리>"
+  ],
+  "items": [
+    {
+      "id": "web-1",
+      "source": "web",
+      "title": "(주)에이치투",
+      "url": "http://www.h2aec.com/kor/news.do;jsessionid=205B097C9BBFE5AC61A95415F7712B24?pageIndex=10",
+      "content": "### WHY H2\n\n더 오래 그리고 안전하게 에너지를 공급하고 싶다면 해결책은 바로 여기, 에이치투에 있습니다.\n\n#### News\n\n에너지장치 中企 H2, 바나듐 방식 장치 납품 성공\n\n'Solar Today' 2014년 2월호에 실린 H2의 VRFB ESS에 관한 기사입니다.\n\n(주)에이치투의 김유종 팀장이 전자부품연구원에서 주관하는 Smart Battery/Cell Forum 2013 에 초대되어 아래와 같이 중대형 이차전지 산업에 대한 발표를 진행할 예정이니 관심이 있으신 많은 분들의 참여를 바랍니다.\n\n2013년 9월초에 일산 KINTEX에서 개최되는 국내 최대의 태양광 전시회인 EXPO Solar 2013에서 당사 대표이사인 한신박사가 아래와 같이 포럼 발표를 진행할 예정이오니 많은 관심 바랍니다.\n\n학교 및 연구소에서의 지속적인 문의 및 요청에 따라 에이치투의 기술력이 담겨 있는 연구용 바나듐 레독스흐름전지를 출시하였습니다.\n\n(주)에이치투의 VRFB 제품에 대한 고유 브랜드명이 다음과 같이 변경되었습니다.\n\n지난 4월 3일(수)-5일(금) 3일간 대구 EXCO에서 열렸던 국제그린에너지엑스포 기간 중 당사의 부스를 방문해 주신 모든 분들께 진심으로 감사의 말씀드립니다.\n\n㈜에이치투(대표이사 한신)는 국내최초의 상용 바나듐 레독스 플로우배터리를 이용한 ESS(Energy Storage System)인 EnerPAC 310을 대구 국제그린에너지엑스포에서 출시한다고 3일 밝혔다.\n\n레독스 플로 2차전지를 장착한 에너지저장장치(ESS)가 상용화된다. [...] 레독스 플로 2차전지를 장착한 에너지저장장치(ESS)가 상용화된다.\n\n(주)에이치투는 국내 최대 규모의 신재생에너지 관련 전시회인 \"국제 그린에너지엑스포 2013\"에 다음과 같이 참가업체로 참가합니다."
+    },
+    {
+      "id": "web-2",
+      "source": "web",
+      "title": "에이치투, ‘국가대표 R&D 우수성과 100’ 에너지 분야 최우수 성과 선정 - 매일경제",
+      "url": "https://www.mk.co.kr/news/business/11573547",
+      "content": "과학기술정보통신부(이하 과기정통부)는 이번 우수성과 발표에서 에이치투의 연구개발 성과를 ‘세계 최고 수준의 출력밀도를 갖는 저비용 고출력 밀도의 바나듐 흐름전지용 스택 기술 개발’로 소개하며 신재생에너지 연계 ESS 산업의 글로벌 경쟁력을 높일 수 있는 핵심 기술로 평가했다.\n\n해당 성과는 태양광과 풍력발전 등에 주로 활용되는 바나듐 흐름전지의 핵심 부품인 스택(Stack) 성능을 획기적으로 향상한 것이 특징이다. 에이치투는 이번 연구를 통해 전류밀도 200mA/cm² 이상의 고출력 VFB 스택을 구현했으며 이는 기존 기술 대비 약 1.6배 수준의 출력 성능 개선에 해당한다. 이를 통해 대용량·장주기 ESS에 적합한 고출력·고효율 스택 기술을 확보했다는 평가다.\n\n과기정통부는 이번 연구개발 성과로 성능 향상과 함께 핵심 소재의 국산화와 제조 기술 자립이 이뤄지면서 국산 VFB 기술이 해외 ESS 시장에서도 경쟁력을 갖출 수 있는 기반을 마련했다는 설명이다.\n\n바나듐 흐름전지는 화재 위험이 거의 없고 수명이 매우 긴 대용량 에너지 저장 장치로, 재생에너지 비중이 확대되는 글로벌 전력 시장에서 주목받고 있는 비리튬계 2차 전지 기술이다. 이번 최우수 성과 선정은 에너지·환경 분야에서 안전성과 장수명을 강점으로 하는 흐름전지 기술의 산업적 가치가 공식적으로 인정받은 사례로 해석된다. [...] ### 이슈\n\n### 국제 많이 본 기사\n\n### 문화 홈\n\n### 에디터 픽\n\n### 유튜브\n\n### 문화 많이 본 기사\n\n### 스포츠 홈\n\n### 유튜브\n\n### 스포츠 많이 본 기사\n\n#### 똑똑하게 질문하기\n\n전 세계가 주목하는 차세대 에너지 기술은?\n\n최근 주목받는 외식/간식 트렌드는?\n\n최근 글로벌 AI 규제 흐름과 한국 기업 대응책은?\n\n가상자산 제도권 진입, 시장의 변화는?\n\nAI 검색을 우선 설정합니다.\n\n공유\n\n글자 크기\n\n가\n\n가\n\n가\n\n가\n\n가\n\n### 편의기능\n\n### AI기능\n\n### 에디터 픽 추천기사\n\n#### 가업승계 문턱 더 높였다 … 40년 경영에 업종 변경도 제한\n\n#### '메가프로젝트 52시간 예외' 두고 부처 간 동상이몽\n\n#### 밑빠진 교부금 … \"공립고 공무직이 사립 2배\"\n\n#### 1.6조 쏟은 AI 데이터 ‘부실’ … 감사원, 중복·오류 적발\n\n#### 정책학회 “李정부 1년 경제정책 57점”\n\n마이에이전트\n마이에이전트\n마이에이전트\n\n## 에이치투, ‘국가대표 R&D 우수성과 100’ 에너지 분야 최우수 성과 선정\n\n### 남궁선희 기자\n\n구글 검색 선호 추가\n\nGoogle 검색에서 매일경제 기사를 더 자주 볼 수 있습니다.\n\n국내 에너지저장장치(ESS) 전문기업 에이치투(H2 Inc. 대표 한신)가 과학기술정보통신부가 발표한 ‘2025 국가대표 연구개발 우수성과 100’에서 에너지·환경 분야 최우수 성과로 선정됐다.\n\n특히 이번 선정은 ESS 분야, 그중에서도 바나듐 흐름전지(VFB) 기술이 최고 성과로 평가받았다는 점에서 업계의 주목을 받고 있다. [...] 에이치투는 이미 독일 시장으로의 스택 수출에 이어, 올해 스페인에서 최대 규모의 바나듐 흐름전지 기반 ESS 설치를 완료하며 해외 실적을 쌓아가고 있다. 회사 측은 이번 국가대표 연구개발 최우수 성과 선정을 계기로 국산 바나듐 흐름전지 기술의 신뢰도를 한층 끌어올리고, 신재생에너지와 연계한 장주기 ESS를 중심으로 해외 수출 확대에 더욱 박차를 가할 계획이다.\n\n에이치투 한신 대표는 “이번 에너지·환경 분야 최우수 연구개발 성과가 비리튬계 ESS, 특히 바나듐 흐름전지 기술에서 나왔다는 점에서 의미가 크다”라며 “국산 기술을 기반으로 글로벌 ESS 시장에서 경쟁력을 지속적으로 확대해 나가겠다”라고 말했다.\n\n#### 남궁선희 기자\n\n공유\n\n### 에디터 픽 추천기사\n\n#### 가업승계 문턱 더 높였다 … 40년 경영에 업종 변경도 제한\n\n#### '메가프로젝트 52시간 예외' 두고 부처 간 동상이몽\n\n#### 밑빠진 교부금 … \"공립고 공무직이 사립 2배\"\n\n#### 1.6조 쏟은 AI 데이터 ‘부실’ … 감사원, 중복·오류 적발\n\n#### 정책학회 “李정부 1년 경제정책 57점”\n\n### 매경에서 선정한 주요뉴스\n\n환율 내리고 수수료도 뚝 … 해외송금 부담 확 줄었다\n\n### 환율 내리고 수수료도 뚝 … 해외송금 부담 확 줄었다\n\n4400달러 넘은 금값 … 아직 남은 '미국 자금' 변수\n\n### 4400달러 넘은 금값 … 아직 남은 '미국 자금' 변수\n\n\"번질수록 돈 번다\" …美 '산물 베팅' 규제 움직임\n\n### \"번질수록 돈 번다\" …美 '산물 베팅' 규제 움직임\n\n### 닫기"
+    },
+    {
+      "id": "web-3",
+      "source": "web",
+      "title": "H2, Inc. | LinkedIn",
+      "url": "https://kr.linkedin.com/company/h2-inc",
+      "content": "## 소개\n\nH2 is a Korea-based advanced energy storage company specialized in vanadium redox flow battery which is an optimal solution especially for large-scale and long-duration energy storage. H2 has developed cutting-edge EnerFLOW series energy storage using its own vanadium redox flow batteries, which is commercially available at the moment. H2 is expected to grow fast and big due to H2's unique design and manufacturing capabilities, and a promising market of large-scale energy storage.\n(주)에이치투는 도전적이고 진취적인 젊은 인재들이 모인 에너지 분야의 첨단벤처기업입니다. 에이치투는 전세계의 에너지 문제를 해결하기 위한 대용량 에너지저장장치(ESS)를 연구개발하고 생산합니다. 특히, 향후 대용량 에너지저장장치 시장을 주도할 중요한 배터리 기술로 부상하고 있는 플로우배터리(flow battery)를 주력으로 하고 있습니다. 플로우배터리 분야에서는 전세계적으로도 가장 선도적인 기업으로 인정받고 있으며, 이를 통해 높은 성장성 또한 인정받아 지난 수년 간 160억원 이상의 벤처투자를 유치하기도 하였습니다. [...] 이 이미지의 대체 텍스트 설명이 없음\n이 이미지의 대체 텍스트 설명이 없음\n\nH2, Inc.님 단체 페이지를 조회합니다.\n\n팔로워 596명\n\n(주)에이치투는 국내 최대 배터리 산업 전시회인 ‘인터배터리 2026’에 참가합니다. 전시회는 2026년 3월 11일(수)~ 3월 13일(금)까지 총 삼 일간 서울 삼성동 코엑스에서 진행 될 예정입니다.\n최근 전 세계적 대표 장주기 ESS인 당사의 흐름전지(VFB) 배터리 제품과 기술력을 선보일 예정입니다. 부스는 코엑스 D홀 D730에 위치해 있습니다. 관심있는 분들의 많은 방문 부탁드립니다.\n#VFB #VRFB #RedoxFlowBattery #Vanadium #Flowbattery #LongDurationEnergyStorage #EnergyStorage #LDES #ESS #EnvironmentFriendly #CarbonNeutrality #ESG #ClimateTech #H2inc\n\n이 이미지의 대체 텍스트 설명이 없음\n\nH2, Inc.님 단체 페이지를 조회합니다.\n\n팔로워 596명 [...] Shin Han님 프로필을 조회합니다."
+    },
+    {
+      "id": "web-4",
+      "source": "web",
+      "title": "[에이치투]바나듐 흐름전지 기술 선도 | 오이마켓",
+      "url": "https://technovalue.com/View.aspx?No=4076339",
+      "content": "# 오이마켓 오이마켓\n\n오이마켓%20-%20%eb%b3%b5%ec%82%ac%eb%b3%b81.png)\n\n## 전체 메뉴\n\n# 오이마켓 오이마켓\n\n오이마켓%20-%20%eb%b3%b5%ec%82%ac%eb%b3%b81.png)\n\n#### [에이치투]바나듐 흐름전지 기술 선도\n\n국내 최초 장주기 ESS 상용화\n  \n화재 없는 친환경 에너지 저장 솔루션 제시\n\n페이스북\nX\n네이버\n클립보드 복사\n인쇄하기\n![[에이치투]바나듐 흐름전지 기술 선도](\n\n에너지저장장치(ESS) 시장에서 차세대 기술을 선도하고 있는 에이치투(H2)가 주목받고 있다. 2010년 설립된 에이치투는 바나듐 흐름전지(VFB, Vanadium Flow Battery) 기술을 전문으로 하는 국내 대표 에너지 솔루션 기업으로, 국내 최초로 장주기 ESS를 상용화하며 글로벌 시장에서의 위상을 높이고 있다.\n\n에이치투의 핵심 기술인 바나듐 흐름전지는 기존 리튬이온 배터리와 완전히 다른 방식의 에너지 저장 기술이다. 바나듐 액체를 전해질로 사용해 화학 반응을 통해 에너지를 저장하고 방출하는 방식으로, 화재 위험이 없다는 가장 큰 장점을 가지고 있다. 또한 20년 이상의 장기 운전이 가능하며, 8시간 이상의 장주기 방전도 가능해 재생에너지의 간헐성 문제를 효과적으로 해결할 수 있다는 평가를 받고 있다. [...] 기존 리튬이온 배터리 기반 ESS는 수시로 발생하는 화재 사고로 사회적 문제가 되어 왔다. 반면 에이치투의 바나듐 흐름전지는 화재 위험이 거의 없어 안전성 측면에서 우수하다. 또한 배터리 성능 저하도 리튬이온보다 훨씬 적어 장기간 일정한 성능을 유지할 수 있으며, 수명이 끝난 후에도 환경 친화적으로 처리할 수 있다는 점이 강점이다.\n\n에이치투는 국내에서 처음 이 기술을 상용화해 풍부한 운전 경험을 축적하고 있다. 현재 국내외 다양한 프로젝트를 진행 중이며, 최근 한국동서발전과 국산 바나듐 흐름전지 저장장치 공동개발 사업을 추진하고 있다. 또한 호주, 미국, 유럽 등 주요 시장에 진출하며 글로벌 경쟁력을 갖춰가고 있다.\n\n에이치투는 KAIST 기계공학 박사연구실 출신의 창업자들이 최고의 엔지니어링 기술을 바탕으로 설립한 첨단벤처기업이다. 책임감과 진정성을 기치로 전 세계의 에너지 문제 해결을 위해 노력하고 있으며, 대용량 장주기 ESS라는 틈새 시장에서 전문성을 인정받고 있다.\n\n업계 전문가들은 에이치투와 같은 비리튬계 ESS 기업들이 향후 에너지 저장 시장에서 중요한 역할을 할 것으로 예측하고 있다. 정부가 탄소중립 달성을 위해 장주기 ESS 도입을 적극 추진하면서 에이치투 같은 전문기업에 대한 수요가 계속 증가할 것으로 예상되기 때문이다. 안전하고 환경 친화적인 에너지 저장 기술의 필요성이 대두되는 만큼, 에이치투의 바나듐 흐름전지 기술이 차세대 ESS 시장의 주역이 될 수 있을 것으로 관측된다.\n\nLike\nLike\n\n오이마켓\n조혜영\nssbizbiz@naver.com\n\n### 댓글 [...] Like\nLike\n\n오이마켓\n조혜영\nssbizbiz@naver.com\n\n### 댓글\n\n댓글은 로그인 후 작성해주세요.\n\n### Hot News\n\n이청원\n\nGreen-X\n\n박윤석 VP\n\nBusiness Window\n\n박윤석 VP\n\nBusiness Window\n\n박윤석 VP\n\nBusiness Window\n\n이청원\n\nGreen-X\n\n### 전체기사\n\n이홍\n\n프리즘\n\n이청원\n\nGreen-X\n\n조혜영\n\n월드클래스기업\n\n박윤석 VP\n\nBusiness Window\n\n조혜영\n\n월드클래스기업\n\n유효상\n\n프리즘\n\n박윤석 VP\n\nBusiness Window\n\n뉴스브릿지 배너\n\n뉴스브릿지 배너\n\n제호  창조아고라  |  주소  서울시 강남구 영동대로 602   |  이메일  ynchllim@gmail.com  |  대표전화  02-3479-5034  |  발행인  임윤철  |  편집인  임윤철  |  인터넷신문등록번호  경기 아53933  |  사업자등록번호  (주)기술과가치 117-81-28800  |  등록일자  2024.01.01.  \n  \n(교육 및 광고) 주소  서울시 서초구 효령로 131(2층)   |  이메일  wonyon@empas.com  |  사업자등록번호  베리(주) 316-81-26753\n\n2025 © 기술과가치 오이마켓 All rights reserved."
+    },
+    {
+      "id": "psa-1",
+      "source": "web",
+      "title": "[원칙 d] A1_poc_reproducibility (UNVERIFIABLE, 3급 근거)",
+      "url": "https://www.newscj.com/news/articleView.html?idxno=3397375",
+      "content": "에이치투는 7개국 20개 사업 총 43MWh 규모의 바나듐 흐름전지 저장장치 사업 실적을 보유하고 있다.\n[정량값] 7개국 20개 사업 43MWh (2026-04 기준). 서로 다른 고객·환경 2건 이상이라는 건수 요건은 충족되나, 각 회차의 핵심 성능 KPI 수치와 재현 폭(±%)이 공개되지 않아 재현성 판정 불가"
+    },
+    {
+      "id": "psa-2",
+      "source": "web",
+      "title": "[원칙 d] A1_poc_reproducibility (UNVERIFIABLE, 3급 근거)",
+      "url": "https://www.businesspost.co.kr/BP?command=article_view&num=304234",
+      "content": "울산 화력발전소를 비롯해 폴란드 신재생에너지국책연구소(KEZo) 등 14곳에 자사의 에너지저장장치를 공급했다. 총 31메가와트시(MWh) 용량\n[정량값] 14곳 / 31MWh (2023-01 기준). 개별 사이트의 에너지효율·용량유지율 등 KPI 실측치와 사이트 간 편차를 명시한 자료를 국·영문 전수 검색했으나 찾지 못함"
+    },
+    {
+      "id": "psa-3",
+      "source": "web",
+      "title": "[원칙 d] A2_third_party_validation (MET, 3급 근거)",
+      "url": "https://magazine.hankyung.com/business/article/202208244108b",
+      "content": "흐름전지로는 한국 최초로 신제품(NEP) 인증과 단체 표준 인증, 중소벤처기업부 혁신 제품 인증, 미국 수출을 위한 스택의 UL1973 인증을 획득\n[정량값] 발급기관 특정된 제3자 인증 4건: UL(UL1973, 5266 Stack, 2021, 세계 2번째) / 국가기술표준원 NEP 신제품인증(2021-12) / 한국전지산업협회 단체표준 제품인증(2020-11, 스택·모듈 2품목) / 중기부·조달청 우수연구개발 혁신제품 지정(2021-06, EnerFLOW 430)"
+    },
+    {
+      "id": "psa-4",
+      "source": "web",
+      "title": "[원칙 d] A2_third_party_validation (MET, 3급 근거)",
+      "url": "https://m.etnews.com/20201215000111",
+      "content": "에이치투가 국내 흐름전지 업계 최초로 단체표준 인증을 획득했다. 인증 대상은 흐름전지 스택과 시스템 모듈 2개 품목이다.\n[정량값] 단체표준 제품인증 2품목(스택, 시스템 모듈), 발급기관 한국전지산업협회, 2020년 12월 보도. 다만 KTC/KTL 등 공인시험기관 시험성적서 원문(성적서 번호·시험일·측정치)과 인증서 원문(인증번호)은 미확인"
+    },
+    {
+      "id": "psa-5",
+      "source": "web",
+      "title": "[원칙 d] A3_field_operation_hours (MET, 3급 근거)",
+      "url": "http://www.e2news.com/news/articleView.html?idxno=229614",
+      "content": "한국동서발전 울산발전본부에 1MWh급 바나듐 레독스 흐름전지(VRFB) 실증설비를 설치했고 지난달 21일 계통에 연계했다. 국내 최초로 송·배전망에 계통연계된 VRFB 설비다.\n[정량값] 사이트 1: 동서발전 울산발전본부 1MWh VRFB, 2021년 1월 국내 최초 계통연계 상업운전 개시(에너지신문·투데이에너지 2021-01-13 교차확인). 가동 개시 시점 문서 확인됨"
+    },
+    {
+      "id": "psa-6",
+      "source": "web",
+      "title": "[원칙 d] A3_field_operation_hours (MET, 3급 근거)",
+      "url": "https://www.ess-news.com/2026/03/24/spain-completes-testing-of-europes-largest-research-vanadium-bess/",
+      "content": "Spain's Fundación Ciudad de la Energía (Ciuden) has completed operational testing of a 1 MW/8 MWh vanadium redox flow battery (VRFB) system at its Cubillos del Sil technology center. The contract was awarded to Spanish company CYMI, incorporating technology from South Korean firm H2 Inc.\n[정량값] 사이트 2: 스페인 CIUDEN 1MW/8MWh VRFB, 2025년 설치·2026년 3월 운전시험 완료. 울산 사이트와 서로 다른 고객·환경. calibration workingProof의 '가동 개시 시점이 문서로 확인되는 사이트 ≥2건' 충족. 대체 조건인 '제3자 시험성적서·인증기관 검증 ≥2건'도 A2에서 별도 충족(UL/NEP/단체표준/혁신제품 4건)"
+    },
+    {
+      "id": "psa-7",
+      "source": "web",
+      "title": "[원칙 d] A3_field_operation_hours (UNVERIFIABLE, 3급 근거)",
+      "url": "https://magazine.hankyung.com/business/article/202208244108b",
+      "content": "최대 20년, 2만 사이클 이상\n[정량값] 성능보증(PPA·성능계약·warranty) 계약의 존재 여부: 확인 실패. '20년·2만 사이클'은 제품 사양 주장이며 계약상 용량 유지율 보증 %·보증 연수·페널티 조항을 명시한 자료를 국·영문 검색으로 찾지 못함. 또한 미국 캘리포니아 5MW/20MWh는 2021-12 착수 이후 상업운전 확인 자료가 없고(2026-08 기준), 울산 20MWh 실증은 2026년 10월 준공 목표로 아직 미준공"
+    },
+    {
+      "id": "psa-8",
+      "source": "web",
+      "title": "[원칙 d] B1_exchange_tech_grade (UNVERIFIABLE, 3급 근거)",
+      "url": "https://www.sedaily.com/NewsView/29PML6IPU5",
+      "content": "올 하반기 기술특례상장을 위한 기술성 평가부터 마치겠다\n[정량값] 2023-05 시점의 '계획'만 확인. 2026-08 현재 한국거래소 기술평가 등급(A/BBB 등), 전문평가기관 2곳의 명칭, 평가일, 상장예비심사 청구 사실 중 어느 것도 공개 자료에서 확인되지 않음. thebell 2024-12-10 기사 제목 '프리IPO는 아직'이 2024년말까지도 미진행임을 시사"
+    },
+    {
+      "id": "psa-9",
+      "source": "web",
+      "title": "[원칙 d] B2_registered_patents (MET, 1급 근거)",
+      "url": "https://patents.google.com/patent/KR102798928B1/ko",
+      "content": "KR102798928B1 「Electrolyte Antioxidant System For Redox Flow battery」 출원인 주식회사 에이치투, 발명자 강세구·허지향·석문자·한신, 출원 2023-12-01, 등록 2025-04-23. 청구항: 전해액을 저장하는 전해액 탱크; 제1 챔버와 제2 챔버를 구비한 산화방지제 용기; 탱크와 챔버를 연결하는 제1·제2 에어벤트 호스; 챔버 사이 산화방지제 수위를 일정하게 유지하도록 하부에 연결통로를 갖는 격벽\n[정량값] 등록(B1 공보) 18건 — 출원이 아니라 등록 기준. KR101130575B1(2012-04-12) / KR101157992B1(2012-06-19) / KR101205062B1(2012-11-26) / KR101431070B1(2014-08-21) / KR101465489B1(2014-11-26) / KR101471886B1(2014-12-10) / KR101495434B1(2015-02-24) / KR101808606B1(2017-12-13) / KR101955893B1(2019-03-08) / KR102023914B1(2019-09-23) / KR102023919B1(2019-09-23) / KR102028678B1(2019-10-04) / KR102057018B1(2020-01-22) / KR102161420B1(2020-10-05) / KR102205888B1(2021-01-21) / KR102321389B1(2021-11-03) / KR102639281B1(2024-02-21) / KR102798928B1(2025-04-23). calibration patentCountFloor 4건 상회. 공개공보(KR20190113174A 등)와 국제출원 WO2020226190A1은 등록이 아니므로 제외. 청구항 광협·회피 난이도는 KR102798928B1 1건만 확인"
+    },
+    {
+      "id": "psa-10",
+      "source": "web",
+      "title": "[원칙 d] B3_domain_expertise (UNVERIFIABLE, 4급 근거)",
+      "url": "https://www.jobkorea.co.kr/recruit/co_read/c/h2aec",
+      "content": "직원수 78명 (2026년 기준)\n[정량값] 전체 인원(분모) 78명은 확인되나, 관련 도메인 석사 이상 인력 수 또는 비중(%)(분자)을 명시한 자료를 찾지 못해 비중 계산 불가. 비상장·DART 미등록 법인이라 사업보고서 '연구개발활동' 섹션이 존재하지 않음. 채용 사이트 3종·언론 인터뷰·기업부설연구소 정보 검색 모두 학위별 인력 수 미제공"
+    },
+    {
+      "id": "psa-11",
+      "source": "web",
+      "title": "[원칙 d] B4_lab_publication_track (MET, 1급 근거)",
+      "url": "https://patents.google.com/patent/KR102798928B1/ko",
+      "content": "KR102798928B1 발명자: 강세구, 허지향, 석문자, 한신 / 출원인: 주식회사 에이치투 / 등록일 2025-04-23\n[정량값] 대표이사 한신과 CTO 허지향이 핵심 등록특허의 발명자로 등재. 이 외에도 2011년 이후 레독스 흐름전지 등록특허 18건 보유(B2 참조)"
+    },
+    {
+      "id": "psa-12",
+      "source": "web",
+      "title": "[원칙 d] B4_lab_publication_track (MET, 3급 근거)",
+      "url": "https://www.businesspost.co.kr/BP?command=article_view&num=304408",
+      "content": "한신 대표와 허지향 CTO는 KAIST 기계공학과 같은 실험실에서 만나 공동창업했다.\n[정량값] 인물·기관 특정: 한신(대표, KAIST 기계공학 박사) / 허지향(CTO, KAIST 기계공학 동일 연구실 박사과정 동료). 다만 두 사람의 peer-reviewed 논문(제목·게재지)은 특정하지 못했고, 아산기업가정신리뷰는 창업팀이 '공학 박사였지만 플로우 배터리 전공자들은 아니었다'고 기술 — 랩실 이력의 도메인 정합성은 부분적"
+    },
+    {
+      "id": "psa-13",
+      "source": "web",
+      "title": "[원칙 d] C1_capacity_plan (MET, 3급 근거)",
+      "url": "https://www.ess-news.com/2025/01/23/vanadium-flow-battery-maker-h2-secures-funds-for-new-korean-factory/",
+      "content": "The capital will support construction of the K2 manufacturing facility in Daejeon, South Korea. The new plant will have 1.2 GWh annual production capacity with operations expected to commence in 2026. The existing facility produces 330 MWh per year.\n[정량값] K1 연 330MWh(충남 계룡, 2023-05 준공) → K2 연 1.2GWh(대전, 2026년 가동 목표). 증설 시점(2026년)과 규모(1.2GWh/년)가 함께 명시됨. 생산 품목 EnerFlow 500·600·5000 시리즈. 단, K1 실제 출하량(가동률)은 미공개로 annualCapacityUtilizationFloor(≥30%) 판정 불가"
+    },
+    {
+      "id": "psa-14",
+      "source": "web",
+      "title": "[원칙 d] C2_capex_funding (MET, 3급 근거)",
+      "url": "https://www.ess-news.com/2025/01/23/vanadium-flow-battery-maker-h2-secures-funds-for-new-korean-factory/",
+      "content": "$16 million in bridge funding led by STIC Ventures, with participation from K-Run Ventures and Lighthouse Combined Investment. The capital will support construction of the K2 manufacturing facility. The company has raised a total $77 million in funding to date.\n[정량값] 브릿지 $16M — 리드 STIC(스틱인베스트먼트), 참여 K-Run Ventures·Lighthouse Combined Investment. 용처 K2 건설로 특정. 누적 조달 $77M. thebell 2024-12-10 220억원 라운드(스틱 200억 리드, 기업가치 약 1,900억원)와 정합. 단 K2 총 소요 capex 금액이 미공개라 $16M이 1.2GWh 증설에 충분한지는 판단 불가"
+    },
+    {
+      "id": "psa-15",
+      "source": "web",
+      "title": "[원칙 d] C3_supply_chain (UNVERIFIABLE, 3급 근거)",
+      "url": "https://www.energy-storage.news/south-korean-flow-battery-maker-h2-building-330mwh-factory/",
+      "content": "H2 claims that a high level of vertical integration will make its products affordable for large-scale, long-duration energy storage (LDES) applications.\n[정량값] '수직계열화 수준이 높다'는 회사 주장만 있고, 바나듐 원료(V2O5)·전해액·이온교환막·전극 펠트·바이폴라 플레이트 등 핵심 원부자재의 공급업체명·공급계약·계약기간·이중 소싱 여부를 명시한 자료를 국·영문 검색으로 단 한 건도 찾지 못함. DART 미등록이라 사업보고서 '원재료 조달' 섹션도 부재"
+    },
+    {
+      "id": "web-a-1",
+      "source": "web",
+      "title": "동서발전-에이치투 바나듐 흐름전지 협약 및 울산 20MWh 실증 — 뉴시스/ZDNet Korea (2026-04-29)",
+      "url": "https://www.newsis.com/view/NISX20260429_0003611986",
+      "content": "원문: \"2021년부터 기후에너지환경부 국가 연구개발 과제로 국내 최대 규모인 20㎿h급 바나듐 흐름전지(VFB) 저장장치(ESS) 실증사업을 공동 수행\" / \"오는 10월 준공을 목표로 전력계통 직접 연계 실증 마무리 단계에 있다\" / \"7개국 20개 사업, 총 43㎿h의 바나듐 흐름전지 저장장치(VFB ESS) 사업실적을 보유\". 협약(업무협약) 내용: \"▲울산 20메가와트시(MWh) 실증 성과 활용 국내 수요처 확대 ▲재생에너지 연계형·계통지원형·마이크로그리드형 등 신규 사업 공동 개발 ▲국내외 입찰사업 공동수급 체계 구축 ▲바나듐 흐름전지 저장장치(VBESS) 시장 활성화를 위한 정책·제도 개선 공동 제언\". 판정 주석: 울산 20MWh는 국가 R&D 과제로 상업 발주가 아니며, 2026-04-29 체결분은 MOU이므로 하우스 규칙상 수요 근거로 인정하지 않는다. 누적 43MWh는 발주 주체별 내역이 비공개다."
+    },
+    {
+      "id": "web-a-2",
+      "source": "web",
+      "title": "한층 팽팽해진 3차 ESS 입찰…K배터리, 수주전 다시 불붙는다 [배터리레이다] — 디지털데일리 (2026-08-12)",
+      "url": "https://www.ddaily.co.kr/page/view/2026081216012507955",
+      "content": "1차 입찰(563MW): 삼성SDI 약 76% / LG에너지솔루션 약 24% / SK온 물량 미확보. 2차 입찰(540MW, 육지 500MW·제주 40MW): SK온 약 50% / 삼성SDI 약 36% / LG에너지솔루션 약 14%. 채택 셀 유형: 삼성SDI \"니켈·코발트·알루미늄(NCA) 기반 각형 배터리\", SK온·LG에너지솔루션 \"리튬인산철(LFP) 파우치 배터리\". 3차 입찰은 약 1조원 규모로 2026년 \"이달 중순에서 9월 사이\" 공고 예정. 판정 주석: 1·2차 낙찰 물량 전량이 리튬계 셀이며, 흐름전지 또는 에이치투가 낙찰 물량을 확보했다는 공개 근거는 2026-08 기준 존재하지 않는다."
+    },
+    {
+      "id": "web-a-3",
+      "source": "web",
+      "title": "송전망 대란 심각 — 호남권·제주 출력제어 횟수 폭증 (이언주 의원실 자료) — 무등일보",
+      "url": "https://www.mdilbo.com/detail/NDULL4/731322",
+      "content": "원문: \"제주는 풍력발전에 대한 출력제어 횟수가 지난 2019년 46회에서 2023년 117회로 급증 했으며\" / \"출력제어량도 9천223.5Mwh에서 2만6천200.7Mwh로 2.8배 넘게 증가했다\" / \"호남권 태양광 발전의 경우 지난 5월 10일부터 5월 29일까지 매일 출력제어가 발생해 그 심각성이 두드러 졌다.\" 판정 주석: 계통 수용성 제약은 정량 확인되나 이것이 흐름전지 구매로 전환된 증거는 별도로 필요하다."
+    },
+    {
+      "id": "web-a-4",
+      "source": "web",
+      "title": "국내최초 재생에너지 연계 흐름전지 상업운전 개시 — 에너지신문 (2021-01-13)",
+      "url": "https://www.energy-news.co.kr/news/articleView.html?idxno=74946",
+      "content": "\"한국동서발전이 울산발전본부에 설치한 '1MWh급 흐름전지 실증설비'\"가 \"국내 최초로 상업운전을 개시했다\". \"(주)에이치투와 함께 '화재 위험이 없는 바나듐 레독스 흐름전지(VRFB) 제어시스템' 연구개발을 추진\". \"지난해 초 개정된 산업부 규정에 따라 흐름전지도 RPS 시장에 진입할 수 있게 됐다\". 판정 주석: 발주 주체가 공기업이며 사업 성립 조건으로 RPS/REC 제도 진입이 명시된 제도 인센티브 의존형 수요 사례다."
+    },
+    {
+      "id": "web-a-5",
+      "source": "web",
+      "title": "에이치투, 스페인 최대규모 흐름전지 ESS 사업 수주 — 서울경제",
+      "url": "https://www.sedaily.com/NewsView/2D6K2WX8XW",
+      "content": "발주는 스페인 정부 에너지연구기관. 스페인 기업 3곳과 컨소시엄을 구성해 수주했고 에이치투가 배터리 시스템 전량을 공급. 8시간 8.8MWh, 사업기간 16개월, 2025년 상반기 완료 목표, 적용 제품 EnerFLOW 640. 선정 사유로 수계 전해액(화재 위험 없음), 25년 이상 수명, 장주기 구간 LCOE 우위가 제시됨. 기존 수출 실적으로 독일·폴란드 프로젝트와 미국 캘리포니아 20MWh 프로젝트 수행 중이 언급됨. 판정 주석: 발주 주체가 정부 에너지연구기관이므로 순수 상업 발주로 분류하지 않는다. 독일·폴란드 실적은 규모·금액·발주처·가동 시점이 비공개라 검증 불가."
+    },
+    {
+      "id": "web-b-1",
+      "source": "web",
+      "title": "동서발전-에이치투 협약 성격 및 누적 사업실적 43MWh — ZDNet Korea / 천지일보 (2026-04-29)",
+      "url": "https://zdnet.co.kr/view/?no=20260429213158",
+      "content": "협약 성격: \"'국산 바나듐 흐름전지 저장장치(ESS) 국내외 사업개발 및 사업모델 공동 발굴 업무협약(MOU)'\" — 계약이 아니라 MOU. 실증 재원: \"2021년부터 기후에너지환경부 국가 연구개발 과제로 국내 최대 규모인 20MWh급 바나듐 흐름전지(VFB) ESS 실증사업을 공동 수행\", \"오는 10월 준공을 목표로 전력계통 직접 연계 실증 마무리 단계에 있다\". 누적 실적(천지일보): \"에이치투는 7개국 20개 사업 총 43MWh 규모의 바나듐 흐름전지 저장장치 사업 실적을 보유하고 있다.\" 유상 상업발주와 정부 R&D 재원의 구분·건별 계약금액은 비공개."
+    },
+    {
+      "id": "web-b-2",
+      "source": "web",
+      "title": "[단독] 한화솔루션이 배팅한 '에이치투' 상장 재추진 — 서울경제 (2023-05-19)",
+      "url": "https://www.sedaily.com/NewsView/29PML6IPU5",
+      "content": "\"2021년 매출액은 약 7억 원, 영업손실은 18억 원, 당기순손실은 20억 원\"이며 그 다음 해 실적도 비슷한 수준으로 전해짐. \"올해부터 본격적인 매출 실현이 기대되는 만큼 사업 외형을 확장해 상장하자는 의견이 힘을 받았다\". K1(연 330MWh)에 대해 \"이는 연간 1500억 원 규모 매출을 확보할 수 있는 수준\" — 실매출이 아니라 생산능력의 매출 환산치. 누적 투자 562억원, 시리즈C 230억원."
+    },
+    {
+      "id": "web-b-3",
+      "source": "web",
+      "title": "[넷제로 히어로](1-1) 미국도 놀란 에이치투 흐름전지, 화석연료 대안 부각 — 비즈니스포스트 (2023-01-25)",
+      "url": "https://www.businesspost.co.kr/BP?command=article_view&num=304234",
+      "content": "\"울산 화력발전소를 비롯해 폴란드 신재생에너지국책연구소(KEZo) 등 14곳에 자사의 에너지저장장치를 공급했다. 총 31메가와트시(MWh) 용량\". 고객 경제성 주장은 \"발전사업자들이 가장 중요하게 보는 균등화발전비용(LCOE) 즉 발전설비의 총 수명기간에 발생하는 발전비용 측면에서 경쟁력이 높다\"로 정성적이며 수치 없음. \"리튬이온전지는 지난 5년간 37건의 화재사고를 일으켰지만 VRFB는 전 세계에서 단 한 건도 화재를 일으키지 않았다\". 매출 목표 \"2025년 1천억 원, 2026년 5천억 원, 2027년 7천억 원\"."
+    },
+    {
+      "id": "web-b-4",
+      "source": "web",
+      "title": "Spain completes testing of Europe's largest research vanadium BESS — pv magazine Global / ess-news (2026-03-23)",
+      "url": "https://www.pv-magazine.com/2026/03/23/spain-completes-testing-of-europes-largest-research-vanadium-bess/",
+      "content": "\"Spain's Fundación Ciudad de la Energía (Ciuden), a government energy research foundation, has completed operational testing of a 1 MW/8 MWh vanadium redox flow battery (VRFB) system at its Cubillos del Sil technology center, which it says is the largest vanadium flow battery in Europe dedicated to applied research.\" / \"The contract was awarded to Spanish company CYMI for €6.4 million ($7.4 million), incorporating technology from South Korean firm H2 Inc.\" / \"The project's primary objective is to generate technical and operational data to support industrial scalability…\""
+    },
+    {
+      "id": "web-b-5",
+      "source": "web",
+      "title": "동서발전, 국내 최초 재생에너지 연계 흐름전지 상업운전 개시 — 투데이에너지 (2021-01-13)",
+      "url": "http://www.todayenergy.kr/news/articleView.html?idxno=232750",
+      "content": "\"1MWh급 흐름전지 실증설비\" / \"동서발전은 (주)에이치투(대표 한신)와 함께 '화재 위험이 없는 바나듐 레독스 흐름전지(VRFB) 제어시스템' 연구개발을 추진하고 있다\". 넥스트라운드 DB가 '2021년 국내 최초 태양광 연계 VRFB REC 상업운전'으로 표기한 실적의 실체는 공기업과의 공동 연구개발 실증설비이며 사업비·계약금액은 비공개."
+    },
+    {
+      "id": "web-c-1",
+      "source": "web",
+      "title": "[넷제로 히어로](1-2) 에이치투 한신 \"왕대박 실패가 흐름전지 대박기술 낳았다\" — 비즈니스포스트",
+      "url": "https://www.businesspost.co.kr/BP?command=article_view&num=304408",
+      "content": "원칙 c(임팩트) 관점 확인 결과: CO2 감축량·온실가스 저감량·회피 배출량에 대한 정량 수치는 기사 전체에 전혀 없다. 출력제어 관련 유일한 수치는 문제 상황 서술이다: \"제주는 지난해 출력 제한으로 풍력발전소 가동이 100회 이상 중단\". 이는 시장 문제의 크기이지 에이치투 제품이 실제로 저감한 실적이 아니다. 언급된 프로젝트(폴란드 국책연구소, 몰디브 리조트, 독일 송배전망, 캘리포니아 발전소)에 대한 측정 실적·성과 데이터는 제시되지 않는다. → '넷제로 히어로'라는 기후 기획 기사임에도 임팩트 정량치가 0건이라는 사실 자체를 근거로 기록한다."
+    },
+    {
+      "id": "web-c-2",
+      "source": "web",
+      "title": "[Investment Story] 재생에너지 전환을 촉진하는 장주기 ESS의 선두주자, 에이치투(H2) — 옐로우독(임팩트 투자사)",
+      "url": "https://www.yellowdog.kr/2021/08/02/investment-story-h2/",
+      "content": "임팩트 투자사가 직접 쓴 투자 논거임에도 정량 임팩트 지표가 명시되지 않았다. 유일한 정량 데이터: \"국내외 총 10MWh의 실적을 보유\"(2021년 기준) — 설치 용량이지 임팩트 단위가 아니다. 기대효과는 정성 서술에 그친다: 발전 분야 \"탈탄소화 속도를 높이는 데 기여\", 가스발전을 VRFB로 \"대체\"할 것으로 설명. → tCO2e 감축량, 온실가스 저감률, 출력제어 저감량, 임팩트 측정 방법론 모두 부재. → 임팩트 전문 투자사조차 임팩트 단위를 산정하지 못했다는 점은 하드 게이트 판정의 직접 근거다."
+    },
+    {
+      "id": "web-c-3",
+      "source": "web",
+      "title": "[In터뷰] \"VFB는 차세대 발전소\" 에이치투(H2), 장주기 ESS 해법 제시 — 솔라투데이",
+      "url": "https://www.solartodaymag.com/news/articleView.html?idxno=20077",
+      "content": "회사가 직접 제시한 정량 수치(제품 성능·실적): 수명 \"최대 30년(20,000 cycles)\"; 전해액 열화 \"전해액이 1년에 약 0.1% 감소\", \"20년 사업 시 98%가 남음\"; 누적 실적 \"7개국에서 총 42MWh 규모의 실적\"; 생산능력 K1 연 330MWh, K1+K2 완공 시 연 1.2GWh; 프로젝트 울산 20MWh(국내 최대 규모), 스페인 8.8MWh. 단, 에너지효율(%), $/kWh 가격, CO2 저감량 등 임팩트·원가 수치는 기사에 미기재. → 회사가 정량으로 말할 수 있는 것은 전부 제품 스펙과 설치 용량이며, 임팩트 물리량은 하나도 없다."
+    },
+    {
+      "id": "web-c-4",
+      "source": "web",
+      "title": "동서발전 울산화력 1MWh급 재생에너지 연계 바나듐 흐름전지 실증 — 투데이에너지 / 이투뉴스",
+      "url": "http://www.todayenergy.kr/news/articleView.html?idxno=232750",
+      "content": "확인 사실: \"동서발전은 (주)에이치투와 함께 '화재 위험이 없는 바나듐 레독스 흐름전지 제어시스템' 연구개발을 추진\". 설비: 울산발전본부 내 1MWh급 흐름전지 실증설비, 2020년 12월 21일 송배전망 접속, 국내 최초 재생에너지 연계 흐름전지 상업운전. 성격: 태양광 연계 제어시스템 연구개발 실증 과제이며, 목적은 \"운전데이터를 바탕으로 최적 제어 시스템 소프트웨어를 개선\"하는 것. 연간 저장 전력량, 발급 REC량, CO2 저감량(톤), 왕복효율(%) 등 측정 실적 수치는 두 기사 어디에도 공개되지 않았다. → 국내 최장 가동 실증 사이트임에도 5년 이상 지난 시점에 공개된 측정 임팩트 데이터가 0건이다. (병행 출처: http://www.e2news.com/news/articleView.html?idxno=229614)"
+    },
+    {
+      "id": "web-c-5",
+      "source": "web",
+      "title": "Spain completes testing of Europe's largest research vanadium BESS — pv magazine (2026-03-23) / ess-news (2026-03-24)",
+      "url": "https://www.pv-magazine.com/2026/03/23/spain-completes-testing-of-europes-largest-research-vanadium-bess/",
+      "content": "CIUDEN(스페인 Cubillos del Sil 기술개발센터)에서 1MW/8MWh VRFB 시험 완료(2026년 3월). \"한국 기업 H2 Inc의 기술을 통합\"했다고 명시. 공개된 수치: 1MW/8MWh, \"15시간 이상의 저장 자율성\", \"20년 이상의 서비스 수명\". 동일 사이트 병설: NaS 1MW/5.8MWh, 리튬이온 600kW/1.3MWh(2025년 배치). R&D 전용 100kW/800kWh 모듈 포함. 프로젝트 목적은 \"효율, 열화, 재생에너지 통합 분석\"을 위한 기술·운영 데이터 생성. 측정된 왕복효율(%), 사이클 수, CO2 회피량 등 성능 실적 수치는 공개되지 않았고, 독립 검증기관·제3자 검증에 대한 언급도 없다. → 가장 최근의 최대 실증 사이트에서도 임팩트 물리량은 미공개다. 다만 '시험 완료(2026-03)' 사실 자체는 원칙 d(작동 증명) 축에 유효한 신호다."
+    },
+    {
+      "id": "web-c-6",
+      "source": "web",
+      "title": "회사 공식 임팩트 공시 부재 확인 (2026-08-13 조사 로그)",
+      "url": "http://www.h2aec.com/kor/main.do",
+      "content": "공식 홈페이지 h2aec.com은 HTTPS 접속 시 SSL 인증서 altnames 불일치(*.gabia.io) 오류로 자동 수집이 실패했으며, 검색 스니펫 범위에서 확인된 문구는 \"ESG 경영 및 탄소중립 목표 달성을 위한 기술 개발에 집중\" 수준의 서사이고 정량 임팩트 지표(tCO2e, MWh-curtailment, 사고 회피 건수)는 확인되지 않았다. 지속가능경영보고서·ESG 공시: 심사 대상 법인은 DART 미등록(web-0-1)이므로 공시 의무가 없고, 실제로 검색 범위에서 임팩트 리포트·온실가스 감축 인증서·제3자 검증서가 하나도 확인되지 않았다. 검색 시도(모두 정량치 미발견): \"에이치투 바나듐 흐름전지 CO2 감축량 tCO2 온실가스 저감\" / \"H2 Inc vanadium flow battery CO2 avoided tCO2e impact report\" / \"에이치투 ESG 임팩트 리포트 지속가능경영 온실가스 감축 인증\" / \"에이치투 출력제어 저감 curtailment MWh 실적\" / \"CIUDEN H2 8.8MWh commissioning results performance data\". → 결론: 회사가 어떤 임팩트 물리 단위로도 값을 측정·공표한 적이 확인되지 않는다. 제3자 검증은 당연히 부재."
+    }
+  ]
+}

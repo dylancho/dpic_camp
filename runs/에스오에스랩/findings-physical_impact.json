@@ -1,0 +1,7 @@
+{"criteria":[
+{"criterionId":"pi.unit","level":1,"verdict":"partial","rationale":"단위는 지목되나 경계 모호.","evidence":[]},
+{"criterionId":"pi.criteria4","level":2,"verdict":"met","rationale":"2개 충족.","evidence":[]},
+{"criterionId":"pi.linkage","level":2,"verdict":"met","rationale":"직결.","evidence":[]}],
+"gateSignals":{"primaryImpactUnit":"사고-저감 건수/설비-yr"},"redFlags":["baseline 비교 부재"],
+"missingData":["산정식"],"killQuestions":[],"confidence":0.6,"summary":"단위는 있으나 경계 모호.",
+"skillReport":"## Physical Impact Verdict\nVerdict: CONDITIONAL PASS\n(표 생략)"}

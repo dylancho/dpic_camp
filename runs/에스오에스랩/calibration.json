@@ -1,0 +1,4 @@
+{"primaryArchetype":"sw_ai_robotics","secondaryArchetype":"industrial_hardware",
+"classificationRationale":"라이다 센서 하드웨어지만 매출이 로보틱스 고객 대상 공급계약 중심이라 SW·로보틱스 앵커를 주로 적용한다.",
+"thresholds":{"workingProof":"서로 다른 환경 배포 ≥2 + 성능 재현","commercialEvidence":"binding PO ≥2건 또는 반복 구매 고객 ≥1","costUnit":"$/unit","impactUnit":"사고-저감 건수/설비-yr","paybackThresholdYears":3,"patentCountFloor":4},
+"weightingNotes":["고객 집중도(현대차 의존)를 무겁게 본다"]}

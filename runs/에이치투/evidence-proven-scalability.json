@@ -1,0 +1,124 @@
+{
+  "items": [
+    {
+      "criterion_id": "A1_poc_reproducibility",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.newscj.com/news/articleView.html?idxno=3397375",
+      "quote": "에이치투는 7개국 20개 사업 총 43MWh 규모의 바나듐 흐름전지 저장장치 사업 실적을 보유하고 있다.",
+      "extracted_value": "7개국 20개 사업 43MWh (2026-04 기준). 서로 다른 고객·환경 2건 이상이라는 건수 요건은 충족되나, 각 회차의 핵심 성능 KPI 수치와 재현 폭(±%)이 공개되지 않아 재현성 판정 불가"
+    },
+    {
+      "criterion_id": "A1_poc_reproducibility",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.businesspost.co.kr/BP?command=article_view&num=304234",
+      "quote": "울산 화력발전소를 비롯해 폴란드 신재생에너지국책연구소(KEZo) 등 14곳에 자사의 에너지저장장치를 공급했다. 총 31메가와트시(MWh) 용량",
+      "extracted_value": "14곳 / 31MWh (2023-01 기준). 개별 사이트의 에너지효율·용량유지율 등 KPI 실측치와 사이트 간 편차를 명시한 자료를 국·영문 전수 검색했으나 찾지 못함"
+    },
+    {
+      "criterion_id": "A2_third_party_validation",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://magazine.hankyung.com/business/article/202208244108b",
+      "quote": "흐름전지로는 한국 최초로 신제품(NEP) 인증과 단체 표준 인증, 중소벤처기업부 혁신 제품 인증, 미국 수출을 위한 스택의 UL1973 인증을 획득",
+      "extracted_value": "발급기관 특정된 제3자 인증 4건: UL(UL1973, 5266 Stack, 2021, 세계 2번째) / 국가기술표준원 NEP 신제품인증(2021-12) / 한국전지산업협회 단체표준 제품인증(2020-11, 스택·모듈 2품목) / 중기부·조달청 우수연구개발 혁신제품 지정(2021-06, EnerFLOW 430)"
+    },
+    {
+      "criterion_id": "A2_third_party_validation",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://m.etnews.com/20201215000111",
+      "quote": "에이치투가 국내 흐름전지 업계 최초로 단체표준 인증을 획득했다. 인증 대상은 흐름전지 스택과 시스템 모듈 2개 품목이다.",
+      "extracted_value": "단체표준 제품인증 2품목(스택, 시스템 모듈), 발급기관 한국전지산업협회, 2020년 12월 보도. 다만 KTC/KTL 등 공인시험기관 시험성적서 원문(성적서 번호·시험일·측정치)과 인증서 원문(인증번호)은 미확인"
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "http://www.e2news.com/news/articleView.html?idxno=229614",
+      "quote": "한국동서발전 울산발전본부에 1MWh급 바나듐 레독스 흐름전지(VRFB) 실증설비를 설치했고 지난달 21일 계통에 연계했다. 국내 최초로 송·배전망에 계통연계된 VRFB 설비다.",
+      "extracted_value": "사이트 1: 동서발전 울산발전본부 1MWh VRFB, 2021년 1월 국내 최초 계통연계 상업운전 개시(에너지신문·투데이에너지 2021-01-13 교차확인). 가동 개시 시점 문서 확인됨"
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.ess-news.com/2026/03/24/spain-completes-testing-of-europes-largest-research-vanadium-bess/",
+      "quote": "Spain's Fundación Ciudad de la Energía (Ciuden) has completed operational testing of a 1 MW/8 MWh vanadium redox flow battery (VRFB) system at its Cubillos del Sil technology center. The contract was awarded to Spanish company CYMI, incorporating technology from South Korean firm H2 Inc.",
+      "extracted_value": "사이트 2: 스페인 CIUDEN 1MW/8MWh VRFB, 2025년 설치·2026년 3월 운전시험 완료. 울산 사이트와 서로 다른 고객·환경. calibration workingProof의 '가동 개시 시점이 문서로 확인되는 사이트 ≥2건' 충족. 대체 조건인 '제3자 시험성적서·인증기관 검증 ≥2건'도 A2에서 별도 충족(UL/NEP/단체표준/혁신제품 4건)"
+    },
+    {
+      "criterion_id": "A3_field_operation_hours",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://magazine.hankyung.com/business/article/202208244108b",
+      "quote": "최대 20년, 2만 사이클 이상",
+      "extracted_value": "성능보증(PPA·성능계약·warranty) 계약의 존재 여부: 확인 실패. '20년·2만 사이클'은 제품 사양 주장이며 계약상 용량 유지율 보증 %·보증 연수·페널티 조항을 명시한 자료를 국·영문 검색으로 찾지 못함. 또한 미국 캘리포니아 5MW/20MWh는 2021-12 착수 이후 상업운전 확인 자료가 없고(2026-08 기준), 울산 20MWh 실증은 2026년 10월 준공 목표로 아직 미준공"
+    },
+    {
+      "criterion_id": "B1_exchange_tech_grade",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.sedaily.com/NewsView/29PML6IPU5",
+      "quote": "올 하반기 기술특례상장을 위한 기술성 평가부터 마치겠다",
+      "extracted_value": "2023-05 시점의 '계획'만 확인. 2026-08 현재 한국거래소 기술평가 등급(A/BBB 등), 전문평가기관 2곳의 명칭, 평가일, 상장예비심사 청구 사실 중 어느 것도 공개 자료에서 확인되지 않음. thebell 2024-12-10 기사 제목 '프리IPO는 아직'이 2024년말까지도 미진행임을 시사"
+    },
+    {
+      "criterion_id": "B2_registered_patents",
+      "status": "MET",
+      "source_tier": 1,
+      "source_url": "https://patents.google.com/patent/KR102798928B1/ko",
+      "quote": "KR102798928B1 「Electrolyte Antioxidant System For Redox Flow battery」 출원인 주식회사 에이치투, 발명자 강세구·허지향·석문자·한신, 출원 2023-12-01, 등록 2025-04-23. 청구항: 전해액을 저장하는 전해액 탱크; 제1 챔버와 제2 챔버를 구비한 산화방지제 용기; 탱크와 챔버를 연결하는 제1·제2 에어벤트 호스; 챔버 사이 산화방지제 수위를 일정하게 유지하도록 하부에 연결통로를 갖는 격벽",
+      "extracted_value": "등록(B1 공보) 18건 — 출원이 아니라 등록 기준. KR101130575B1(2012-04-12) / KR101157992B1(2012-06-19) / KR101205062B1(2012-11-26) / KR101431070B1(2014-08-21) / KR101465489B1(2014-11-26) / KR101471886B1(2014-12-10) / KR101495434B1(2015-02-24) / KR101808606B1(2017-12-13) / KR101955893B1(2019-03-08) / KR102023914B1(2019-09-23) / KR102023919B1(2019-09-23) / KR102028678B1(2019-10-04) / KR102057018B1(2020-01-22) / KR102161420B1(2020-10-05) / KR102205888B1(2021-01-21) / KR102321389B1(2021-11-03) / KR102639281B1(2024-02-21) / KR102798928B1(2025-04-23). calibration patentCountFloor 4건 상회. 공개공보(KR20190113174A 등)와 국제출원 WO2020226190A1은 등록이 아니므로 제외. 청구항 광협·회피 난이도는 KR102798928B1 1건만 확인"
+    },
+    {
+      "criterion_id": "B3_domain_expertise",
+      "status": "UNVERIFIABLE",
+      "source_tier": 4,
+      "source_url": "https://www.jobkorea.co.kr/recruit/co_read/c/h2aec",
+      "quote": "직원수 78명 (2026년 기준)",
+      "extracted_value": "전체 인원(분모) 78명은 확인되나, 관련 도메인 석사 이상 인력 수 또는 비중(%)(분자)을 명시한 자료를 찾지 못해 비중 계산 불가. 비상장·DART 미등록 법인이라 사업보고서 '연구개발활동' 섹션이 존재하지 않음. 채용 사이트 3종·언론 인터뷰·기업부설연구소 정보 검색 모두 학위별 인력 수 미제공"
+    },
+    {
+      "criterion_id": "B4_lab_publication_track",
+      "status": "MET",
+      "source_tier": 1,
+      "source_url": "https://patents.google.com/patent/KR102798928B1/ko",
+      "quote": "KR102798928B1 발명자: 강세구, 허지향, 석문자, 한신 / 출원인: 주식회사 에이치투 / 등록일 2025-04-23",
+      "extracted_value": "대표이사 한신과 CTO 허지향이 핵심 등록특허의 발명자로 등재. 이 외에도 2011년 이후 레독스 흐름전지 등록특허 18건 보유(B2 참조)"
+    },
+    {
+      "criterion_id": "B4_lab_publication_track",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.businesspost.co.kr/BP?command=article_view&num=304408",
+      "quote": "한신 대표와 허지향 CTO는 KAIST 기계공학과 같은 실험실에서 만나 공동창업했다.",
+      "extracted_value": "인물·기관 특정: 한신(대표, KAIST 기계공학 박사) / 허지향(CTO, KAIST 기계공학 동일 연구실 박사과정 동료). 다만 두 사람의 peer-reviewed 논문(제목·게재지)은 특정하지 못했고, 아산기업가정신리뷰는 창업팀이 '공학 박사였지만 플로우 배터리 전공자들은 아니었다'고 기술 — 랩실 이력의 도메인 정합성은 부분적"
+    },
+    {
+      "criterion_id": "C1_capacity_plan",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.ess-news.com/2025/01/23/vanadium-flow-battery-maker-h2-secures-funds-for-new-korean-factory/",
+      "quote": "The capital will support construction of the K2 manufacturing facility in Daejeon, South Korea. The new plant will have 1.2 GWh annual production capacity with operations expected to commence in 2026. The existing facility produces 330 MWh per year.",
+      "extracted_value": "K1 연 330MWh(충남 계룡, 2023-05 준공) → K2 연 1.2GWh(대전, 2026년 가동 목표). 증설 시점(2026년)과 규모(1.2GWh/년)가 함께 명시됨. 생산 품목 EnerFlow 500·600·5000 시리즈. 단, K1 실제 출하량(가동률)은 미공개로 annualCapacityUtilizationFloor(≥30%) 판정 불가"
+    },
+    {
+      "criterion_id": "C2_capex_funding",
+      "status": "MET",
+      "source_tier": 3,
+      "source_url": "https://www.ess-news.com/2025/01/23/vanadium-flow-battery-maker-h2-secures-funds-for-new-korean-factory/",
+      "quote": "$16 million in bridge funding led by STIC Ventures, with participation from K-Run Ventures and Lighthouse Combined Investment. The capital will support construction of the K2 manufacturing facility. The company has raised a total $77 million in funding to date.",
+      "extracted_value": "브릿지 $16M — 리드 STIC(스틱인베스트먼트), 참여 K-Run Ventures·Lighthouse Combined Investment. 용처 K2 건설로 특정. 누적 조달 $77M. thebell 2024-12-10 220억원 라운드(스틱 200억 리드, 기업가치 약 1,900억원)와 정합. 단 K2 총 소요 capex 금액이 미공개라 $16M이 1.2GWh 증설에 충분한지는 판단 불가"
+    },
+    {
+      "criterion_id": "C3_supply_chain",
+      "status": "UNVERIFIABLE",
+      "source_tier": 3,
+      "source_url": "https://www.energy-storage.news/south-korean-flow-battery-maker-h2-building-330mwh-factory/",
+      "quote": "H2 claims that a high level of vertical integration will make its products affordable for large-scale, long-duration energy storage (LDES) applications.",
+      "extracted_value": "'수직계열화 수준이 높다'는 회사 주장만 있고, 바나듐 원료(V2O5)·전해액·이온교환막·전극 펠트·바이폴라 플레이트 등 핵심 원부자재의 공급업체명·공급계약·계약기간·이중 소싱 여부를 명시한 자료를 국·영문 검색으로 단 한 건도 찾지 못함. DART 미등록이라 사업보고서 '원재료 조달' 섹션도 부재"
+    }
+  ]
+}

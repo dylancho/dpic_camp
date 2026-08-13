@@ -1,0 +1,8 @@
+{"criteria":[
+{"criterionId":"sd.drivers","level":2,"verdict":"met","rationale":"Confirmed 2건.","evidence":[{"sourceId":"web-a-1","quote":"현대차 로보틱스랩 200억 공급"}]},
+{"criterionId":"sd.subsidy","level":1,"verdict":"partial","rationale":"Unclear.","evidence":[]},
+{"criterionId":"sd.tam","level":1,"verdict":"partial","rationale":"bottom-up 미분해.","evidence":[]}],
+"gateSignals":{"structuralDrivers":["productivity_imperative","supply_chain_reconfiguration"]},
+"redFlags":[],"missingData":["정부과제 비중"],"killQuestions":["현대차 외 고객은?"],"confidence":0.5,
+"summary":"Confirmed driver 2개.","skillReport":"## Structural Demand Verdict\nVerdict: CONDITIONAL PASS\n(표 생략)",
+"extraEvidence":[{"id":"web-a-1","source":"web","title":"현대차 라이다 공급","url":"https://example.com/a","content":"현대차 로보틱스랩 200억 공급"}]}
