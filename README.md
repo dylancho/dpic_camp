@@ -197,6 +197,18 @@ app/                             (선택) 웹 UI 버전 — API 키가 있을 �
 
 ---
 
+## 팀
+
+드림인베스터클럽 캠프 5조.
+
+- [@dylancho](https://github.com/dylancho)
+- [@xavierchoi](https://github.com/xavierchoi)
+- [@ppaxen](https://github.com/ppaxen)
+- [@bananawooyou-invest](https://github.com/bananawooyou-invest)
+- [@eunjaekim50](https://github.com/eunjaekim50)
+
+---
+
 ## 알아둘 것
 
 - **근거가 없으면 점수가 낮게 나온다. 이건 버그가 아니라 설계다.** 우리 철학은 근거 없는 임팩트를
