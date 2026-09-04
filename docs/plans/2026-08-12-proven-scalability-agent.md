@@ -2030,7 +2030,7 @@ Run: `python -m agents.proven_scalability --company "심텍"`
 ```markdown
 # Proven Scalability 에이전트
 
-드림인베스터클럽 캠프 5조 · pre-IPO 투자 검토 멀티 에이전트의 기술성 축 (25점).
+pre-IPO 투자 검토 멀티 에이전트의 기술성 축 (25점).
 
 ## 설계
 

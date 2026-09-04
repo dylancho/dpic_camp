@@ -43,7 +43,7 @@ const ImpactUnitSchema = z.object({
 export type ImpactUnit = z.infer<typeof ImpactUnitSchema>;
 
 const UNIT_SYSTEM = `
-너는 임팩트 VC "양양 5조"의 임팩트 측정 담당이다. 지금 하는 일은 딱 하나:
+너는 임팩트 VC의 임팩트 측정 담당이다. 지금 하는 일은 딱 하나:
 이 기업의 **Primary Impact Unit**이 실제로 정의 가능한지 판정하는 것.
 
 Primary Impact Unit이란: 제품/서비스 1단위가 만들어내는 사회적 효과를 나타내는

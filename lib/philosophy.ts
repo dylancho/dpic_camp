@@ -1,7 +1,7 @@
 /**
- * 양양 5조 하우스 투자철학 — 단일 진실 원천(Single Source of Truth).
+ * 하우스 투자철학 — 단일 진실 원천(Single Source of Truth).
  *
- * 이 파일은 4명의 조원이 각자 만드는 원칙 에이전트가 **공유하는 헌법**이다.
+ * 이 파일은 원칙 에이전트 4개가 **공유하는 헌법**이다.
  * 프롬프트에 들어가는 철학 원문, 그리고 코드가 결정론적으로 채점하는 루브릭이 함께 있다.
  *
  * 중요한 설계 원칙:
@@ -41,12 +41,12 @@ export const PRINCIPLE_ORDER: PrincipleId[] = [
 
 export const PRINCIPLE_META: Record<
   PrincipleId,
-  { key: 'a' | 'b' | 'c' | 'd'; name: string; category: string; owner: string }
+  { key: 'a' | 'b' | 'c' | 'd'; name: string; category: string }
 > = {
-  structural_demand: { key: 'a', name: 'Structural Demand', category: '시장성', owner: '조원 A' },
-  economic_value: { key: 'b', name: 'Economic Value', category: '시장성', owner: '조원 B' },
-  physical_impact: { key: 'c', name: 'Physical Impact', category: '임팩트성', owner: '나 (오케스트레이터 겸임)' },
-  proven_scalability: { key: 'd', name: 'Proven Scalability', category: '기술성', owner: '조원 D' },
+  structural_demand: { key: 'a', name: 'Structural Demand', category: '시장성' },
+  economic_value: { key: 'b', name: 'Economic Value', category: '시장성' },
+  physical_impact: { key: 'c', name: 'Physical Impact', category: '임팩트성' },
+  proven_scalability: { key: 'd', name: 'Proven Scalability', category: '기술성' },
 };
 
 /* ------------------------------------------------------------------ *

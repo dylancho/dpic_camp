@@ -305,7 +305,7 @@
           "level": 0,
           "score": 0,
           "verdict": "unmet",
-          "rationale": "조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
+          "rationale": "원칙 d 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
           "evidence": [
             {
               "sourceId": "psa-1",
@@ -328,7 +328,7 @@
           "level": 1,
           "score": 2,
           "verdict": "met",
-          "rationale": "조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
+          "rationale": "원칙 d 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
           "evidence": [
             {
               "sourceId": "psa-4",
@@ -351,7 +351,7 @@
           "level": 0,
           "score": 0,
           "verdict": "unmet",
-          "rationale": "조원 D의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
+          "rationale": "원칙 d 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
           "evidence": [
             {
               "sourceId": "psa-8",
@@ -374,7 +374,7 @@
             "criterionId": "ps.working",
             "level": 0,
             "verdict": "unmet",
-            "rationale": "조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
+            "rationale": "원칙 d 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.",
             "evidence": [
               {
                 "sourceId": "psa-1",
@@ -394,7 +394,7 @@
             "criterionId": "ps.moat",
             "level": 1,
             "verdict": "met",
-            "rationale": "조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
+            "rationale": "원칙 d 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).",
             "evidence": [
               {
                 "sourceId": "psa-4",
@@ -414,7 +414,7 @@
             "criterionId": "ps.scaleup",
             "level": 0,
             "verdict": "unmet",
-            "rationale": "조원 D의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
+            "rationale": "원칙 d 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.",
             "evidence": [
               {
                 "sourceId": "psa-8",
@@ -461,7 +461,7 @@
           "[C3_supply_chain] 공급망 확보 — 공개 자료에서 확인할 수 없었다. 판정 기준: 핵심 원료·부품의 공급 계약 또는 이중 소싱이 확보되어 있다"
         ],
         "confidence": 0.4,
-        "summary": "조원 D 파이썬 에이전트 판정: INSUFFICIENT_EVIDENCE, 자체 점수 0/25 (A 0/12 · B 0/8 · C 0/5). 근거 커버리지 40%."
+        "summary": "원칙 d 파이썬 에이전트 판정: INSUFFICIENT_EVIDENCE, 자체 점수 0/25 (A 0/12 · B 0/8 · C 0/5). 근거 커버리지 40%."
       }
     }
   ]

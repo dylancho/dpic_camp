@@ -1,5 +1,5 @@
 /**
- * 조원 D의 Proven Scalability 파이썬 에이전트 → 공용 채점 형식 어댑터.
+ * 원칙 d의 Proven Scalability 파이썬 에이전트 → 공용 채점 형식 어댑터.
  *   npm run adapt:d -- "<기업명>" [증거파일.json]
  *
  * 왜 어댑터인가:
@@ -70,7 +70,7 @@ else {
 
 const py = spawnSync('python', args, { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
 if (py.error || py.status !== 0) {
-  console.error('조원 D 에이전트 실행 실패:', py.stderr || py.error?.message);
+  console.error('원칙 d 에이전트 실행 실패:', py.stderr || py.error?.message);
   console.error('  → pip install -e ".[dev]" 를 먼저 실행했는지 확인하세요.');
   process.exit(1);
 }
@@ -127,7 +127,7 @@ const detail = (prefix: string) =>
 
 /* ── 두 채점기가 갈리는 지점을 명시적으로 드러낸다 ──────────
  *
- * 조원 D의 scoring.py 는 필수 조건 미충족 시 **그 블록만** 0으로 두고 나머지 블록 점수를
+ * 원칙 d의 scoring.py 는 필수 조건 미충족 시 **그 블록만** 0으로 두고 나머지 블록 점수를
  * 살린다 (예: A 0건·B 3건·C 2건 → 0+7+4 = 11/25).
  * 우리 하우스 헌법은 다르다:
  *   "필수 조건 — Proven Scalability의 (A) 1개 이상·(B) 2개 이상 미충족 시 해당 원칙 0점 처리"
@@ -141,7 +141,7 @@ const detail = (prefix: string) =>
 const houseGateFails = aCount < 1 || bCount < 2;
 const divergence = houseGateFails && result.score > 0;
 const divergenceNote =
-  `조원 D 채점기는 실패 블록만 0으로 두어 ${result.score}/25 를 산출했으나, ` +
+  `원칙 d 채점기는 실패 블록만 0으로 두어 ${result.score}/25 를 산출했으나, ` +
   `하우스 Cut-off 규칙("(A)≥1·(B)≥2 미충족 시 해당 원칙 0점 처리")에 따라 최종 점수는 0/25로 처리된다. ` +
   `블록 점수(A ${result.block_scores.a} · B ${result.block_scores.b} · C ${result.block_scores.c})는 ` +
   `어느 축이 강했는지를 보여주는 진단 정보로만 읽을 것.`;
@@ -153,7 +153,7 @@ const findings: PrincipleFindings = {
       level: Math.min(3, aCount),
       verdict: verdictOf(aCount, statusesOf('A')),
       rationale:
-        `조원 D의 결정론 채점기 판정: ${detail('A')}. MET ${aCount}건. ` +
+        `원칙 d의 결정론 채점기 판정: ${detail('A')}. MET ${aCount}건. ` +
         `아키타입 ${result.calibration.archetype} 기준으로 임계치를 적용했다.` +
         (result.calibration.note ? ` 주의: ${result.calibration.note}` : ''),
       evidence: citationsFor('A'),
@@ -162,14 +162,14 @@ const findings: PrincipleFindings = {
       criterionId: 'ps.moat',
       level: Math.min(4, bCount),
       verdict: verdictOf(bCount, statusesOf('B')),
-      rationale: `조원 D의 결정론 채점기 판정: ${detail('B')}. MET ${bCount}건 (2건 이상이어야 필수 조건 충족).`,
+      rationale: `원칙 d의 결정론 채점기 판정: ${detail('B')}. MET ${bCount}건 (2건 이상이어야 필수 조건 충족).`,
       evidence: citationsFor('B'),
     },
     {
       criterionId: 'ps.scaleup',
       level: Math.min(2, cCount),
       verdict: verdictOf(cCount, statusesOf('C')),
-      rationale: `조원 D의 결정론 채점기 판정: ${detail('C')}. MET ${cCount}건.`,
+      rationale: `원칙 d의 결정론 채점기 판정: ${detail('C')}. MET ${cCount}건.`,
       evidence: citationsFor('C'),
     },
   ],
@@ -185,7 +185,7 @@ const findings: PrincipleFindings = {
   killQuestions: result.diligence_questions,
   confidence: result.evidence_coverage,
   summary:
-    `조원 D 파이썬 에이전트 판정: ${result.verdict}, 자체 점수 ${result.score}/25 ` +
+    `원칙 d 파이썬 에이전트 판정: ${result.verdict}, 자체 점수 ${result.score}/25 ` +
     `(A ${result.block_scores.a}/12 · B ${result.block_scores.b}/8 · C ${result.block_scores.c}/5). ` +
     `근거 커버리지 ${Math.round(result.evidence_coverage * 100)}%.` +
     (divergence ? ` ⚠ ${divergenceNote}` : ''),
@@ -194,7 +194,7 @@ const findings: PrincipleFindings = {
 writeFileSync(`${dir}/findings-proven_scalability.json`, JSON.stringify(findings, null, 2), 'utf8');
 writeFileSync(`${dir}/proven-scalability-raw.json`, JSON.stringify(result, null, 2), 'utf8');
 
-console.log(`\n조원 D 에이전트 → 공용 형식 변환 완료`);
+console.log(`\n원칙 d 에이전트 → 공용 형식 변환 완료`);
 console.log(`  D 자체 판정 : ${result.verdict} ${result.score}/25`);
 console.log(`  변환된 level: ps.working=${Math.min(3, aCount)} ps.moat=${Math.min(4, bCount)} ps.scaleup=${Math.min(2, cCount)}`);
 console.log(`  커버리지    : ${Math.round(result.evidence_coverage * 100)}%`);

@@ -1,5 +1,5 @@
 /**
- * 원칙 d — Proven Scalability (기술성, 25점)   ★ 담당: 조원 D
+ * 원칙 d — Proven Scalability (기술성, 25점)
  *
  * "실험이 아니라, 실제로 구현되며 해당 팀만이 가진 해자여야 한다."
  *

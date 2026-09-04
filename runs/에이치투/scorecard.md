@@ -362,20 +362,20 @@ One-line Thesis: VRFB ESS는 임팩트 단위를 정의할 수 있는 제품이�
 ### d. Proven Scalability — 20/25
 
 
-조원 D 파이썬 에이전트 판정: PASS, 자체 점수 19/25 (A 10/12 · B 5/8 · C 4/5). 근거 커버리지 60%.
+원칙 d 파이썬 에이전트 판정: PASS, 자체 점수 19/25 (A 10/12 · B 5/8 · C 4/5). 근거 커버리지 60%.
 
 - **(A) 기술 작동 증명 (1개↑ 필수)** 10/12 (level 2, met)
-  - 조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=MET, A3_field_operation_hours=MET. MET 2건. 아키타입 energy_infra 기준으로 임계치를 적용했다.
+  - 원칙 d 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=MET, A3_field_operation_hours=MET. MET 2건. 아키타입 energy_infra 기준으로 임계치를 적용했다.
   - 인용 `[psa-1]` "에이치투는 7개국 20개 사업 총 43MWh 규모의 바나듐 흐름전지 저장장치 사업 실적을 보유하고 있다."
   - 인용 `[psa-2]` "울산 화력발전소를 비롯해 폴란드 신재생에너지국책연구소(KEZo) 등 14곳에 자사의 에너지저장장치를 공급했다. 총 31메가와트시(MWh) 용량"
   - 인용 `[psa-3]` "흐름전지로는 한국 최초로 신제품(NEP) 인증과 단체 표준 인증, 중소벤처기업부 혁신 제품 인증, 미국 수출을 위한 스택의 UL1973 인증을 획득"
 - **(B) 해자 Defensibility (2개↑ 필수)** 5/8 (level 2, met)
-  - 조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=MET, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 2건 (2건 이상이어야 필수 조건 충족).
+  - 원칙 d 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=MET, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 2건 (2건 이상이어야 필수 조건 충족).
   - 인용 `[psa-8]` "올 하반기 기술특례상장을 위한 기술성 평가부터 마치겠다"
   - 인용 `[psa-9]` "KR102798928B1 「Electrolyte Antioxidant System For Redox Flow battery」 출원인 주식회사 에이치투, 발명자 강세구·허지향·석문자·한신, 출원 2023-12-01, 등록 2025-04-23. 청구항: 전해액을 저장하는 전해액 탱크; 제1 챔버와 제2 챔버를 구비한 산화방지제 용기; 탱크와 챔버를 연결하는 제1·제2 에어벤트 호스; 챔버 사이 산화방지제 수위를 일정하게 유지하도록 하부에 연결통로를 갖는 격벽"
   - 인용 `[psa-10]` "직원수 78명 (2026년 기준)"
 - **(C) Scale-up 준비** 5/5 (level 2, met)
-  - 조원 D의 결정론 채점기 판정: C1_capacity_plan=MET, C2_capex_funding=MET, C3_supply_chain=UNVERIFIABLE. MET 2건.
+  - 원칙 d 결정론 채점기 판정: C1_capacity_plan=MET, C2_capex_funding=MET, C3_supply_chain=UNVERIFIABLE. MET 2건.
   - 인용 `[psa-13]` "The capital will support construction of the K2 manufacturing facility in Daejeon, South Korea. The new plant will have 1.2 GWh annual production capacity with operations expected to commence in 2026. The existing facility produces 330 MWh per year."
   - 인용 `[psa-14]` "$16 million in bridge funding led by STIC Ventures, with participation from K-Run Ventures and Lighthouse Combined Investment. The capital will support construction of the K2 manufacturing facility. The company has raised a total $77 million in funding to date."
   - 인용 `[psa-15]` "H2 claims that a high level of vertical integration will make its products affordable for large-scale, long-duration energy storage (LDES) applications."

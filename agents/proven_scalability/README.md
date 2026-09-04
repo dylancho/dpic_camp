@@ -1,6 +1,6 @@
 # Proven Scalability 에이전트
 
-드림인베스터클럽 캠프 5조 · pre-IPO 투자 검토 멀티 에이전트의 기술성 축 (25점).
+pre-IPO 투자 검토 멀티 에이전트의 기술성 축 (25점).
 
 **이 레포의 파이썬 코드는 어떤 LLM API도 호출하지 않는다.** `anthropic` 등 LLM SDK를
 import하지 않는다는 사실을 `tests/test_no_llm_dependency.py`가 레포 전체를 훑어 강제한다.

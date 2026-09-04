@@ -4,7 +4,7 @@
       "criterionId": "ps.working",
       "level": 2,
       "verdict": "met",
-      "rationale": "조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=MET, A3_field_operation_hours=MET. MET 2건. 아키타입 energy_infra 기준으로 임계치를 적용했다.",
+      "rationale": "원칙 d 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=MET, A3_field_operation_hours=MET. MET 2건. 아키타입 energy_infra 기준으로 임계치를 적용했다.",
       "evidence": [
         {
           "sourceId": "psa-1",
@@ -24,7 +24,7 @@
       "criterionId": "ps.moat",
       "level": 2,
       "verdict": "met",
-      "rationale": "조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=MET, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 2건 (2건 이상이어야 필수 조건 충족).",
+      "rationale": "원칙 d 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=MET, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 2건 (2건 이상이어야 필수 조건 충족).",
       "evidence": [
         {
           "sourceId": "psa-8",
@@ -44,7 +44,7 @@
       "criterionId": "ps.scaleup",
       "level": 2,
       "verdict": "met",
-      "rationale": "조원 D의 결정론 채점기 판정: C1_capacity_plan=MET, C2_capex_funding=MET, C3_supply_chain=UNVERIFIABLE. MET 2건.",
+      "rationale": "원칙 d 결정론 채점기 판정: C1_capacity_plan=MET, C2_capex_funding=MET, C3_supply_chain=UNVERIFIABLE. MET 2건.",
       "evidence": [
         {
           "sourceId": "psa-13",
@@ -86,5 +86,5 @@
     "[C3_supply_chain] 공급망 확보 — 공개 자료에서 확인할 수 없었다. 판정 기준: 핵심 원료·부품의 공급 계약 또는 이중 소싱이 확보되어 있다"
   ],
   "confidence": 0.6,
-  "summary": "조원 D 파이썬 에이전트 판정: PASS, 자체 점수 19/25 (A 10/12 · B 5/8 · C 4/5). 근거 커버리지 60%."
+  "summary": "원칙 d 파이썬 에이전트 판정: PASS, 자체 점수 19/25 (A 10/12 · B 5/8 · C 4/5). 근거 커버리지 60%."
 }

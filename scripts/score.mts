@@ -79,9 +79,9 @@ for (const id of PRINCIPLE_ORDER as PrincipleId[]) {
     continue;
   }
 
-  // 계약서(Zod) 위반은 여기서 잡는다 — 조원이 형식을 어기면 조용히 넘어가지 않는다.
-  // 다만 4명이 서로 다른 판정 어휘를 쓰는 프로젝트라(조원 D는 MET/NOT_MET/UNVERIFIABLE,
-  // 조원 A·B 스킬은 Confirmed/Not Demonstrated) 동의어가 새어 들어오는 것은 형식 오류로
+  // 계약서(Zod) 위반은 여기서 잡는다 — 형식을 어기면 조용히 넘어가지 않는다.
+  // 다만 원칙마다 서로 다른 판정 어휘를 쓰는 프로젝트라(원칙 d는 MET/NOT_MET/UNVERIFIABLE,
+  // 원칙 a·b 스킬은 Confirmed/Not Demonstrated) 동의어가 새어 들어오는 것은 형식 오류로
   // 취급하지 않고 정규화한다. 진짜 못 알아볼 값만 오류로 보고한다.
   const parsed = PrincipleFindingsSchema.safeParse(normalizeVerdicts(raw));
   if (!parsed.success) {
@@ -175,7 +175,7 @@ const md = [
     p.findings.killQuestions.length
       ? `**Kill questions**\n${p.findings.killQuestions.map((r) => `- ${r}`).join('\n')}\n`
       : '',
-    // 담당 조원 스킬의 서술 전문 — 보고서 작성 에이전트가 이 부분을 그대로 인용한다
+    // 해당 원칙 스킬의 서술 전문 — 보고서 작성 에이전트가 이 부분을 그대로 인용한다
     p.findings.skillReport ? `<details><summary>담당 스킬 상세 리포트</summary>\n\n${p.findings.skillReport}\n\n</details>\n` : '',
   ]),
   evidence.gaps.length ? `## 근거 수집 공백\n\n${evidence.gaps.map((g) => `- ${g}`).join('\n')}\n` : '',

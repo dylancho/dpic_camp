@@ -1,6 +1,6 @@
 # Proven Scalability 에이전트 설계
 
-작성 2026-08-12 · 드림인베스터클럽 캠프 5조 · 브랜치 `Proven-Scalability-agent`
+작성 2026-08-12 · 브랜치 `Proven-Scalability-agent`
 
 ## 1. 무엇을 만드는가
 

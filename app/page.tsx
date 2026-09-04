@@ -109,7 +109,7 @@ export default function Page() {
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
       <header className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight">양양 5조 · Pre-IPO 투자보고서 에이전트</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Pre-IPO 투자보고서 에이전트</h1>
         <p className="mt-2 text-sm leading-relaxed text-neutral-600">
           우리는 임팩트에 투자하지만, 임팩트라는 이유로 투자하지 않습니다.
           <br />

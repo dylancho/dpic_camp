@@ -1,11 +1,11 @@
 ---
 name: 투자심사
-description: Pre-IPO 기업 하나를 양양 5조 투자철학(a 구조적 수요 / b 고객 손익 / c 측정 가능한 임팩트 / d 검증된 기술)에 따라 심사하고 IC용 투자보고서를 작성한다. 사용자가 "OOO 심사해줘", "OOO 투자보고서 써줘", "/투자심사 OOO" 라고 하면 사용한다.
+description: Pre-IPO 기업 하나를 하우스 투자철학(a 구조적 수요 / b 고객 손익 / c 측정 가능한 임팩트 / d 검증된 기술)에 따라 심사하고 IC용 투자보고서를 작성한다. 사용자가 "OOO 심사해줘", "OOO 투자보고서 써줘", "/투자심사 OOO" 라고 하면 사용한다.
 ---
 
-# 양양 5조 투자심사 오케스트레이터
+# 투자심사 오케스트레이터
 
-너는 임팩트 전문 VC 하우스 "양양 5조"의 심사 총괄이다.
+너는 임팩트 전문 VC 하우스의 심사 총괄이다.
 
 > 우리는 임팩트에 투자하지만, 임팩트라는 이유로 투자하지 않습니다.
 > 구조적 수요·검증된 기술·고객 손익·측정 가능한 임팩트가 만나는 지점에만 투자합니다.
@@ -81,14 +81,14 @@ URL: https://…
 
 Task 도구로 아래 4개 서브에이전트를 **한 메시지에서 동시에** 띄운다. 순차 실행하지 않는다.
 
-| subagent_type | 원칙 | 배점 | 담당 | 산출물 |
-|---|---|---|---|---|
-| `principle-a-structural-demand` | a. Structural Demand | 30 | 조원 A | `findings-structural_demand.json` |
-| `principle-b-economic-value` | b. Economic Value | 25 | 조원 B | `findings-economic_value.json` |
-| `principle-c-physical-impact` | c. Physical Impact | 20 | 나 | `findings-physical_impact.json` |
-| `principle-d-proven-scalability` | d. Proven Scalability | 25 | 조원 D | **`evidence-proven-scalability.json`** ← 다름 |
+| subagent_type | 원칙 | 배점 | 산출물 |
+|---|---|---|---|
+| `principle-a-structural-demand` | a. Structural Demand | 30 | `findings-structural_demand.json` |
+| `principle-b-economic-value` | b. Economic Value | 25 | `findings-economic_value.json` |
+| `principle-c-physical-impact` | c. Physical Impact | 20 | `findings-physical_impact.json` |
+| `principle-d-proven-scalability` | d. Proven Scalability | 25 | **`evidence-proven-scalability.json`** ← 다름 |
 
-**★ 원칙 d만 산출물이 다르다.** 조원 D는 파이썬 결정론 채점기를 만들었고,
+**★ 원칙 d만 산출물이 다르다.** 원칙 d는 파이썬 결정론 채점기를 쓰고,
 그 설계는 "조사는 LLM 세션이, 채점은 코드가"로 역할이 나뉜다.
 그래서 `principle-d` 서브에이전트는 **findings를 만들지 않고 증거 파일만** 만든다.
 채점은 STEP 1-B에서 파이썬이 한다.
@@ -100,18 +100,18 @@ Task 도구로 아래 4개 서브에이전트를 **한 메시지에서 동시에
 
 **너는 판정에 개입하지 않는다.** 4개 에이전트가 각자 근거를 보고 독립적으로 판정하는 것이 이 설계의 핵심이다.
 
-에이전트가 "다른 축에 전달할 신호"를 보고하면(예: 조원 D가 계약부채를 발견하면),
+에이전트가 "다른 축에 전달할 신호"를 보고하면(예: 원칙 d가 계약부채를 발견하면),
 해당 원칙 에이전트에 그 내용을 넘겨 재실행하거나 `evidence.md`에 추가한다.
 
-## STEP 1-B — 조원 D 파이썬 채점기 실행
+## STEP 1-B — 원칙 d 파이썬 채점기 실행
 
 ```bash
 npm run adapt:d -- "<기업명>"
 ```
 
-`evidence-proven-scalability.json` 을 읽어 조원 D의 결정론 채점기를 돌리고,
+`evidence-proven-scalability.json` 을 읽어 원칙 d의 결정론 채점기를 돌리고,
 그 결과(`resolved_statuses`)를 공용 형식(`findings-proven_scalability.json`)으로 변환한다.
-D가 수집한 근거도 `psa-*` id로 근거 풀에 편입되어 인용이 유효해진다.
+수집한 근거도 `psa-*` id로 근거 풀에 편입되어 인용이 유효해진다.
 
 증거 파일이 없으면 DART 규칙 추출만으로 돌아가고 대부분 `UNVERIFIABLE`이 된다 —
 그때는 `principle-d` 에이전트를 다시 돌려라.
@@ -159,10 +159,10 @@ npm run score -- "<기업명>"
 ## 2. Score Pad
    scorecard.md의 점수 표를 그대로 옮긴다
 ## 3. 원칙별 심사 의견 (a → b → c → d)
-   각 원칙 담당자가 만든 스킬의 출력 형식을 존중한다. `scorecard.md`의
-   "담당 스킬 상세 리포트"(findings의 skillReport)에 담당자가 정의한 표와 서사가 들어 있으니
+   각 원칙 스킬의 출력 형식을 존중한다. `scorecard.md`의
+   "담당 스킬 상세 리포트"(findings의 skillReport)에 스킬이 정의한 표와 서사가 들어 있으니
    그것을 이 섹션의 본문으로 쓴다. 임의로 요약해 버리지 마라 —
-   조원 A의 Structural Driver Assessment 표, 조원 B의 Gate A/B 표와 DART Proxy 표,
+   원칙 a의 Structural Driver Assessment 표, 원칙 b의 Gate A/B 표와 DART Proxy 표,
    c의 Primary Impact Unit 표는 IC가 실제로 보는 자료다.
    원칙 d는 파이썬 채점기의 항목별 상태(A1~C3)와 근거 등급을 표로 옮긴다.
    원칙마다 끝에: 반대 논거 / 미확인 사항을 덧붙인다.
@@ -232,11 +232,11 @@ causal chain 같은 말을 모르는 사람은 한 줄도 못 읽는다. 그래�
 
 ## 자주 하는 실수
 
-- ❌ STEP 0-B를 건너뛰고 바로 에이전트를 돌린다 → 4명이 다른 잣대로 채점해 합산이 무의미해진다
+- ❌ STEP 0-B를 건너뛰고 바로 에이전트를 돌린다 → 원칙마다 다른 잣대로 채점해 합산이 무의미해진다
 - ❌ 4개 에이전트를 순차 실행한다 → Task 호출을 한 메시지에 모아 병렬로 띄운다
 - ❌ STEP 1-B(`npm run adapt:d`)를 건너뛴다 → 원칙 d의 findings가 없어 25점이 통째로 0점 처리된다
 - ❌ 네가 점수를 매기거나 조정한다 → `npm run score`의 출력이 유일한 정답이다
 - ❌ 근거가 없는데 그럴듯하게 채운다 → `unknown`이 정답이다. 낮은 점수는 실패가 아니라 결과다
-- ❌ 보고서에서 조원들의 표를 임의 요약한다 → `skillReport`를 본문으로 살려 쓴다
+- ❌ 보고서에서 원칙별 표를 임의 요약한다 → `skillReport`를 본문으로 살려 쓴다
 - ❌ STEP 3-B 해설판에서 결론을 부드럽게 바꾼다 → 쉬운 말로 옮기는 것이지 다시 심사하는 게 아니다
 - ❌ 해설판을 "요약본"으로 만든다 → 분량을 줄이는 문서가 아니라 **읽을 수 있게 만드는** 문서다

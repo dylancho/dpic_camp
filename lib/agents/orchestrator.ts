@@ -26,7 +26,7 @@ import { economicValueAgent } from './b-economic-value';
 import { physicalImpactAgent } from './c-physical-impact';
 import { provenScalabilityAgent } from './d-proven-scalability';
 
-/** 조원이 새 에이전트를 붙일 때 여기만 갈아끼우면 된다 */
+/** 새 에이전트를 붙일 때 여기만 갈아끼우면 된다 */
 export const AGENTS: Record<PrincipleId, PrincipleAgent> = {
   structural_demand: structuralDemandAgent,
   economic_value: economicValueAgent,
@@ -34,7 +34,7 @@ export const AGENTS: Record<PrincipleId, PrincipleAgent> = {
   proven_scalability: provenScalabilityAgent,
 };
 
-/** 에이전트 하나가 죽어도 파이프라인 전체를 죽이지 않는다 (해커톤 데모 안정성) */
+/** 에이전트 하나가 죽어도 파이프라인 전체를 죽이지 않는다 (데모 안정성) */
 function fallbackFindings(reason: string): PrincipleFindings {
   return {
     criteria: [],

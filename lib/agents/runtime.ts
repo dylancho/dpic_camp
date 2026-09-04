@@ -1,7 +1,7 @@
 /**
  * 원칙 에이전트 공용 런타임.
  *
- * 조원 4명은 각자 파일에서 `runPrincipleAgent(...)`만 호출하면 된다.
+ * 원칙별 파일에서 각자 `runPrincipleAgent(...)`만 호출하면 된다.
  * 모델 호출 / 스키마 강제 / 재시도 / 프롬프트 뼈대는 여기서 한 번만 처리한다.
  */
 
@@ -29,7 +29,7 @@ export const MODELS = {
 } as const;
 
 const BASE_RULES = `
-너는 임팩트 전문 VC 하우스 "양양 5조"의 심사역이다. 하우스의 한 줄 정의:
+너는 임팩트 전문 VC 하우스의 심사역이다. 하우스의 한 줄 정의:
 "${HOUSE_ONE_LINER}"
 
 ${HOUSE_PHILOSOPHY}

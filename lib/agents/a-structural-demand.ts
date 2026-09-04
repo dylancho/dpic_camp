@@ -1,9 +1,9 @@
 /**
- * 원칙 a — Structural Demand (시장성, 30점)   ★ 담당: 조원 A
+ * 원칙 a — Structural Demand (시장성, 30점)
  *
  * 이 파일에서 건드릴 곳은 EXTRA_GUIDANCE 하나뿐이다.
  * 입력/출력 형태(AgentInput → PrincipleFindings)는 lib/contract.ts가 고정하므로
- * 다른 조원 코드와 충돌하지 않는다.
+ * 다른 원칙의 코드와 충돌하지 않는다.
  */
 
 import type { PrincipleAgent } from '../contract';

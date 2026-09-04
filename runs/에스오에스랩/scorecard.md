@@ -123,20 +123,20 @@ Verdict: CONDITIONAL PASS
 
 > ⛔ 필수 조건 미충족 → 0점 처리: (A) 작동 증명 0건 — 1건 이상 필요, (B) 해자 1건 — 2건 이상 필요
 
-조원 D 파이썬 에이전트 판정: INSUFFICIENT_EVIDENCE, 자체 점수 0/25 (A 0/12 · B 0/8 · C 0/5). 근거 커버리지 40%.
+원칙 d 파이썬 에이전트 판정: INSUFFICIENT_EVIDENCE, 자체 점수 0/25 (A 0/12 · B 0/8 · C 0/5). 근거 커버리지 40%.
 
 - **(A) 기술 작동 증명 (1개↑ 필수)** 0/12 (level 0, unmet)
-  - 조원 D의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.
+  - 원칙 d의 결정론 채점기 판정: A1_poc_reproducibility=UNVERIFIABLE, A2_third_party_validation=NOT_MET, A3_field_operation_hours=UNVERIFIABLE. MET 0건. 아키타입 sw_ai_robotics 기준으로 임계치를 적용했다. 주의: 알 수 없는 아키타입 'sw_ai_robotics' — 원칙 원문의 중립 기준을 적용했다.
   - 인용 `[psa-1]` "연혁에 '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'이 있으나, materials 기준이 요구하는 Pilot run 2회 이상·고객 qualification 1건 이상·재현성 ±10~20% 수치가 어디에도 제시되지 않는다. 시설의 존재와 파일럿 실행 실적은 다르다."
   - 인용 `[psa-2]` "연혁의 인증은 '2020.06 벤처인증(기술보증기금)', '2020.10 중소기업 확인(중소벤처기업부)'뿐이다. 둘 다 기업 지위에 대한 행정 인증이고, 원칙이 요구하는 제3자 공인시험기관의 시험성적서나 제품·기술 인증이 아니다."
   - 인용 `[psa-3]` "materials 기준은 배치 수와 수율 재현성으로 본다. 파일럿 시설 구축·확장 사실은 확인되나 누적 배치 수, 수율, 재현 폭 수치를 찾지 못했다."
 - **(B) 해자 Defensibility (2개↑ 필수)** 2/8 (level 1, met)
-  - 조원 D의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).
+  - 원칙 d의 결정론 채점기 판정: B1_exchange_tech_grade=UNVERIFIABLE, B2_registered_patents=UNVERIFIABLE, B3_domain_expertise=UNVERIFIABLE, B4_lab_publication_track=MET. MET 1건 (2건 이상이어야 필수 조건 충족).
   - 인용 `[psa-4]` "거래소 기술성 평가 등급을 확인할 자료를 찾지 못했다. 상장 준비 단계나 기술특례 트랙 여부가 공개되어 있지 않다."
   - 인용 `[psa-5]` "'세계 최초로 그래핀에 나노홀을 일괄 형성하는 양산 기술, 금속에서 그래핀을 기르는 기술 등 독창적인 연구개발 노하우를 갖추고 있다'는 기술 보유 서술은 있으나, 등록 특허 건수와 청구항 구조는 제시되지 않는다. DART에도 이 회사의 공시가 없어 확인 경로가 없다."
   - 인용 `[psa-6]` "'2021.03 기업부설연구소 설립(과학기술정보통신부)'이 확인되나, 연구 인력의 규모와 학위별 구성(석사 이상 비중)은 공개되어 있지 않다."
 - **(C) Scale-up 준비** 0/5 (level 0, unmet)
-  - 조원 D의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.
+  - 원칙 d의 결정론 채점기 판정: C1_capacity_plan=NOT_MET, C2_capex_funding=NOT_MET, C3_supply_chain=UNVERIFIABLE. MET 0건.
   - 인용 `[psa-8]` "'2022.06 Fabrication Zero 완공(서울대연구공원)', '2024.01 시험검증용 파일럿 시설 구축', '2026.03 시험검증용 파일럿 시설 확장 이전'. 시점은 명시되나 증설 규모(생산능력·면적)가 제시되지 않고, 시험검증용 파일럿이지 양산 라인 증설 로드맵이 아니다."
   - 인용 `[psa-9]` "2020년 개인엔젤부터 2025년 인비저닝파트너스·에이티넘인베스트먼트·IBK기업은행까지 5회 이상 투자유치가 확인되고, 2022.06에는 유안타인베스트먼트·KB증권·에이티넘인베스트먼트·KDB산업은행·JB인베스트먼트가 참여했다. 다만 조달 금액이 공개되지 않았고, 조달 자금이 증설에 쓰인다는 용도 연결이 어디에도 없다."
   - 인용 `[psa-10]` "핵심 원료·부품의 공급 계약이나 이중 소싱 확보를 확인할 자료를 찾지 못했다. 그래핀 전구체·기재 금속의 조달 구조에 대한 언급이 공개 자료에 없다."

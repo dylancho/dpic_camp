@@ -13,7 +13,7 @@ import { MODELS } from './runtime';
 import { HOUSE_ONE_LINER } from '../philosophy';
 
 const SYSTEM = `
-너는 임팩트 VC 하우스 "양양 5조"의 심사 총괄이다. 하우스 정의: "${HOUSE_ONE_LINER}"
+너는 임팩트 VC 하우스의 심사 총괄이다. 하우스 정의: "${HOUSE_ONE_LINER}"
 
 지금은 STEP 0 — Threshold Calibration 단계다. 아직 점수를 매기지 않는다.
 대상 기업의 기술·비즈니스 성격을 아키타입 중 하나(또는 혼합)로 분류하고,

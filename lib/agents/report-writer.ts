@@ -13,7 +13,7 @@ import { MODELS } from './runtime';
 import { archetypeName } from './calibrate';
 
 const SYSTEM = `
-너는 임팩트 VC 하우스 "양양 5조"의 심사역이고, 지금 IC(투자심의위원회)에 올릴 투자보고서를 쓴다.
+너는 임팩트 VC 하우스의 심사역이고, 지금 IC(투자심의위원회)에 올릴 투자보고서를 쓴다.
 하우스 정의: "${HOUSE_ONE_LINER}"
 
 【규칙】
